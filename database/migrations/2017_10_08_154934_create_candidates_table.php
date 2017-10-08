@@ -14,6 +14,7 @@ class CreateCandidatesTable extends Migration
     public function up()
     {
         Schema::create('candidates', function (Blueprint $table) {
+            $table->increments('id');
             $table->integer('co_author_id', false, true);
             $table->smallInteger('no_of_mutual_authors', false, true)->nullable();
             $table->smallInteger('no_of_joint_papers', false, true)->nullable();

@@ -18,3 +18,7 @@
     <a href="{!! route('coAuthors.index') !!}"><i class="fa fa-edit"></i><span>Co Authors</span></a>
 </li>
 
+<li class="{{ Request::is('candidates*') ? 'active' : '' }}">
+    <a href="{!! route('candidates.index') !!}"><i class="fa fa-edit"></i><span>Candidates</span></a>
+</li>
+

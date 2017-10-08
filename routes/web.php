@@ -28,3 +28,5 @@ Route::resource('papers', 'PaperController');
 Route::resource('authorPapers', 'AuthorPaperController');
 
 Route::resource('coAuthors', 'CoAuthorController');
+
+Route::resource('candidates', 'CandidateController');
