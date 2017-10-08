@@ -20,7 +20,6 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->enum('gender', ['Male', 'Female', 'Other'])->nullable()->default('Other');
             $table->string('phone', 20)->nullable();
-            $table->integer('author_id', false, true)->nullable();
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

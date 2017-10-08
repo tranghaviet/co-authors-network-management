@@ -64,7 +64,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Ho_Chi_Minh',
 
     /*
     |--------------------------------------------------------------------------
@@ -173,6 +173,14 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
         // ide helper
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        // Use l5-repository for Repository pattern
+        Prettus\Repository\Providers\RepositoryServiceProvider::class,
+
+        // Infyom laravel generator
+        Collective\Html\HtmlServiceProvider::class,
+        Laracasts\Flash\FlashServiceProvider::class,
+        \InfyOm\Generator\InfyOmGeneratorServiceProvider::class,
+        \InfyOm\AdminLTETemplates\AdminLTETemplatesServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -231,7 +239,10 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
+        // Infyom laravel generator
+        'Form'      => Collective\Html\FormFacade::class,
+        'Html'      => Collective\Html\HtmlFacade::class,
+        'Flash'     => Laracasts\Flash\Flash::class,
     ],
 
 ];
