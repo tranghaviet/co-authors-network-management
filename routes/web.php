@@ -25,5 +25,6 @@ Route::resource('authors', 'AuthorController');
 
 Route::resource('papers', 'PaperController');
 
-
 Route::resource('authorPapers', 'AuthorPaperController');
+
+Route::resource('coAuthors', 'CoAuthorController');

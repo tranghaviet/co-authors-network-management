@@ -14,3 +14,7 @@
     <a href="{!! route('authorPapers.index') !!}"><i class="fa fa-edit"></i><span>Author Papers</span></a>
 </li>
 
+<li class="{{ Request::is('coAuthors*') ? 'active' : '' }}">
+    <a href="{!! route('coAuthors.index') !!}"><i class="fa fa-edit"></i><span>Co Authors</span></a>
+</li>
+
