@@ -19,12 +19,12 @@ class CreateKeywordPaperTable extends Migration
 
             $table->foreign('keyword_id')
                 ->references('id')
-                ->one('keywords')
+                ->on('keywords')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
             $table->foreign('paper_id')
                 ->references('id')
-                ->one('papers')
+                ->on('papers')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
         });

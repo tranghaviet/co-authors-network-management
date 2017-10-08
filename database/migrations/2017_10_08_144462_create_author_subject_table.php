@@ -19,12 +19,12 @@ class CreateAuthorSubjectTable extends Migration
 
             $table->foreign('author_id')
                 ->references('id')
-                ->one('authors')
+                ->on('authors')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
             $table->foreign('subject_id')
                 ->references('id')
-                ->one('subjects')
+                ->on('subjects')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
         });

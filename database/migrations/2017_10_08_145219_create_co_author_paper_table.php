@@ -19,12 +19,12 @@ class CreateCoAuthorPaperTable extends Migration
 
             $table->foreign('co_author_id')
                 ->references('id')
-                ->one('co_authors')
+                ->on('co_authors')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
             $table->foreign('paper_id')
                 ->references('id')
-                ->one('papers')
+                ->on('papers')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
         });
