@@ -79,6 +79,8 @@ class User extends Authenticatable
      * @var array
      */
     public static $rules = [
-
+        'name' => 'required|string',
+        'email' => 'required|string|email',
+        'password' => 'required|string|min:6',
     ];
 }

@@ -17,6 +17,7 @@ class UsersTableSeeder extends Seeder
         $admin->email = 'admin@example.com';
         $admin->password = bcrypt('password');
         $admin->gender = 'Male';
+        $admin->remember_token = str_random(60);
         $admin->save();
         
         $trang = new User();
@@ -24,6 +25,7 @@ class UsersTableSeeder extends Seeder
         $trang->email = 'tranghv@example.com';
         $trang->password = bcrypt('password');
         $trang->gender = 'Male';
+        $trang->remember_token = str_random(60);
         $trang->save();
     }
 }

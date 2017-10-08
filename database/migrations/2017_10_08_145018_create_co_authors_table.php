@@ -18,16 +18,7 @@ class CreateCoAuthorsTable extends Migration
             $table->integer('first_author_id', false, true);
             $table->integer('second_author_id', false, true);
 
-            $table->foreign('first_author_id')
-                ->references('id')
-                ->on('authors')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
-            $table->foreign('second_author_id')
-                ->references('id')
-                ->on('authors')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+            $table->index(['first_author_id', 'second_author_id']);
         });
     }
 
