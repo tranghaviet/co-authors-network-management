@@ -21,5 +21,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('users', 'UserController');
 
-
 Route::resource('authors', 'AuthorController');
+
+Route::resource('papers', 'PaperController');

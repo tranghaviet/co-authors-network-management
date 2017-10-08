@@ -14,6 +14,7 @@ class CreatePapersTable extends Migration
     public function up()
     {
         Schema::create('papers', function (Blueprint $table) {
+            // in reality it's a string
             $table->increments('id');
             $table->mediumText('title');
             $table->date('cover_date')->nullable();

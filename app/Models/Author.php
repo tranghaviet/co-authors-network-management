@@ -20,15 +20,8 @@ use Eloquent as Model;
 class Author extends Model
 {
     public $table = 'authors';
-    
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
-
-
-    protected $dates = ['deleted_at'];
 
     public $timestamps = false;
-
 
     public $fillable = [
         'given_name',

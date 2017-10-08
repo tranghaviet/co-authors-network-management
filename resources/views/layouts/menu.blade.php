@@ -6,3 +6,7 @@
     <a href="{!! route('authors.index') !!}"><i class="fa fa-edit"></i><span>Authors</span></a>
 </li>
 
+<li class="{{ Request::is('papers*') ? 'active' : '' }}">
+    <a href="{!! route('papers.index') !!}"><i class="fa fa-edit"></i><span>Papers</span></a>
+</li>
+
