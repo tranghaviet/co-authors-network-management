@@ -2,8 +2,8 @@
     <thead>
         <tr>
             <th>Id</th>
-            <th>First Author Id</th>
-            <th>Second Author Id</th>
+            <th>First Author</th>
+            <th>Second Author</th>
             <th colspan="3">Action</th>
         </tr>
     </thead>
@@ -11,8 +11,17 @@
     @foreach($coAuthors as $coAuthor)
         <tr>
             <td>{!! $coAuthor->id !!}</td>
-            <td>{!! $coAuthor->first_author_id !!}</td>
-            <td>{!! $coAuthor->second_author_id !!}</td>
+            <td>
+                <a href="{!! route('authors.show', [$coAuthor->firstAuthor->id]) !!}">
+                    {!! $coAuthor->firstAuthor->given_name.' '.$coAuthor->firstAuthor->surname !!}
+                </a>
+            </td>
+            <td>
+                <a href="{!! route('authors.show', [$coAuthor->secondAuthor->id]) !!}">
+                    {!! $coAuthor->secondAuthor->given_name.' '.$coAuthor->secondAuthor->surname !!}
+                </a>
+            </td>
+
             <td>
                 {!! Form::open(['route' => ['coAuthors.destroy', $coAuthor->id], 'method' => 'delete']) !!}
                 <div class='btn-group'>

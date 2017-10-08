@@ -65,4 +65,20 @@ class CoAuthor extends Model
     {
         return $this->belongsToMany(\App\Models\Paper::class, 'co_author_paper');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     **/
+    public function firstAuthor()
+    {
+        return $this->hasOne(\App\Models\Author::class, 'id', 'first_author_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     **/
+    public function secondAuthor()
+    {
+        return $this->hasOne(\App\Models\Author::class, 'id', 'second_author_id');
+    }
 }

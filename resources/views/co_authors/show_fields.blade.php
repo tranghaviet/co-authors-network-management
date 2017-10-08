@@ -4,15 +4,23 @@
     <p>{!! $coAuthor->id !!}</p>
 </div>
 
-<!-- First Author Id Field -->
+<!-- First Author Field -->
 <div class="form-group">
-    {!! Form::label('first_author_id', 'First Author Id:') !!}
-    <p>{!! $coAuthor->first_author_id !!}</p>
+    {!! Form::label('first_author_id', 'First Author:') !!}
+    <p>
+        <a href="{!! route('authors.show', [$coAuthor->firstAuthor->id]) !!}">
+            {!! $coAuthor->firstAuthor->given_name.' '.$coAuthor->firstAuthor->surname !!}
+        </a>
+    </p>
 </div>
 
-<!-- Second Author Id Field -->
+<!-- Second Author Field -->
 <div class="form-group">
     {!! Form::label('second_author_id', 'Second Author Id:') !!}
-    <p>{!! $coAuthor->second_author_id !!}</p>
+    <p>
+        <a href="{!! route('authors.show', [$coAuthor->secondAuthor->id]) !!}">
+            {!! $coAuthor->secondAuthor->given_name.' '.$coAuthor->secondAuthor->surname !!}
+        </a>
+    </p>
 </div>
 

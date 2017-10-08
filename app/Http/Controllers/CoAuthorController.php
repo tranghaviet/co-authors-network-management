@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
+use App\Models\Author;
 
 class CoAuthorController extends AppBaseController
 {
@@ -31,6 +32,8 @@ class CoAuthorController extends AppBaseController
     {
         $this->coAuthorRepository->pushCriteria(new RequestCriteria($request));
         $coAuthors = $this->coAuthorRepository->all();
+
+        // TODO: $coAuthor->firstAuthor and $coAuthor->firstAuthor maybe null
 
         return view('co_authors.index')
             ->with('coAuthors', $coAuthors);
