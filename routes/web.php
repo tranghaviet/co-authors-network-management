@@ -33,3 +33,5 @@ Route::resource('candidates', 'CandidateController');
 
 
 Route::resource('universities', 'UniversityController');
+
+Route::resource('cities', 'CityController');
