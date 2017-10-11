@@ -22,3 +22,7 @@
     <a href="{!! route('candidates.index') !!}"><i class="fa fa-eye"></i><span>Candidates</span></a>
 </li>
 
+<li class="{{ Request::is('universities*') ? 'active' : '' }}">
+    <a href="{!! route('universities.index') !!}"><i class="fa fa-edit"></i><span>Universities</span></a>
+</li>
+

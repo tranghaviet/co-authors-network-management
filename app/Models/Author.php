@@ -63,8 +63,9 @@ class Author extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      **/
-    // public function university()
-    // {
+    public function university()
+    {
         // return $this->belongsTo(\App\Models\University::class);
-    // }
+        return $this->belongsTo(\App\Models\University::class, 'university_id', 'id');
+    }
 }

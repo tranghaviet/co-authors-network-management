@@ -3,7 +3,9 @@
         <tr>
             <th>Id</th>
             <th>First Author</th>
+            <th>University</th>
             <th>Second Author</th>
+            <th>University</th>
             <th colspan="3">Action</th>
         </tr>
     </thead>
@@ -17,12 +19,15 @@
                 </a>
             </td>
             <td>
-                <!-- {!! $coAuthor->firstAuthor !!} -->
+                {!! $coAuthor->firstAuthor->university['name'] !!}
             </td>
             <td>
                 <a href="{!! route('authors.show', [$coAuthor->secondAuthor->id]) !!}">
                     {!! $coAuthor->secondAuthor->given_name.' '.$coAuthor->secondAuthor->surname !!}
                 </a>
+            </td>
+            <td>
+                {!! $coAuthor->secondAuthor->university['name'] !!}
             </td>
 
             <td>

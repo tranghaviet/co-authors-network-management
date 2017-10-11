@@ -5,6 +5,7 @@
             <th>Given Name</th>
             <th>Surname</th>
             <th>Email</th>
+            <th>University</th>
             <th>Url</th>
             <th colspan="3">Action</th>
         </tr>
@@ -16,6 +17,7 @@
             <td>{!! $author->given_name !!}</td>
             <td>{!! $author->surname !!}</td>
             <td>{!! $author->email !!}</td>
+            <td>{!! $author->university['name'] !!}</td>
             <td>{!! $author->url !!}</td>
             <td>
                 {!! Form::open(['route' => ['authors.destroy', $author->id], 'method' => 'delete']) !!}

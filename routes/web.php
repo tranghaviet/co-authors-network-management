@@ -30,3 +30,6 @@ Route::resource('authorPapers', 'AuthorPaperController');
 Route::resource('coAuthors', 'CoAuthorController');
 
 Route::resource('candidates', 'CandidateController');
+
+
+Route::resource('universities', 'UniversityController');
