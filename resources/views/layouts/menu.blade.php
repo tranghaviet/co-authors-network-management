@@ -19,14 +19,18 @@
 </li>
 
 <li class="{{ Request::is('candidates*') ? 'active' : '' }}">
-    <a href="{!! route('candidates.index') !!}"><i class="fa fa-eye"></i><span>Candidates</span></a>
+    <a href="{!! route('candidates.index') !!}"><i class="fa fa-user-plus"></i><span>Candidates</span></a>
 </li>
 
 <li class="{{ Request::is('universities*') ? 'active' : '' }}">
-    <a href="{!! route('universities.index') !!}"><i class="fa fa-edit"></i><span>Universities</span></a>
+    <a href="{!! route('universities.index') !!}"><i class="fa fa-university"></i><span>Universities</span></a>
 </li>
 
 <li class="{{ Request::is('cities*') ? 'active' : '' }}">
-    <a href="{!! route('cities.index') !!}"><i class="fa fa-edit"></i><span>Cities</span></a>
+    <a href="{!! route('cities.index') !!}"><i class="fa fa-building"></i><span>Cities</span></a>
+</li>
+
+<li class="{{ Request::is('countries*') ? 'active' : '' }}">
+    <a href="{!! route('countries.index') !!}"><i class="fa fa-flag-checkered"></i><span>Countries</span></a>
 </li>
 
