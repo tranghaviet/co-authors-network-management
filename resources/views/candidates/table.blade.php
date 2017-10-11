@@ -15,8 +15,16 @@
     <tbody>
     @foreach($candidates as $candidate)
         <tr>
-            <td>{!! $candidate->co_author_id !!}</td>
-            <td>{!! $candidate->no_of_mutual_authors !!}</td>
+            <td>
+                <a href="{!! route('authors.show', [$candidate->coAuthor->firstAuthor->id]) !!}">
+                    {!! $candidate->coAuthor->firstAuthor->given_name.' '.$candidate->coAuthor->firstAuthor->surname !!}
+                </a>
+            </td>
+            <td>
+                <a href="{!! route('authors.show', [$candidate->coAuthor->secondAuthor->id]) !!}">
+                    {!! $candidate->coAuthor->secondAuthor->given_name.' '.$candidate->coAuthor->secondAuthor->surname !!}
+                </a>
+            </td>
             <td>{!! $candidate->no_of_joint_papers !!}</td>
             <td>{!! $candidate->no_of_joint_subjects !!}</td>
             <td>{!! $candidate->no_of_joint_keywords !!}</td>

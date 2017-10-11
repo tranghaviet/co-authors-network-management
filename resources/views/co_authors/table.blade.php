@@ -17,6 +17,9 @@
                 </a>
             </td>
             <td>
+                <!-- {!! $coAuthor->firstAuthor !!} -->
+            </td>
+            <td>
                 <a href="{!! route('authors.show', [$coAuthor->secondAuthor->id]) !!}">
                     {!! $coAuthor->secondAuthor->given_name.' '.$coAuthor->secondAuthor->surname !!}
                 </a>

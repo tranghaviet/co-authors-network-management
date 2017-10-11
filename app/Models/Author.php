@@ -49,7 +49,7 @@ class Author extends Model
      * @var array
      */
     public static $rules = [
-        
+
     ];
 
     /**
@@ -59,4 +59,12 @@ class Author extends Model
     {
         return $this->belongsToMany(\App\Models\Subject::class, 'author_subject');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    // public function university()
+    // {
+        // return $this->belongsTo(\App\Models\University::class);
+    // }
 }

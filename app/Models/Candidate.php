@@ -27,7 +27,7 @@ class Candidate extends Model
 {
 
     public $table = 'candidates';
-    
+
     public $timestamps = false;
 
     public $fillable = [
@@ -63,7 +63,7 @@ class Candidate extends Model
      * @var array
      */
     public static $rules = [
-        
+
     ];
 
     /**
