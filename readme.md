@@ -1,63 +1,46 @@
 # Co-authors network management
 
-This is our project 3 team's product.
+## Installation
 
-Composer.json
+1. Requirements
+- PHP >= 5.6.4 (kiểm tra bằng câu lệnh `php --version`)
+- MySQL (có thể cài cả PHP và MySQL bằng Xampp/LAMP)
+- Composer (chạy được câu lệnh `composer`)
+- Git
 
-{
-    "name": "laravel/laravel",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
-    "license": "MIT",
-    "type": "project",
-    "require": {
-        "php": ">=5.6.4",
-        "bkwld/laravel-pug": "^1.3",
-        "doctrine/dbal": "^2.5",
-        "laravel/framework": "5.4.*",
-        "laravel/tinker": "~1.0"
-    },
-    "require-dev": {
-        "barryvdh/laravel-debugbar": "^2.4",
-        "barryvdh/laravel-ide-helper": "^2.4",
-        "fzaninotto/faker": "~1.4",
-        "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~5.7"
-    },
-    "autoload": {
-        "classmap": [
-            "database"
-        ],
-        "psr-4": {
-            "App\\": "app/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "tests/"
-        }
-    },
-    "scripts": {
-        "post-root-package-install": [
-            "php -r \"file_exists('.env') || copy('.env.example', '.env');\""
-        ],
-        "post-create-project-cmd": [
-            "php artisan key:generate"
-        ],
-        "post-install-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postInstall",
-            "php artisan optimize"
-        ],
-        "post-update-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "php artisan ide-helper:generate",
-            "php artisan ide-helper:meta",
-            "php artisan optimize"
-        ]
-    },
-    "config": {
-        "preferred-install": "dist",
-        "sort-packages": true,
-        "optimize-autoloader": true
-    }
-}
+TIPS: Cài đặt hirak/prestissimo để tiến hành setup project nhanh hơn:
+```
+composer global require hirak/prestissimo
+```
+
+2. Setup
+Clone project về bất kì đâu
+```
+git clone https://github.com/tranghaviet/co-authors-network-management.git;
+cd co-authors-network-management
+```
+
+Cài đặt các Packages:
+```
+composer install
+hoặc
+composer update
+```
+Copy file .env.example thành .env
+sửa config trong file .env 
+```
+DB_DATABASE=co_authors_network_management
+DB_USERNAME=root
+DB_PASSWORD=
+```
+Tạo key cho app
+```
+php artisan key:generate
+```
+
+Import Databse vào MySQL và khởi động Databse.
+Khởi động app:
+```
+php artisan serve
+```
+Login vào admin bằng email **admin@example.com** và password là **password**.
