@@ -20,12 +20,9 @@ use Eloquent as Model;
  */
 class University extends Model
 {
-
     public $table = 'universities';
-    
+
     public $timestamps = false;
-
-
 
     public $fillable = [
         'name',
@@ -49,7 +46,6 @@ class University extends Model
      * @var array
      */
     public static $rules = [
-        
     ];
 
     /**

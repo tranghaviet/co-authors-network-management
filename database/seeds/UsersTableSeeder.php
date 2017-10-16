@@ -19,7 +19,7 @@ class UsersTableSeeder extends Seeder
         $admin->gender = 'Male';
         $admin->remember_token = str_random(60);
         $admin->save();
-        
+
         $trang = new User();
         $trang->name = 'Trang Ha Viet';
         $trang->email = 'tranghv@example.com';

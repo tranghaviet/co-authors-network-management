@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateAuthorRequest;
 use App\Http\Requests\UpdateAuthorRequest;
 use App\Repositories\AuthorRepository;
-use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
@@ -81,7 +80,22 @@ class AuthorController extends AppBaseController
             return redirect(route('authors.index'));
         }
 
-        return view('authors.show')->with('author', $author);
+        $papers = $author->papers;
+        // TODO: find $coAuthor, $topCandidates
+        $collaborators = [];
+
+        foreach ($papers as $paper) {
+            $authors = $paper->authors->toArray();
+            $collaborators = array_merge($collaborators, $authors);
+        }
+        // remove himself/herself from collaborators list
+        for ($i = 0; $i < count($collaborators); $i++) {
+            if ($collaborators[$i]['id'] == $author['id']) {
+                unset($collaborators[$i]);
+            }
+        }
+
+        return view('authors.show', compact('author', 'papers', 'collaborators'));
     }
 
     /**
