@@ -15,7 +15,7 @@ class CreateCoAuthorPaperTable extends Migration
     {
         Schema::create('co_author_paper', function (Blueprint $table) {
             $table->integer('co_author_id', false, true);
-            $table->integer('paper_id', false, true);
+            $table->string('paper_id', 25);
 
             $table->foreign('co_author_id')
                 ->references('id')

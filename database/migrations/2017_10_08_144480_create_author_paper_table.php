@@ -14,9 +14,8 @@ class CreateAuthorPaperTable extends Migration
     public function up()
     {
         Schema::create('author_paper', function (Blueprint $table) {
-            $table->integer('author_id', false, true);
-            $table->integer('paper_id', false, true);
-            $table->integer('university_id', false, true);
+            $table->string('author_id', 12);
+            $table->string('paper_id', 25);
 
             $table->foreign('author_id')
                 ->references('id')
@@ -30,11 +29,7 @@ class CreateAuthorPaperTable extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
-            $table->foreign('university_id')
-                ->references('id')
-                ->on('universities')
-                ->onUpdate('cascade')
-                ->onDelete('no action');
+            $table->primary(['author_id', 'paper_id']);
         });
     }
 

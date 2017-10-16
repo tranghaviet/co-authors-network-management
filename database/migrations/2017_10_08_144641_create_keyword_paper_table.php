@@ -15,7 +15,7 @@ class CreateKeywordPaperTable extends Migration
     {
         Schema::create('keyword_paper', function (Blueprint $table) {
             $table->integer('keyword_id', false, true);
-            $table->integer('paper_id', false, true);
+            $table->string('paper_id', 25);
 
             $table->foreign('keyword_id')
                 ->references('id')
