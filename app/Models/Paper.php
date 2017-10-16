@@ -59,6 +59,14 @@ class Paper extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      **/
+    public function authors()
+    {
+        return $this->belongsToMany(\App\Models\Author::class, 'author_paper');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     **/
     public function coAuthors()
     {
         return $this->belongsToMany(\App\Models\CoAuthor::class, 'co_author_paper');

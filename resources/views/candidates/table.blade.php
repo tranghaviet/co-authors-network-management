@@ -1,7 +1,8 @@
 <table class="table table-responsive" id="candidates-table">
     <thead>
         <tr>
-            <th>Co Author Id</th>
+            <th>First Author</th>
+            <th>Second Author</th>
             <th>No. of Mutual Authors</th>
             <th>No. of Joint Papers</th>
             <th>No. of Joint Subjects</th>
@@ -25,6 +26,7 @@
                     {!! $candidate->coAuthor->secondAuthor->given_name.' '.$candidate->coAuthor->secondAuthor->surname !!}
                 </a>
             </td>
+            <td>{!! $candidate->no_of_mutual_authors !!}</td>
             <td>{!! $candidate->no_of_joint_papers !!}</td>
             <td>{!! $candidate->no_of_joint_subjects !!}</td>
             <td>{!! $candidate->no_of_joint_keywords !!}</td>

@@ -1,7 +1,7 @@
 <!-- Id Field -->
 <div class="form-group">
     {!! Form::label('id', 'Id:') !!}
-    <p>{!! $paper->id !!}</p>
+    {!! $paper->id !!}
 </div>
 
 <!-- Title Field -->
@@ -10,10 +10,34 @@
     <p>{!! $paper->title !!}</p>
 </div>
 
+<!-- Authors Field -->
+<div class="form-group">
+    {!! Form::label('author', 'Authors:') !!}
+    <ol>
+        @foreach($paper->authors as $author)
+            <li>
+                <a href="{!! route('authors.show', [$author->id]) !!}">{!! $author['given_name'] . ' ' . $author['surname'] !!}</a>
+            </li>
+        @endforeach
+    </ol>
+</div>
+
 <!-- Cover Date Field -->
 <div class="form-group">
     {!! Form::label('cover_date', 'Cover Date:') !!}
-    <p>{!! $paper->cover_date !!}</p>
+    {!! $paper->cover_date !!}
+</div>
+
+<!-- Url Field -->
+<div class="form-group">
+    {!! Form::label('url', 'URL:') !!}
+    <a href="{!! $paper->url !!}">{!! $paper->url !!}</a>
+</div>
+
+<!-- Issn Field -->
+<div class="form-group">
+    {!! Form::label('issn', 'Issn:') !!}
+    {!! $paper->issn !!}
 </div>
 
 <!-- Abstract Field -->
@@ -22,15 +46,14 @@
     <p>{!! $paper->abstract !!}</p>
 </div>
 
-<!-- Url Field -->
+<!-- Keywords Field -->
 <div class="form-group">
-    {!! Form::label('url', 'Url:') !!}
-    <p>{!! $paper->url !!}</p>
+    {!! Form::label('keyword', 'Keywords:') !!}
+    <ul>
+        @foreach($paper->keywords as $keyword)
+            <li>
+                {!! $keyword['content'] !!}
+            </li>
+        @endforeach
+    </ul>
 </div>
-
-<!-- Issn Field -->
-<div class="form-group">
-    {!! Form::label('issn', 'Issn:') !!}
-    <p>{!! $paper->issn !!}</p>
-</div>
-

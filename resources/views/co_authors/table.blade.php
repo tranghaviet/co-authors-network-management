@@ -14,20 +14,20 @@
         <tr>
             <td>{!! $coAuthor->id !!}</td>
             <td>
-                <a href="{!! route('authors.show', [$coAuthor->firstAuthor->id]) !!}">
-                    {!! $coAuthor->firstAuthor->given_name.' '.$coAuthor->firstAuthor->surname !!}
+                <a href="{!! route('authors.show', [$coAuthor['firstAuthor']['id']]) !!}">
+                    {!! $coAuthor['firstAuthor']['given_name'].' '.$coAuthor['firstAuthor']['surname'] !!}
                 </a>
             </td>
             <td>
-                {!! $coAuthor->firstAuthor->university['name'] !!}
+                {!! $coAuthor['firstAuthor']->university['name'] !!}
             </td>
             <td>
-                <a href="{!! route('authors.show', [$coAuthor->secondAuthor->id]) !!}">
-                    {!! $coAuthor->secondAuthor->given_name.' '.$coAuthor->secondAuthor->surname !!}
+                <a href="{!! route('authors.show', [$coAuthor['secondAuthor']['id']]) !!}">
+                    {!! $coAuthor['secondAuthor']['given_name'].' '.$coAuthor['secondAuthor']['surname'] !!}
                 </a>
             </td>
             <td>
-                {!! $coAuthor->secondAuthor->university['name'] !!}
+                {!! $coAuthor['secondAuthor']->university['name'] !!}
             </td>
 
             <td>

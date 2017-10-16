@@ -18,7 +18,7 @@
             <td>{!! $author->surname !!}</td>
             <td>{!! $author->email !!}</td>
             <td>{!! $author->university['name'] !!}</td>
-            <td>{!! $author->url !!}</td>
+            <td><a href="{!! $author->url !!}" target="_blank">{!! $author->url !!}</a></td>
             <td>
                 {!! Form::open(['route' => ['authors.destroy', $author->id], 'method' => 'delete']) !!}
                 <div class='btn-group'>

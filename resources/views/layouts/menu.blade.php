@@ -15,7 +15,7 @@
 </li>
 
 <li class="{{ Request::is('coAuthors*') ? 'active' : '' }}">
-    <a href="{!! route('coAuthors.index') !!}"><i class="fa fa-handshake-o"></i><span>Co Authors</span></a>
+    <a href="{!! route('coAuthors.index') !!}"><i class="fa fa-handshake-o"></i><span>Co-authors</span></a>
 </li>
 
 <li class="{{ Request::is('candidates*') ? 'active' : '' }}">

@@ -17,7 +17,7 @@
             <td>{!! $paper->title !!}</td>
             <td>{!! $paper->cover_date !!}</td>
             <td>{!! $paper->abstract !!}</td>
-            <td>{!! $paper->url !!}</td>
+            <td><a href="{!! $paper->url !!}" target="_blank">{!! $paper->url !!}</a></td>
             <td>{!! $paper->issn !!}</td>
             <td>
                 {!! Form::open(['route' => ['papers.destroy', $paper->id], 'method' => 'delete']) !!}
