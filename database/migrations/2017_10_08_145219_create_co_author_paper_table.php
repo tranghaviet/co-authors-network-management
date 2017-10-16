@@ -27,6 +27,7 @@ class CreateCoAuthorPaperTable extends Migration
                 ->on('papers')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+            $table->primary(['co_author_id', 'paper_id']);
         });
     }
 

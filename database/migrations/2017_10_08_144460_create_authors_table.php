@@ -20,7 +20,7 @@ class CreateAuthorsTable extends Migration
             $table->string('surname', 45);
             $table->string('email')->nullable();
             $table->string('url')->nullable();
-            // $table->string('universitiy')->nullable();
+            // $table->string('university')->nullable();
             $table->integer('university_id', false, true);
 
             $table->primary('id');

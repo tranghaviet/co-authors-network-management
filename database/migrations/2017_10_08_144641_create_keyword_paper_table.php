@@ -27,6 +27,7 @@ class CreateKeywordPaperTable extends Migration
                 ->on('papers')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+            $table->primary(['keyword_id', 'paper_id']);
         });
     }
 

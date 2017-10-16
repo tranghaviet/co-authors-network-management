@@ -27,6 +27,8 @@ class CreateAuthorSubjectTable extends Migration
                 ->on('subjects')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+
+            $table->primary(['author_id', 'subject_id']);
         });
     }
 
