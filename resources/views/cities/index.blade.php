@@ -17,6 +17,7 @@
             <div class="box-body">
                     @include('cities.table')
             </div>
+            <div class="text-center">{{ $cities->render() }}</div>
         </div>
     </div>
 @endsection

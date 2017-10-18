@@ -10,16 +10,17 @@
     @foreach($authorPapers as $authorPaper)
         <tr>
             <td>
-                <a href="{!! route('authors.show', [$authorPaper->author->id]) !!}">
-                    {!! $authorPaper->author->given_name.' '.$authorPaper->author->surname !!}
+                <a href="{!! route('authors.show', [$authorPaper->author['id']]) !!}">
+                    {{ $authorPaper->author['given_name'].' '.$authorPaper->author['surname'] }}
                 </a>
             </td>
             <td>
-                <a href="{!! route('papers.show', [$authorPaper->paper->id]) !!}">
-                    {!! $authorPaper->paper->title !!}
+                <a href="{!! route('papers.show', [$authorPaper->paper['id']]) !!}">
+                    {{--{{ dump($authorPaper) }}--}}
+                    {{ $authorPaper->paper['title'] }}
                 </a>
             <td>
-                {!! Form::open(['route' => ['authorPapers.destroy', $authorPaper->id], 'method' => 'delete']) !!}
+                {!! Form::open(['route' => ['authorPapers.destroy', $authorPaper['id']], 'method' => 'delete']) !!}
                 <div class='btn-group'>
 {{--                    <a href="{!! route('authorPapers.show', [$authorPaper->id]) !!}" class='btn btn-default btn-xs'><i class="fa fa-eye"></i></a>--}}
 {{--                    <a href="{!! route('authorPapers.edit', [$authorPaper->id]) !!}" class='btn btn-default btn-xs'><i class="fa fa-edit"></i></a>--}}

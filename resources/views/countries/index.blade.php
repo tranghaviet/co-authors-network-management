@@ -17,6 +17,7 @@
             <div class="box-body">
                     @include('countries.table')
             </div>
+            <div class="text-center">{{ $countries->render() }}</div>
         </div>
     </div>
 @endsection

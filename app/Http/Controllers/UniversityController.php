@@ -30,7 +30,7 @@ class UniversityController extends AppBaseController
     public function index(Request $request)
     {
         $this->universityRepository->pushCriteria(new RequestCriteria($request));
-        $universities = $this->universityRepository->all();
+        $universities = $this->universityRepository->paginate(30);
 
         return view('universities.index')
             ->with('universities', $universities);

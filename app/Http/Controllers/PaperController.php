@@ -30,7 +30,7 @@ class PaperController extends AppBaseController
     public function index(Request $request)
     {
         $this->paperRepository->pushCriteria(new RequestCriteria($request));
-        $papers = $this->paperRepository->all();
+        $papers = $this->paperRepository->paginate(30);
 
         return view('papers.index')
             ->with('papers', $papers);

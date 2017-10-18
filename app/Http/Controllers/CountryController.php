@@ -30,7 +30,7 @@ class CountryController extends AppBaseController
     public function index(Request $request)
     {
         $this->countryRepository->pushCriteria(new RequestCriteria($request));
-        $countries = $this->countryRepository->all();
+        $countries = $this->countryRepository->paginate(30);
 
         return view('countries.index')
             ->with('countries', $countries);

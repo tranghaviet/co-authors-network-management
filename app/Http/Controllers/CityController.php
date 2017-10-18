@@ -30,7 +30,7 @@ class CityController extends AppBaseController
     public function index(Request $request)
     {
         $this->cityRepository->pushCriteria(new RequestCriteria($request));
-        $cities = $this->cityRepository->all();
+        $cities = $this->cityRepository->paginate(30);
 
         return view('cities.index')
             ->with('cities', $cities);

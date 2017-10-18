@@ -4,7 +4,7 @@
             <th>ID</th>
             <th>Title</th>
             <th>Cover Date</th>
-            <th>Abstract</th>
+            {{--<th>Abstract</th>--}}
             <th>Url</th>
             <th>Issn</th>
             <th colspan="3">Action</th>
@@ -16,7 +16,7 @@
             <td>{!! $paper->id !!}</td>
             <td>{!! $paper->title !!}</td>
             <td>{!! $paper->cover_date !!}</td>
-            <td>{!! $paper->abstract !!}</td>
+            {{--<td>{!! $paper->abstract !!}</td>--}}
             <td><a href="{!! $paper->url !!}" target="_blank">{!! $paper->url !!}</a></td>
             <td>{!! $paper->issn !!}</td>
             <td>

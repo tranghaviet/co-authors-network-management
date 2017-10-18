@@ -17,6 +17,7 @@
             <div class="box-body">
                     @include('co_authors.table')
             </div>
+            <div class="text-center">{{ $coAuthors->render() }}</div>
         </div>
     </div>
 @endsection

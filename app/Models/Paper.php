@@ -39,7 +39,7 @@ class Paper extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
+        'id' => 'string',
         'title' => 'string',
         'cover_date' => 'date',
         'abstract' => 'string',

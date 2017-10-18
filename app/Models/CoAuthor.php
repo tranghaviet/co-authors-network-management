@@ -15,8 +15,8 @@ use Eloquent as Model;
  * @property \Illuminate\Database\Eloquent\Collection Candidate
  * @property \Illuminate\Database\Eloquent\Collection coAuthorPaper
  * @property \Illuminate\Database\Eloquent\Collection keywordPaper
- * @property integer first_author_id
- * @property integer second_author_id
+ * @property string first_author_id
+ * @property string second_author_id
  */
 class CoAuthor extends Model
 {
@@ -37,8 +37,8 @@ class CoAuthor extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'first_author_id' => 'integer',
-        'second_author_id' => 'integer'
+        'first_author_id' => 'string',
+        'second_author_id' => 'string'
     ];
 
     /**

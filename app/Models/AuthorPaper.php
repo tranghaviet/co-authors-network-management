@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class AuthorPaper
@@ -15,14 +16,14 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @property \Illuminate\Database\Eloquent\Collection coAuthorPaper
  * @property \Illuminate\Database\Eloquent\Collection coAuthors
  * @property \Illuminate\Database\Eloquent\Collection keywordPaper
- * @property integer author_id
- * @property integer paper_id
+ * @property string author_id
+ * @property string paper_id
  */
-class AuthorPaper extends Pivot
+class AuthorPaper extends Model
 {
 
     public $table = 'author_paper';
-    
+
     public $timestamps = false;
 
     public $fillable = [
@@ -36,8 +37,8 @@ class AuthorPaper extends Pivot
      * @var array
      */
     protected $casts = [
-        'author_id' => 'integer',
-        'paper_id' => 'integer'
+        'author_id' => 'string',
+        'paper_id' => 'string'
     ];
 
     /**
@@ -46,7 +47,7 @@ class AuthorPaper extends Pivot
      * @var array
      */
     public static $rules = [
-        
+
     ];
 
     /**

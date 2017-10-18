@@ -17,6 +17,7 @@
             <div class="box-body">
                     @include('candidates.table')
             </div>
+            <div class="text-center">{{ $candidates->render() }}</div>
         </div>
     </div>
 @endsection

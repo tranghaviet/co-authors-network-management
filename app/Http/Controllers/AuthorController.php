@@ -29,7 +29,7 @@ class AuthorController extends AppBaseController
     public function index(Request $request)
     {
         $this->authorRepository->pushCriteria(new RequestCriteria($request));
-        $authors = $this->authorRepository->all();
+        $authors = $this->authorRepository->paginate(30);
 
         return view('authors.index')
             ->with('authors', $authors);

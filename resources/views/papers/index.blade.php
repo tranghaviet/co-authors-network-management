@@ -17,6 +17,7 @@
             <div class="box-body">
                     @include('papers.table')
             </div>
+            <div class="text-center">{{ $papers->render() }}</div>
         </div>
     </div>
 @endsection

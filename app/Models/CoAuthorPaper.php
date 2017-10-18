@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @property \Illuminate\Database\Eloquent\Collection authorSubject
  * @property \Illuminate\Database\Eloquent\Collection keywordPaper
  * @property integer co_author_id
- * @property integer paper_id
+ * @property string paper_id
  */
 class CoAuthorPaper extends Pivot
 {
@@ -35,7 +35,7 @@ class CoAuthorPaper extends Pivot
      */
     protected $casts = [
         'co_author_id' => 'integer',
-        'paper_id' => 'integer'
+        'paper_id' => 'string'
     ];
 
     /**
