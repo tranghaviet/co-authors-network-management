@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
+use App\Models\Author;
 
 class AuthorController extends AppBaseController
 {
@@ -29,10 +30,9 @@ class AuthorController extends AppBaseController
     public function index(Request $request)
     {
         $this->authorRepository->pushCriteria(new RequestCriteria($request));
-        $authors = $this->authorRepository->paginate(30);
+        $authors = $this->authorRepository->paginate(15);
 
-        return view('authors.index')
-            ->with('authors', $authors);
+        return view('authors.index', compact('authors'));
     }
 
     /**
@@ -121,7 +121,7 @@ class AuthorController extends AppBaseController
     /**
      * Update the specified Author in storage.
      *
-     * @param  int              $id
+     * @param  int $id
      * @param UpdateAuthorRequest $request
      *
      * @return Response
@@ -165,5 +165,18 @@ class AuthorController extends AppBaseController
         Flash::success('Author deleted successfully.');
 
         return redirect(route('authors.index'));
+    }
+
+    public function search(Request $request)
+    {
+        $input = $request->only([
+            'author_name',
+            'university',
+            'paper',
+            'email'
+        ]);
+        $authors = Author::search(implode(' ', $input))->paginate(15);
+
+        return view('authors.index', compact('authors'));
     }
 }

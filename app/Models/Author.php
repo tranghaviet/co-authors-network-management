@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
+use Sofa\Eloquence\Eloquence;
 
 /**
  * Class Author
@@ -16,9 +18,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property string surname
  * @property string email
  * @property string url
+ * @property integer university_id
  */
 class Author extends Model
 {
+    use Searchable;
+//    use Eloquence;
+
     public $table = 'authors';
 
     public $timestamps = false;
@@ -27,6 +33,7 @@ class Author extends Model
         'given_name',
         'surname',
         'email',
+        'university_id',
         'url'
     ];
 
@@ -36,10 +43,11 @@ class Author extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
+        'id' => 'string',
         'given_name' => 'string',
         'surname' => 'string',
         'email' => 'string',
+        'university_id' => 'integer',
         'url' => 'string'
     ];
 
@@ -49,8 +57,37 @@ class Author extends Model
      * @var array
      */
     public static $rules = [
-
     ];
+
+    /**
+     * Default searchable columns (Eloquence)
+     *
+     * @var array
+     */
+    protected $searchableColumns = [
+        'given_name' => 10,
+        'surname' => 10,
+        'email' => 10,
+        'university.name' => 7,
+        'papers.title' => 5
+    ];
+
+    /**
+     * Get the indexable data array for the model. (TNTSearch)
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        $a = $this->toArray();
+        unset($a['url']);
+        $a['university'] = $this->university['name'];
+        $papers = $this->papers()->get(['title'])->map(function ($paper) {
+            return $paper['title'];
+        });
+        $a['papers'] = implode(' ', $papers->toArray());
+        return $a;
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -67,5 +104,13 @@ class Author extends Model
     {
         // return $this->belongsTo(\App\Models\University::class);
         return $this->belongsTo(\App\Models\University::class, 'university_id', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     **/
+    public function papers()
+    {
+        return $this->belongsToMany(\App\Models\Paper::class, 'author_paper');
     }
 }

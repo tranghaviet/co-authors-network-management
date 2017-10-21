@@ -14,13 +14,14 @@
 Route::get('/', function () {
     return view('welcome');
 });
-
+// TODO: add prefix 'admin'
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('users', 'UserController');
 
+Route::get('authors/search', 'AuthorController@search')->name('authors.search');
 Route::resource('authors', 'AuthorController');
 
 Route::resource('papers', 'PaperController');

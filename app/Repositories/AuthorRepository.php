@@ -23,7 +23,8 @@ class AuthorRepository extends BaseRepository
         'given_name',
         'surname',
         'email',
-        'url'
+        'url',
+        'university_id'
     ];
 
     /**

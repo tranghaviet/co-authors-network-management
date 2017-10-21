@@ -181,6 +181,12 @@ return [
         Laracasts\Flash\FlashServiceProvider::class,
         \InfyOm\Generator\InfyOmGeneratorServiceProvider::class,
         \InfyOm\AdminLTETemplates\AdminLTETemplatesServiceProvider::class,
+        // Laravel scout
+        Laravel\Scout\ScoutServiceProvider::class,
+        // TNT search driver
+        TeamTNT\Scout\TNTSearchScoutServiceProvider::class,
+
+        Sofa\Eloquence\BaseServiceProvider::class,
 
         /*
          * Application Service Providers...

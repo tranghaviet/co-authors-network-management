@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
     {{--<<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">--}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/AdminLTE.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/AdminLTE_all-skins.min.css') }}">
@@ -16,7 +17,7 @@
     <link rel="stylesheet" href="{{ asset('css/ionicons.min.css') }}">
 
     @yield('css')
-    <script type="application/javascript" src="{{ asset('js/turbolinks.min.js') }}"></script>
+    <!-- <script type="application/javascript" src="{{ asset('js/turbolinks.min.js') }}"></script> -->
 </head>
 
 <body class="skin-blue sidebar-mini">
@@ -144,6 +145,7 @@
     <!-- jQuery 3.1.1 -->
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="{{ asset('js/select2.min.js') }}"></script>
     <script src="{{ asset('js/icheck.min.js') }}"></script>
 
