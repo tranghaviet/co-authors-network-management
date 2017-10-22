@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
 use Sofa\Eloquence\Eloquence;
+use Watson\Rememberable\Rememberable;
+
 
 /**
  * Class Author
@@ -24,6 +26,9 @@ class Author extends Model
 {
     use Searchable;
 //    use Eloquence;
+    use Rememberable;
+
+    protected $rememberFor = 10;
 
     public $table = 'authors';
 
@@ -112,5 +117,22 @@ class Author extends Model
     public function papers()
     {
         return $this->belongsToMany(\App\Models\Paper::class, 'author_paper');
+    }
+
+    public function collaborators($columns = ['*'])
+    {
+        $papers = $this->papers;
+        $collaborators = collect();
+
+        foreach ($papers as $paper) {
+            $ids = $collaborators->map(function ($author) {
+                return $author->id;
+            });
+            $authors = $paper->authors()->where('id', '!=', $this->id)
+                ->whereNotIn('id', $ids)->get($columns);
+            $collaborators = $collaborators->merge($authors);
+        }
+
+        return $collaborators;
     }
 }

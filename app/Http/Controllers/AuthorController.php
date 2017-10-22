@@ -10,6 +10,7 @@ use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 use App\Models\Author;
+use Illuminate\Support\Facades\Cache;
 
 class AuthorController extends AppBaseController
 {
@@ -30,7 +31,9 @@ class AuthorController extends AppBaseController
     public function index(Request $request)
     {
         $this->authorRepository->pushCriteria(new RequestCriteria($request));
-        $authors = $this->authorRepository->paginate(15);
+        $authors = Cache::remember('authors.index', 5, function () {
+            return $this->authorRepository->with('university')->paginate(15);
+        });
 
         return view('authors.index', compact('authors'));
     }
@@ -80,22 +83,16 @@ class AuthorController extends AppBaseController
             return redirect(route('authors.index'));
         }
 
-        $papers = $author->papers;
+        $subjects = $author->subjects->map(function ($subject) {
+            return $subject['name'];
+        });
+        $subjects = implode(', ', $subjects->toArray());
+
+        $papers = $author->papers()->get(['id', 'title']);
         // TODO: find $coAuthor, $topCandidates
-        $collaborators = [];
+        $collaborators = $author->collaborators(['id', 'given_name', 'surname']);
 
-        foreach ($papers as $paper) {
-            $authors = $paper->authors->toArray();
-            $collaborators = array_merge($collaborators, $authors);
-        }
-        // remove himself/herself from collaborators list
-        for ($i = 0; $i < count($collaborators); $i++) {
-            if ($collaborators[$i]['id'] == $author['id']) {
-                unset($collaborators[$i]);
-            }
-        }
-
-        return view('authors.show', compact('author', 'papers', 'collaborators'));
+        return view('authors.show', compact('author', 'subjects', 'papers', 'collaborators'));
     }
 
     /**
@@ -175,7 +172,11 @@ class AuthorController extends AppBaseController
             'paper',
             'email'
         ]);
-        $authors = Author::search(implode(' ', $input))->paginate(15);
+
+        $authors = $this->authorRepository->search(implode(' ', $input))->paginate(15);
+//        foreach($authors as $author) {
+//            $author['university'] = $author->university()->first();
+//        }
 
         return view('authors.index', compact('authors'));
     }

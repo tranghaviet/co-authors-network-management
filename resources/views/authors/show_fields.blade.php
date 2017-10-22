@@ -43,13 +43,7 @@
 <!-- Subjects Field -->
 <div class="form-group">
     {!! Form::label('subject', 'Subjects:') !!}
-    <ol>
-    @foreach($author->subjects as $subject)
-        <li>
-            {!! $subject['name'] !!}
-        </li>
-    @endforeach
-    </ol>
+    {{ $subjects }}
 </div>
 
 <!-- Url Field -->

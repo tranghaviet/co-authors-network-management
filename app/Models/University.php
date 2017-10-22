@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Eloquent as Model;
+use Watson\Rememberable\Rememberable;
 
 /**
  * Class University
@@ -20,14 +21,14 @@ use Eloquent as Model;
  */
 class University extends Model
 {
-    public $table = 'universities';
+    use Rememberable;
 
-    public $timestamps = false;
-
-    public $fillable = [
-        'name',
-        'city_id'
-    ];
+    /**
+     * Time for cache a query
+     *
+     * @var int
+     */
+    protected $rememberFor = 30;
 
     /**
      * The attributes that should be casted to native types.
@@ -38,6 +39,15 @@ class University extends Model
         'id' => 'integer',
         'name' => 'string',
         'city_id' => 'integer'
+    ];
+
+    public $table = 'universities';
+
+    public $timestamps = false;
+
+    public $fillable = [
+        'name',
+        'city_id'
     ];
 
     /**
