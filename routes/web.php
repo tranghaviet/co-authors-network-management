@@ -24,6 +24,7 @@ Route::resource('users', 'UserController');
 Route::get('authors/search', 'AuthorController@search')->name('authors.search');
 Route::resource('authors', 'AuthorController');
 
+Route::get('papers/search', 'PaperController@search')->name('papers.search');
 Route::resource('papers', 'PaperController');
 
 Route::resource('authorPapers', 'AuthorPaperController');

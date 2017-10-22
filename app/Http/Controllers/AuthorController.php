@@ -31,8 +31,10 @@ class AuthorController extends AppBaseController
     public function index(Request $request)
     {
         $this->authorRepository->pushCriteria(new RequestCriteria($request));
-        $authors = Cache::remember('authors.index', 5, function () {
-            return $this->authorRepository->with('university')->paginate(15);
+        $authors = Cache::remember('authors.index',
+            config('constants.CACHE_TIME'), function () {
+            return $this->authorRepository->with('university')
+                ->paginate(config('constants.DEFAULT_PAGINATION'));
         });
 
         return view('authors.index', compact('authors'));
@@ -166,14 +168,7 @@ class AuthorController extends AppBaseController
 
     public function search(Request $request)
     {
-        $input = $request->only([
-            'author_name',
-            'university',
-            'paper',
-            'email'
-        ]);
-
-        $authors = $this->authorRepository->search(implode(' ', $input))->paginate(15);
+        $authors = $this->authorRepository->search($request->q)->paginate(15);
 //        foreach($authors as $author) {
 //            $author['university'] = $author->university()->first();
 //        }

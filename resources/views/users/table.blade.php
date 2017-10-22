@@ -2,11 +2,11 @@
     <thead>
         <tr>
             <th>Name</th>
-        <th>Email</th>
-        <th>Password</th>
-        <th>Gender</th>
-        <th>Phone</th>
-        <th>Remember Token</th>
+            <th>Email</th>
+            <th>Gender</th>
+            <th>Phone</th>
+            <th>Deleted at</th>
+            <th>Created at</th>
             <th colspan="3">Action</th>
         </tr>
     </thead>
@@ -15,10 +15,10 @@
         <tr>
             <td>{!! $user->name !!}</td>
             <td>{!! $user->email !!}</td>
-            <td>{!! $user->password !!}</td>
             <td>{!! $user->gender !!}</td>
             <td>{!! $user->phone !!}</td>
-            <td>{!! $user->remember_token !!}</td>
+            <td>{!! $user->deleted_at !!}</td>
+            <td>{!! $user->updated_at !!}</td>
             <td>
                 {!! Form::open(['route' => ['users.destroy', $user->id], 'method' => 'delete']) !!}
                 <div class='btn-group'>

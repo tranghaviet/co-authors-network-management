@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
+use Illuminate\Support\Facades\Cache;
 
 class PaperController extends AppBaseController
 {
@@ -30,7 +31,11 @@ class PaperController extends AppBaseController
     public function index(Request $request)
     {
         $this->paperRepository->pushCriteria(new RequestCriteria($request));
-        $papers = $this->paperRepository->paginate(30);
+        $papers = Cache::remember('papers.index',
+            config('constants.CACHE_TIME'), function () {
+                return $this->paperRepository
+                    ->paginate(config('constants.DEFAULT_PAGINATION'));
+            });
 
         return view('papers.index')
             ->with('papers', $papers);
@@ -80,8 +85,12 @@ class PaperController extends AppBaseController
 
             return redirect(route('papers.index'));
         }
+        $keywords = $paper->keywords->map(function ($keyword) {
+            return $keyword['content'];
+        });
+        $keywords = implode(', ', $keywords->toArray());
 
-        return view('papers.show')->with('paper', $paper);
+        return view('papers.show', compact('paper', 'keywords'));
     }
 
     /**
@@ -151,5 +160,12 @@ class PaperController extends AppBaseController
         Flash::success('Paper deleted successfully.');
 
         return redirect(route('papers.index'));
+    }
+
+    public function search(Request $request)
+    {
+        $papers = $this->paperRepository->search($request->q)->paginate(15);
+
+        return view('papers.index', compact('papers'));
     }
 }
