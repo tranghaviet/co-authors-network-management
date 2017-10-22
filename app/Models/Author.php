@@ -84,8 +84,14 @@ class Author extends Model
      */
     public function toSearchableArray()
     {
-        $a = $this->toArray();
-        unset($a['url']);
+//        $a = $this->toArray();
+//        unset($a['url']);
+        $a = [
+            'id' => $this->id,
+            'name' => $this->given_name . ' ' . $this->surname,
+            'email' => $this->email
+        ];
+
         $a['university'] = $this->university['name'];
         $papers = $this->papers()->get(['title'])->map(function ($paper) {
             return $paper['title'];

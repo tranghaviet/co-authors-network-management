@@ -1,0 +1,24 @@
+preset: laravel
+
+enabled:
+
+disabled:
+  - length_ordered_imports
+  - phpdoc_scalar
+  - phpdoc_no_package
+  - phpdoc_single_line_var_spacing
+  - phpdoc_annotation_without_dot
+
+linting: true
+
+finder:
+  exclude:
+    - "tests"
+    - "node_modules"
+    - "storage"
+    - "vendor"
+  not-name:
+    - "AcceptanceTester.php"
+    - "FunctionalTester.php"
+    - "UnitTester.php"
+    - "*Stub.php"

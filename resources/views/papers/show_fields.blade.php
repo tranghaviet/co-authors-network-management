@@ -31,7 +31,7 @@
 <!-- Url Field -->
 <div class="form-group">
     {!! Form::label('url', 'URL:') !!}
-    <a href="{!! $paper->url !!}">{!! $paper->url !!}</a>
+    <a href="{!! $paper->url !!}" target="_blank">{!! $paper->url !!}</a>
 </div>
 
 <!-- Issn Field -->
@@ -49,11 +49,5 @@
 <!-- Keywords Field -->
 <div class="form-group">
     {!! Form::label('keyword', 'Keywords:') !!}
-    <ul>
-        @foreach($paper->keywords as $keyword)
-            <li>
-                {!! $keyword['content'] !!}
-            </li>
-        @endforeach
-    </ul>
+    {{ $keywords }}
 </div>
