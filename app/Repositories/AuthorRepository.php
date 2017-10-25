@@ -6,14 +6,13 @@ use App\Models\Author;
 use InfyOm\Generator\Common\BaseRepository;
 
 /**
- * Class AuthorRepository
- * @package App\Repositories
+ * Class AuthorRepository.
  * @version October 8, 2017, 7:41 pm ICT
  *
  * @method Author findWithoutFail($id, $columns = ['*'])
  * @method Author find($id, $columns = ['*'])
  * @method Author first($columns = ['*'])
-*/
+ */
 class AuthorRepository extends BaseRepository
 {
     /**
@@ -24,11 +23,11 @@ class AuthorRepository extends BaseRepository
         'surname',
         'email',
         'url',
-        'university_id'
+        'university_id',
     ];
 
     /**
-     * Configure the Model
+     * Configure the Model.
      **/
     public function model()
     {

@@ -5,8 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 
 /**
- * Class City
- * @package App\Models
+ * Class City.
  * @version October 11, 2017, 2:31 pm ICT
  *
  * @property \App\Models\Country country
@@ -16,20 +15,17 @@ use Eloquent as Model;
  * @property \Illuminate\Database\Eloquent\Collection keywordPaper
  * @property \Illuminate\Database\Eloquent\Collection University
  * @property string name
- * @property integer country_id
+ * @property int country_id
  */
 class City extends Model
 {
-
     public $table = 'cities';
-    
+
     public $timestamps = false;
-
-
 
     public $fillable = [
         'name',
-        'country_id'
+        'country_id',
     ];
 
     /**
@@ -40,16 +36,16 @@ class City extends Model
     protected $casts = [
         'id' => 'integer',
         'name' => 'string',
-        'country_id' => 'integer'
+        'country_id' => 'integer',
     ];
 
     /**
-     * Validation rules
+     * Validation rules.
      *
      * @var array
      */
     public static $rules = [
-        
+
     ];
 
     /**

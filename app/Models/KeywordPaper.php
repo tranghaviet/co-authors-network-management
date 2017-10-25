@@ -5,8 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
- * Class KeywordPaper
- * @package App\Models
+ * Class KeywordPaper.
  * @version October 11, 2017, 5:06 pm ICT
  *
  * @property \App\Models\Keyword keyword
@@ -14,18 +13,18 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @property \Illuminate\Database\Eloquent\Collection authorPaper
  * @property \Illuminate\Database\Eloquent\Collection authorSubject
  * @property \Illuminate\Database\Eloquent\Collection coAuthorPaper
- * @property integer keyword_id
+ * @property int keyword_id
  * @property string paper_id
  */
 class KeywordPaper extends Pivot
 {
     public $table = 'keyword_paper';
-    
+
     public $timestamps = false;
 
     public $fillable = [
         'keyword_id',
-        'paper_id'
+        'paper_id',
     ];
 
     /**
@@ -35,11 +34,11 @@ class KeywordPaper extends Pivot
      */
     protected $casts = [
         'keyword_id' => 'integer',
-        'paper_id' => 'string'
+        'paper_id' => 'string',
     ];
 
     /**
-     * Validation rules
+     * Validation rules.
      *
      * @var array
      */

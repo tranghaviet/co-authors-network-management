@@ -2,12 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class AuthorPaper
- * @package App\Models
+ * Class AuthorPaper.
  * @version October 8, 2017, 8:47 pm ICT
  *
  * @property \App\Models\Author author
@@ -21,14 +19,13 @@ use Illuminate\Database\Eloquent\Model;
  */
 class AuthorPaper extends Model
 {
-
     public $table = 'author_paper';
 
     public $timestamps = false;
 
     public $fillable = [
         'author_id',
-        'paper_id'
+        'paper_id',
     ];
 
     /**
@@ -38,11 +35,11 @@ class AuthorPaper extends Model
      */
     protected $casts = [
         'author_id' => 'string',
-        'paper_id' => 'string'
+        'paper_id' => 'string',
     ];
 
     /**
-     * Validation rules
+     * Validation rules.
      *
      * @var array
      */

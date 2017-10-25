@@ -4,17 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateAuthorRequest;
 use App\Http\Requests\UpdateAuthorRequest;
+use App\Models\Author;
 use App\Repositories\AuthorRepository;
-use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
-use App\Models\Author;
-use Illuminate\Support\Facades\Cache;
 
 class AuthorController extends AppBaseController
 {
-    /** @var  AuthorRepository */
+    /** @var AuthorRepository */
     private $authorRepository;
 
     public function __construct(AuthorRepository $authorRepo)
@@ -33,9 +33,9 @@ class AuthorController extends AppBaseController
         $this->authorRepository->pushCriteria(new RequestCriteria($request));
         $authors = Cache::remember('authors.index',
             config('constants.CACHE_TIME'), function () {
-            return $this->authorRepository->with('university')
+                return $this->authorRepository->with('university')
                 ->paginate(config('constants.DEFAULT_PAGINATION'));
-        });
+            });
 
         return view('authors.index', compact('authors'));
     }

@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 /**
- * Class User
- * @package App\Models
+ * Class User.
  * @version October 8, 2017, 5:28 pm ICT
  *
  * @property \Illuminate\Database\Eloquent\Collection authorSubject
@@ -41,7 +40,7 @@ class User extends Authenticatable
         'password',
         'gender',
         'phone',
-        'remember_token'
+        'remember_token',
     ];
 
     /**
@@ -65,11 +64,11 @@ class User extends Authenticatable
         'password' => 'string',
         'gender' => 'string',
         'phone' => 'string',
-        'remember_token' => 'string'
+        'remember_token' => 'string',
     ];
 
     /**
-     * Validation rules
+     * Validation rules.
      *
      * @var array
      */

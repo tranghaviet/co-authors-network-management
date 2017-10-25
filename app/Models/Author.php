@@ -7,10 +7,8 @@ use Laravel\Scout\Searchable;
 use Sofa\Eloquence\Eloquence;
 use Watson\Rememberable\Rememberable;
 
-
 /**
- * Class Author
- * @package App\Models
+ * Class Author.
  * @version October 8, 2017, 7:41 pm ICT
  *
  * @property \Illuminate\Database\Eloquent\Collection authorSubject
@@ -20,7 +18,7 @@ use Watson\Rememberable\Rememberable;
  * @property string surname
  * @property string email
  * @property string url
- * @property integer university_id
+ * @property int university_id
  */
 class Author extends Model
 {
@@ -39,7 +37,7 @@ class Author extends Model
         'surname',
         'email',
         'university_id',
-        'url'
+        'url',
     ];
 
     /**
@@ -53,11 +51,11 @@ class Author extends Model
         'surname' => 'string',
         'email' => 'string',
         'university_id' => 'integer',
-        'url' => 'string'
+        'url' => 'string',
     ];
 
     /**
-     * Validation rules
+     * Validation rules.
      *
      * @var array
      */
@@ -65,7 +63,7 @@ class Author extends Model
     ];
 
     /**
-     * Default searchable columns (Eloquence)
+     * Default searchable columns (Eloquence).
      *
      * @var array
      */
@@ -74,11 +72,11 @@ class Author extends Model
         'surname' => 10,
         'email' => 10,
         'university.name' => 7,
-        'papers.title' => 5
+        'papers.title' => 5,
     ];
 
     /**
-     * Get the indexable data array for the model. (TNTSearch)
+     * Get the indexable data array for the model. (TNTSearch).
      *
      * @return array
      */
@@ -88,8 +86,8 @@ class Author extends Model
 //        unset($a['url']);
         $a = [
             'id' => $this->id,
-            'name' => $this->given_name . ' ' . $this->surname,
-            'email' => $this->email
+            'name' => $this->given_name.' '.$this->surname,
+            'email' => $this->email,
         ];
 
         $a['university'] = $this->university['name'];
@@ -97,6 +95,7 @@ class Author extends Model
             return $paper['title'];
         });
         $a['papers'] = implode(' ', $papers->toArray());
+
         return $a;
     }
 
