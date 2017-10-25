@@ -1,10 +1,13 @@
 preset: laravel
 
 enabled:
-  - alpha_ordered_imports
+  - short_array_syntax
+  - phpdoc_annotation_without_dot
 
 disabled:
   - length_ordered_imports
+
+linting: true
 
 finder:
   exclude:
@@ -16,3 +19,4 @@ finder:
     - "AcceptanceTester.php"
     - "FunctionalTester.php"
     - "UnitTester.php"
+    - "*Stub.php"
