@@ -5,7 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 
 /**
- * Class Subject
+ * Class Subject.
  * @package App\Models
  * @version October 11, 2017, 4:58 pm ICT
  *
@@ -18,11 +18,11 @@ use Eloquent as Model;
 class Subject extends Model
 {
     public $table = 'subjects';
-    
+
     public $timestamps = false;
 
     public $fillable = [
-        'name'
+        'name',
     ];
 
     /**
@@ -32,11 +32,11 @@ class Subject extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'name' => 'string'
+        'name' => 'string',
     ];
 
     /**
-     * Validation rules
+     * Validation rules.
      *
      * @var array
      */

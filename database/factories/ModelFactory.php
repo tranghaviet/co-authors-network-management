@@ -23,9 +23,10 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
     ];
 });
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+/* @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(App\Models\Author::class, function (Faker\Generator $faker) {
     $university = \App\Models\University::inRandomOrder()->first();
+
     return [
         'id' => str_random(12),
         'given_name' => $faker->firstName(),

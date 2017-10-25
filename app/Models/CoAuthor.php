@@ -5,7 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 
 /**
- * Class CoAuthor
+ * Class CoAuthor.
  * @package App\Models
  * @version October 8, 2017, 9:23 pm ICT
  *
@@ -20,14 +20,13 @@ use Eloquent as Model;
  */
 class CoAuthor extends Model
 {
-
     public $table = 'co_authors';
-    
+
     public $timestamps = false;
 
     public $fillable = [
         'first_author_id',
-        'second_author_id'
+        'second_author_id',
     ];
 
     /**
@@ -38,16 +37,16 @@ class CoAuthor extends Model
     protected $casts = [
         'id' => 'integer',
         'first_author_id' => 'string',
-        'second_author_id' => 'string'
+        'second_author_id' => 'string',
     ];
 
     /**
-     * Validation rules
+     * Validation rules.
      *
      * @var array
      */
     public static $rules = [
-        
+
     ];
 
     /**
