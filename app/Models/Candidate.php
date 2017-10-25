@@ -5,7 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 
 /**
- * Class Candidate
+ * Class Candidate.
  * @package App\Models
  * @version October 8, 2017, 9:45 pm ICT
  *
@@ -25,7 +25,6 @@ use Eloquent as Model;
  */
 class Candidate extends Model
 {
-
     public $table = 'candidates';
 
     public $timestamps = false;
@@ -38,7 +37,7 @@ class Candidate extends Model
         'no_of_joint_keywords',
         'score_1',
         'score_2',
-        'score_3'
+        'score_3',
     ];
 
     /**
@@ -54,11 +53,11 @@ class Candidate extends Model
         'no_of_joint_keywords' => 'integer',
         'score_1' => 'float',
         'score_2' => 'float',
-        'score_3' => 'float'
+        'score_3' => 'float',
     ];
 
     /**
-     * Validation rules
+     * Validation rules.
      *
      * @var array
      */

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateAuthorPaperRequest;
 use App\Http\Requests\UpdateAuthorPaperRequest;
 use App\Repositories\AuthorPaperRepository;
-use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;

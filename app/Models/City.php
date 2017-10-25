@@ -5,7 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 
 /**
- * Class City
+ * Class City.
  * @package App\Models
  * @version October 11, 2017, 2:31 pm ICT
  *
@@ -20,16 +20,13 @@ use Eloquent as Model;
  */
 class City extends Model
 {
-
     public $table = 'cities';
-    
+
     public $timestamps = false;
-
-
 
     public $fillable = [
         'name',
-        'country_id'
+        'country_id',
     ];
 
     /**
@@ -40,16 +37,16 @@ class City extends Model
     protected $casts = [
         'id' => 'integer',
         'name' => 'string',
-        'country_id' => 'integer'
+        'country_id' => 'integer',
     ];
 
     /**
-     * Validation rules
+     * Validation rules.
      *
      * @var array
      */
     public static $rules = [
-        
+
     ];
 
     /**

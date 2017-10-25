@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
- * Class CoAuthorPaper
+ * Class CoAuthorPaper.
  * @package App\Models
  * @version October 11, 2017, 5:06 pm ICT
  *
@@ -25,7 +25,7 @@ class CoAuthorPaper extends Pivot
 
     public $fillable = [
         'co_author_id',
-        'paper_id'
+        'paper_id',
     ];
 
     /**
@@ -35,11 +35,11 @@ class CoAuthorPaper extends Pivot
      */
     protected $casts = [
         'co_author_id' => 'integer',
-        'paper_id' => 'string'
+        'paper_id' => 'string',
     ];
 
     /**
-     * Validation rules
+     * Validation rules.
      *
      * @var array
      */
