@@ -6,8 +6,7 @@ use Eloquent as Model;
 use Watson\Rememberable\Rememberable;
 
 /**
- * Class University
- * @package App\Models
+ * Class University.
  * @version October 11, 2017, 1:54 pm ICT
  *
  * @property \App\Models\City city
@@ -17,14 +16,14 @@ use Watson\Rememberable\Rememberable;
  * @property \Illuminate\Database\Eloquent\Collection coAuthorPaper
  * @property \Illuminate\Database\Eloquent\Collection keywordPaper
  * @property string name
- * @property integer city_id
+ * @property int city_id
  */
 class University extends Model
 {
     use Rememberable;
 
     /**
-     * Time for cache a query
+     * Time for cache a query.
      *
      * @var int
      */
@@ -38,7 +37,7 @@ class University extends Model
     protected $casts = [
         'id' => 'integer',
         'name' => 'string',
-        'city_id' => 'integer'
+        'city_id' => 'integer',
     ];
 
     public $table = 'universities';
@@ -47,11 +46,11 @@ class University extends Model
 
     public $fillable = [
         'name',
-        'city_id'
+        'city_id',
     ];
 
     /**
-     * Validation rules
+     * Validation rules.
      *
      * @var array
      */

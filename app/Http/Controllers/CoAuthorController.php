@@ -4,17 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateCoAuthorRequest;
 use App\Http\Requests\UpdateCoAuthorRequest;
+use App\Models\Author;
 use App\Repositories\CoAuthorRepository;
-use App\Http\Controllers\AppBaseController;
-use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Http\Request;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
-use App\Models\Author;
 
 class CoAuthorController extends AppBaseController
 {
-    /** @var  CoAuthorRepository */
+    /** @var CoAuthorRepository */
     private $coAuthorRepository;
 
     public function __construct(CoAuthorRepository $coAuthorRepo)

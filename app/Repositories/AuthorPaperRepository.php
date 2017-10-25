@@ -6,14 +6,13 @@ use App\Models\AuthorPaper;
 use InfyOm\Generator\Common\BaseRepository;
 
 /**
- * Class AuthorPaperRepository
- * @package App\Repositories
+ * Class AuthorPaperRepository.
  * @version October 8, 2017, 8:47 pm ICT
  *
  * @method AuthorPaper findWithoutFail($id, $columns = ['*'])
  * @method AuthorPaper find($id, $columns = ['*'])
  * @method AuthorPaper first($columns = ['*'])
-*/
+ */
 class AuthorPaperRepository extends BaseRepository
 {
     /**
@@ -21,11 +20,11 @@ class AuthorPaperRepository extends BaseRepository
      */
     protected $fieldSearchable = [
         'author_id',
-        'paper_id'
+        'paper_id',
     ];
 
     /**
-     * Configure the Model
+     * Configure the Model.
      **/
     public function model()
     {

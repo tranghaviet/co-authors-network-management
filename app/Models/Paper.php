@@ -8,8 +8,7 @@ use Sofa\Eloquence\Eloquence;
 use Watson\Rememberable\Rememberable;
 
 /**
- * Class Paper
- * @package App\Models
+ * Class Paper.
  * @version October 8, 2017, 8:05 pm ICT
  *
  * @property \Illuminate\Database\Eloquent\Collection authorSubject
@@ -40,7 +39,7 @@ class Paper extends Model
         'cover_date',
         'abstract',
         'url',
-        'issn'
+        'issn',
     ];
 
     /**
@@ -54,11 +53,11 @@ class Paper extends Model
         'cover_date' => 'datetime',
         'abstract' => 'string',
         'url' => 'string',
-        'issn' => 'string'
+        'issn' => 'string',
     ];
 
     /**
-     * Validation rules
+     * Validation rules.
      *
      * @var array
      */
@@ -66,7 +65,7 @@ class Paper extends Model
     ];
 
     /**
-     * Default searchable columns (Eloquence)
+     * Default searchable columns (Eloquence).
      *
      * @var array
      */
@@ -76,11 +75,11 @@ class Paper extends Model
         'issn' => 10,
         'authors.given_name' => 7,
         'authors.surname' => 7,
-        'keywords.content' => 6
+        'keywords.content' => 6,
     ];
 
     /**
-     * Get the indexable data array for the model. (TNTSearch)
+     * Get the indexable data array for the model. (TNTSearch).
      *
      * @return array
      */
@@ -89,13 +88,13 @@ class Paper extends Model
         $a = [
             'id' => $this->id,
             'title' => $this->title,
-            'issn' => $this->issn
+            'issn' => $this->issn,
         ];
 
         $authors = $this->authors()->get(['given_name', 'surname'])
             ->map(function ($author) {
-            return $author['given_name'] . ' ' . $author['surname'];
-        });
+                return $author['given_name'].' '.$author['surname'];
+            });
         $a['authors'] = implode(' ', $authors->toArray());
 
         $keywords = $this->keywords()->get(['content'])->map(function ($keyword) {

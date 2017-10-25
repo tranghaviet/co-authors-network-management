@@ -6,14 +6,13 @@ use App\Models\Paper;
 use InfyOm\Generator\Common\BaseRepository;
 
 /**
- * Class PaperRepository
- * @package App\Repositories
+ * Class PaperRepository.
  * @version October 8, 2017, 8:05 pm ICT
  *
  * @method Paper findWithoutFail($id, $columns = ['*'])
  * @method Paper find($id, $columns = ['*'])
  * @method Paper first($columns = ['*'])
-*/
+ */
 class PaperRepository extends BaseRepository
 {
     /**
@@ -24,11 +23,11 @@ class PaperRepository extends BaseRepository
         'cover_date',
         'abstract',
         'url',
-        'issn'
+        'issn',
     ];
 
     /**
-     * Configure the Model
+     * Configure the Model.
      **/
     public function model()
     {

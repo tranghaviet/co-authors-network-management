@@ -5,16 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreatePaperRequest;
 use App\Http\Requests\UpdatePaperRequest;
 use App\Repositories\PaperRepository;
-use App\Http\Controllers\AppBaseController;
-use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
-use Illuminate\Support\Facades\Cache;
 
 class PaperController extends AppBaseController
 {
-    /** @var  PaperRepository */
+    /** @var PaperRepository */
     private $paperRepository;
 
     public function __construct(PaperRepository $paperRepo)
