@@ -33,9 +33,9 @@ class AuthorController extends AppBaseController
         $this->authorRepository->pushCriteria(new RequestCriteria($request));
         $authors = Cache::remember('authors.index',
             config('constants.CACHE_TIME'), function () {
-            return $this->authorRepository->with('university')
+                return $this->authorRepository->with('university')
                 ->paginate(config('constants.DEFAULT_PAGINATION'));
-        });
+            });
 
         return view('authors.index', compact('authors'));
     }

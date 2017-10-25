@@ -6,7 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
- * Class User
+ * Class User.
  * @package App\Models
  * @version October 8, 2017, 5:28 pm ICT
  *
@@ -41,7 +41,7 @@ class User extends Authenticatable
         'password',
         'gender',
         'phone',
-        'remember_token'
+        'remember_token',
     ];
 
     /**
@@ -65,11 +65,11 @@ class User extends Authenticatable
         'password' => 'string',
         'gender' => 'string',
         'phone' => 'string',
-        'remember_token' => 'string'
+        'remember_token' => 'string',
     ];
 
     /**
-     * Validation rules
+     * Validation rules.
      *
      * @var array
      */
