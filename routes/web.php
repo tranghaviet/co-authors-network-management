@@ -14,3 +14,27 @@
 Route::get('/', function () {
     return view('welcome');
 });
+// TODO: add prefix 'admin'
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Route::resource('users', 'UserController');
+
+Route::get('authors/search', 'AuthorController@search')->name('authors.search');
+Route::resource('authors', 'AuthorController');
+
+Route::get('papers/search', 'PaperController@search')->name('papers.search');
+Route::resource('papers', 'PaperController');
+
+Route::resource('authorPapers', 'AuthorPaperController');
+
+Route::resource('coAuthors', 'CoAuthorController');
+
+Route::resource('candidates', 'CandidateController');
+
+Route::resource('universities', 'UniversityController');
+
+Route::resource('cities', 'CityController');
+
+Route::resource('countries', 'CountryController');
