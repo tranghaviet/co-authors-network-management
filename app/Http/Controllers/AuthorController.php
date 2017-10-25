@@ -4,17 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateAuthorRequest;
 use App\Http\Requests\UpdateAuthorRequest;
+use App\Models\Author;
 use App\Repositories\AuthorRepository;
-use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
-use App\Models\Author;
-use Illuminate\Support\Facades\Cache;
 
 class AuthorController extends AppBaseController
 {
-    /** @var  AuthorRepository */
+    /** @var AuthorRepository */
     private $authorRepository;
 
     public function __construct(AuthorRepository $authorRepo)
@@ -26,6 +26,7 @@ class AuthorController extends AppBaseController
      * Display a listing of the Author.
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function index(Request $request)
@@ -33,9 +34,9 @@ class AuthorController extends AppBaseController
         $this->authorRepository->pushCriteria(new RequestCriteria($request));
         $authors = Cache::remember('authors.index',
             config('constants.CACHE_TIME'), function () {
-            return $this->authorRepository->with('university')
+                return $this->authorRepository->with('university')
                 ->paginate(config('constants.DEFAULT_PAGINATION'));
-        });
+            });
 
         return view('authors.index', compact('authors'));
     }
@@ -71,7 +72,7 @@ class AuthorController extends AppBaseController
     /**
      * Display the specified Author.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */
@@ -100,7 +101,7 @@ class AuthorController extends AppBaseController
     /**
      * Show the form for editing the specified Author.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */
@@ -120,7 +121,7 @@ class AuthorController extends AppBaseController
     /**
      * Update the specified Author in storage.
      *
-     * @param  int $id
+     * @param int                 $id
      * @param UpdateAuthorRequest $request
      *
      * @return Response
@@ -145,7 +146,7 @@ class AuthorController extends AppBaseController
     /**
      * Remove the specified Author from storage.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */

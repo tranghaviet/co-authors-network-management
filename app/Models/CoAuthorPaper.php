@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
- * Class CoAuthorPaper
- * @package App\Models
+ * Class CoAuthorPaper.
+ *
  * @version October 11, 2017, 5:06 pm ICT
  *
  * @property \App\Models\CoAuthor coAuthor
@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @property \Illuminate\Database\Eloquent\Collection authorPaper
  * @property \Illuminate\Database\Eloquent\Collection authorSubject
  * @property \Illuminate\Database\Eloquent\Collection keywordPaper
- * @property integer co_author_id
+ * @property int co_author_id
  * @property string paper_id
  */
 class CoAuthorPaper extends Pivot
@@ -25,7 +25,7 @@ class CoAuthorPaper extends Pivot
 
     public $fillable = [
         'co_author_id',
-        'paper_id'
+        'paper_id',
     ];
 
     /**
@@ -35,11 +35,11 @@ class CoAuthorPaper extends Pivot
      */
     protected $casts = [
         'co_author_id' => 'integer',
-        'paper_id' => 'string'
+        'paper_id'     => 'string',
     ];
 
     /**
-     * Validation rules
+     * Validation rules.
      *
      * @var array
      */

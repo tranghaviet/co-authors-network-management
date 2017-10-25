@@ -5,8 +5,8 @@ namespace App\Models;
 use Eloquent as Model;
 
 /**
- * Class Keyword
- * @package App\Models
+ * Class Keyword.
+ *
  * @version October 11, 2017, 5:05 pm ICT
  *
  * @property \Illuminate\Database\Eloquent\Collection authorPaper
@@ -17,13 +17,12 @@ use Eloquent as Model;
  */
 class Keyword extends Model
 {
-
     public $table = 'keywords';
 
     public $timestamps = false;
 
     public $fillable = [
-        'content'
+        'content',
     ];
 
     /**
@@ -32,12 +31,12 @@ class Keyword extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
-        'content' => 'string'
+        'id'      => 'integer',
+        'content' => 'string',
     ];
 
     /**
-     * Validation rules
+     * Validation rules.
      *
      * @var array
      */

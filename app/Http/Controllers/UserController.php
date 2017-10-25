@@ -5,15 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Repositories\UserRepository;
-use App\Http\Controllers\AppBaseController;
-use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Http\Request;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 
 class UserController extends AppBaseController
 {
-    /** @var  UserRepository */
+    /** @var UserRepository */
     private $userRepository;
 
     public function __construct(UserRepository $userRepo)
@@ -25,6 +24,7 @@ class UserController extends AppBaseController
      * Display a listing of the User.
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function index(Request $request)
@@ -67,7 +67,7 @@ class UserController extends AppBaseController
     /**
      * Display the specified User.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */
@@ -87,7 +87,7 @@ class UserController extends AppBaseController
     /**
      * Show the form for editing the specified User.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */
@@ -107,7 +107,7 @@ class UserController extends AppBaseController
     /**
      * Update the specified User in storage.
      *
-     * @param  int              $id
+     * @param int               $id
      * @param UpdateUserRequest $request
      *
      * @return Response
@@ -132,7 +132,7 @@ class UserController extends AppBaseController
     /**
      * Remove the specified User from storage.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */

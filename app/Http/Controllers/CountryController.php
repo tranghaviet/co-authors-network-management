@@ -5,15 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateCountryRequest;
 use App\Http\Requests\UpdateCountryRequest;
 use App\Repositories\CountryRepository;
-use App\Http\Controllers\AppBaseController;
-use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Http\Request;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 
 class CountryController extends AppBaseController
 {
-    /** @var  CountryRepository */
+    /** @var CountryRepository */
     private $countryRepository;
 
     public function __construct(CountryRepository $countryRepo)
@@ -25,6 +24,7 @@ class CountryController extends AppBaseController
      * Display a listing of the Country.
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function index(Request $request)
@@ -67,7 +67,7 @@ class CountryController extends AppBaseController
     /**
      * Display the specified Country.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */
@@ -87,7 +87,7 @@ class CountryController extends AppBaseController
     /**
      * Show the form for editing the specified Country.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */
@@ -107,7 +107,7 @@ class CountryController extends AppBaseController
     /**
      * Update the specified Country in storage.
      *
-     * @param  int              $id
+     * @param int                  $id
      * @param UpdateCountryRequest $request
      *
      * @return Response
@@ -132,7 +132,7 @@ class CountryController extends AppBaseController
     /**
      * Remove the specified Country from storage.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */

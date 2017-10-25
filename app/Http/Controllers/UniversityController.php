@@ -5,15 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateUniversityRequest;
 use App\Http\Requests\UpdateUniversityRequest;
 use App\Repositories\UniversityRepository;
-use App\Http\Controllers\AppBaseController;
-use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Http\Request;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 
 class UniversityController extends AppBaseController
 {
-    /** @var  UniversityRepository */
+    /** @var UniversityRepository */
     private $universityRepository;
 
     public function __construct(UniversityRepository $universityRepo)
@@ -25,6 +24,7 @@ class UniversityController extends AppBaseController
      * Display a listing of the University.
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function index(Request $request)
@@ -67,7 +67,7 @@ class UniversityController extends AppBaseController
     /**
      * Display the specified University.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */
@@ -87,7 +87,7 @@ class UniversityController extends AppBaseController
     /**
      * Show the form for editing the specified University.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */
@@ -107,7 +107,7 @@ class UniversityController extends AppBaseController
     /**
      * Update the specified University in storage.
      *
-     * @param  int              $id
+     * @param int                     $id
      * @param UpdateUniversityRequest $request
      *
      * @return Response
@@ -132,7 +132,7 @@ class UniversityController extends AppBaseController
     /**
      * Remove the specified University from storage.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */

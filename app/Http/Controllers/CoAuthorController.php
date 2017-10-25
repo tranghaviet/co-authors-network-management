@@ -4,17 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateCoAuthorRequest;
 use App\Http\Requests\UpdateCoAuthorRequest;
+use App\Models\Author;
 use App\Repositories\CoAuthorRepository;
-use App\Http\Controllers\AppBaseController;
-use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Http\Request;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
-use App\Models\Author;
 
 class CoAuthorController extends AppBaseController
 {
-    /** @var  CoAuthorRepository */
+    /** @var CoAuthorRepository */
     private $coAuthorRepository;
 
     public function __construct(CoAuthorRepository $coAuthorRepo)
@@ -26,6 +25,7 @@ class CoAuthorController extends AppBaseController
      * Display a listing of the CoAuthor.
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function index(Request $request)
@@ -70,7 +70,7 @@ class CoAuthorController extends AppBaseController
     /**
      * Display the specified CoAuthor.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */
@@ -90,7 +90,7 @@ class CoAuthorController extends AppBaseController
     /**
      * Show the form for editing the specified CoAuthor.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */
@@ -110,7 +110,7 @@ class CoAuthorController extends AppBaseController
     /**
      * Update the specified CoAuthor in storage.
      *
-     * @param  int              $id
+     * @param int                   $id
      * @param UpdateCoAuthorRequest $request
      *
      * @return Response
@@ -135,7 +135,7 @@ class CoAuthorController extends AppBaseController
     /**
      * Remove the specified CoAuthor from storage.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */
