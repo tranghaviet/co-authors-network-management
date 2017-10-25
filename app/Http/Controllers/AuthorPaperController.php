@@ -5,15 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateAuthorPaperRequest;
 use App\Http\Requests\UpdateAuthorPaperRequest;
 use App\Repositories\AuthorPaperRepository;
-use App\Http\Controllers\AppBaseController;
-use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Http\Request;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 
 class AuthorPaperController extends AppBaseController
 {
-    /** @var  AuthorPaperRepository */
+    /** @var AuthorPaperRepository */
     private $authorPaperRepository;
 
     public function __construct(AuthorPaperRepository $authorPaperRepo)
@@ -25,6 +24,7 @@ class AuthorPaperController extends AppBaseController
      * Display a listing of the AuthorPaper.
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function index(Request $request)
@@ -67,7 +67,7 @@ class AuthorPaperController extends AppBaseController
     /**
      * Display the specified AuthorPaper.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */
@@ -87,7 +87,7 @@ class AuthorPaperController extends AppBaseController
     /**
      * Show the form for editing the specified AuthorPaper.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */
@@ -107,7 +107,7 @@ class AuthorPaperController extends AppBaseController
     /**
      * Update the specified AuthorPaper in storage.
      *
-     * @param  int              $id
+     * @param int                      $id
      * @param UpdateAuthorPaperRequest $request
      *
      * @return Response
@@ -132,7 +132,7 @@ class AuthorPaperController extends AppBaseController
     /**
      * Remove the specified AuthorPaper from storage.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */

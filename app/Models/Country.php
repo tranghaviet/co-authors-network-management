@@ -5,8 +5,8 @@ namespace App\Models;
 use Eloquent as Model;
 
 /**
- * Class Country
- * @package App\Models
+ * Class Country.
+ *
  * @version October 11, 2017, 3:37 pm ICT
  *
  * @property \Illuminate\Database\Eloquent\Collection authorPaper
@@ -18,13 +18,12 @@ use Eloquent as Model;
  */
 class Country extends Model
 {
-
     public $table = 'countries';
-    
+
     public $timestamps = false;
 
     public $fillable = [
-        'name'
+        'name',
     ];
 
     /**
@@ -33,17 +32,17 @@ class Country extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
-        'name' => 'string'
+        'id'   => 'integer',
+        'name' => 'string',
     ];
 
     /**
-     * Validation rules
+     * Validation rules.
      *
      * @var array
      */
     public static $rules = [
-        
+
     ];
 
     /**

@@ -5,15 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateCandidateRequest;
 use App\Http\Requests\UpdateCandidateRequest;
 use App\Repositories\CandidateRepository;
-use App\Http\Controllers\AppBaseController;
-use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Http\Request;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 
 class CandidateController extends AppBaseController
 {
-    /** @var  CandidateRepository */
+    /** @var CandidateRepository */
     private $candidateRepository;
 
     public function __construct(CandidateRepository $candidateRepo)
@@ -25,6 +24,7 @@ class CandidateController extends AppBaseController
      * Display a listing of the Candidate.
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function index(Request $request)
@@ -67,7 +67,7 @@ class CandidateController extends AppBaseController
     /**
      * Display the specified Candidate.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */
@@ -87,7 +87,7 @@ class CandidateController extends AppBaseController
     /**
      * Show the form for editing the specified Candidate.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */
@@ -107,7 +107,7 @@ class CandidateController extends AppBaseController
     /**
      * Update the specified Candidate in storage.
      *
-     * @param  int              $id
+     * @param int                    $id
      * @param UpdateCandidateRequest $request
      *
      * @return Response
@@ -132,7 +132,7 @@ class CandidateController extends AppBaseController
     /**
      * Remove the specified Candidate from storage.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */

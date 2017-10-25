@@ -7,10 +7,9 @@ use Laravel\Scout\Searchable;
 use Sofa\Eloquence\Eloquence;
 use Watson\Rememberable\Rememberable;
 
-
 /**
- * Class Author
- * @package App\Models
+ * Class Author.
+ *
  * @version October 8, 2017, 7:41 pm ICT
  *
  * @property \Illuminate\Database\Eloquent\Collection authorSubject
@@ -20,7 +19,7 @@ use Watson\Rememberable\Rememberable;
  * @property string surname
  * @property string email
  * @property string url
- * @property integer university_id
+ * @property int university_id
  */
 class Author extends Model
 {
@@ -39,7 +38,7 @@ class Author extends Model
         'surname',
         'email',
         'university_id',
-        'url'
+        'url',
     ];
 
     /**
@@ -48,16 +47,16 @@ class Author extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'string',
-        'given_name' => 'string',
-        'surname' => 'string',
-        'email' => 'string',
+        'id'            => 'string',
+        'given_name'    => 'string',
+        'surname'       => 'string',
+        'email'         => 'string',
         'university_id' => 'integer',
-        'url' => 'string'
+        'url'           => 'string',
     ];
 
     /**
-     * Validation rules
+     * Validation rules.
      *
      * @var array
      */
@@ -65,20 +64,20 @@ class Author extends Model
     ];
 
     /**
-     * Default searchable columns (Eloquence)
+     * Default searchable columns (Eloquence).
      *
      * @var array
      */
     protected $searchableColumns = [
-        'given_name' => 10,
-        'surname' => 10,
-        'email' => 10,
+        'given_name'      => 10,
+        'surname'         => 10,
+        'email'           => 10,
         'university.name' => 7,
-        'papers.title' => 5
+        'papers.title'    => 5,
     ];
 
     /**
-     * Get the indexable data array for the model. (TNTSearch)
+     * Get the indexable data array for the model. (TNTSearch).
      *
      * @return array
      */
@@ -87,9 +86,9 @@ class Author extends Model
 //        $a = $this->toArray();
 //        unset($a['url']);
         $a = [
-            'id' => $this->id,
-            'name' => $this->given_name . ' ' . $this->surname,
-            'email' => $this->email
+            'id'    => $this->id,
+            'name'  => $this->given_name.' '.$this->surname,
+            'email' => $this->email,
         ];
 
         $a['university'] = $this->university['name'];
@@ -97,6 +96,7 @@ class Author extends Model
             return $paper['title'];
         });
         $a['papers'] = implode(' ', $papers->toArray());
+
         return $a;
     }
 

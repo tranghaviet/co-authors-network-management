@@ -5,15 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateCityRequest;
 use App\Http\Requests\UpdateCityRequest;
 use App\Repositories\CityRepository;
-use App\Http\Controllers\AppBaseController;
-use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Http\Request;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 
 class CityController extends AppBaseController
 {
-    /** @var  CityRepository */
+    /** @var CityRepository */
     private $cityRepository;
 
     public function __construct(CityRepository $cityRepo)
@@ -25,6 +24,7 @@ class CityController extends AppBaseController
      * Display a listing of the City.
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function index(Request $request)
@@ -67,7 +67,7 @@ class CityController extends AppBaseController
     /**
      * Display the specified City.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */
@@ -87,7 +87,7 @@ class CityController extends AppBaseController
     /**
      * Show the form for editing the specified City.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */
@@ -107,7 +107,7 @@ class CityController extends AppBaseController
     /**
      * Update the specified City in storage.
      *
-     * @param  int              $id
+     * @param int               $id
      * @param UpdateCityRequest $request
      *
      * @return Response
@@ -132,7 +132,7 @@ class CityController extends AppBaseController
     /**
      * Remove the specified City from storage.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */

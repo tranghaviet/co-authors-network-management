@@ -6,14 +6,14 @@ use App\Models\University;
 use InfyOm\Generator\Common\BaseRepository;
 
 /**
- * Class UniversityRepository
- * @package App\Repositories
+ * Class UniversityRepository.
+ *
  * @version October 11, 2017, 1:54 pm ICT
  *
  * @method University findWithoutFail($id, $columns = ['*'])
  * @method University find($id, $columns = ['*'])
  * @method University first($columns = ['*'])
-*/
+ */
 class UniversityRepository extends BaseRepository
 {
     /**
@@ -21,11 +21,11 @@ class UniversityRepository extends BaseRepository
      */
     protected $fieldSearchable = [
         'name',
-        'city_id'
+        'city_id',
     ];
 
     /**
-     * Configure the Model
+     * Configure the Model.
      **/
     public function model()
     {
