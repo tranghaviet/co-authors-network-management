@@ -6,7 +6,7 @@ disabled:
   - length_ordered_imports
   - phpdoc_scalar
   - phpdoc_no_package
-  -
+  - phpdoc_single_line_var_spacing
 
 linting: true
 
