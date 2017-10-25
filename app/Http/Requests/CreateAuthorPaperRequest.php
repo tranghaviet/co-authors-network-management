@@ -7,7 +7,6 @@ use App\Models\AuthorPaper;
 
 class CreateAuthorPaperRequest extends FormRequest
 {
-
     /**
      * Determine if the user is authorized to make this request.
      *

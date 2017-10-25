@@ -6,14 +6,14 @@ use App\Models\Candidate;
 use InfyOm\Generator\Common\BaseRepository;
 
 /**
- * Class CandidateRepository
+ * Class CandidateRepository.
  * @package App\Repositories
  * @version October 8, 2017, 9:45 pm ICT
  *
  * @method Candidate findWithoutFail($id, $columns = ['*'])
  * @method Candidate find($id, $columns = ['*'])
  * @method Candidate first($columns = ['*'])
-*/
+ */
 class CandidateRepository extends BaseRepository
 {
     /**
@@ -27,11 +27,11 @@ class CandidateRepository extends BaseRepository
         'no_of_joint_keywords',
         'score_1',
         'score_2',
-        'score_3'
+        'score_3',
     ];
 
     /**
-     * Configure the Model
+     * Configure the Model.
      **/
     public function model()
     {

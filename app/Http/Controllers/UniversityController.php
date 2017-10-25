@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateUniversityRequest;
 use App\Http\Requests\UpdateUniversityRequest;
 use App\Repositories\UniversityRepository;
-use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;

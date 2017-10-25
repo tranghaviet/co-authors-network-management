@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateCandidateRequest;
 use App\Http\Requests\UpdateCandidateRequest;
 use App\Repositories\CandidateRepository;
-use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
- * Class KeywordPaper
+ * Class KeywordPaper.
  * @package App\Models
  * @version October 11, 2017, 5:06 pm ICT
  *
@@ -20,12 +20,12 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 class KeywordPaper extends Pivot
 {
     public $table = 'keyword_paper';
-    
+
     public $timestamps = false;
 
     public $fillable = [
         'keyword_id',
-        'paper_id'
+        'paper_id',
     ];
 
     /**
@@ -35,11 +35,11 @@ class KeywordPaper extends Pivot
      */
     protected $casts = [
         'keyword_id' => 'integer',
-        'paper_id' => 'string'
+        'paper_id' => 'string',
     ];
 
     /**
-     * Validation rules
+     * Validation rules.
      *
      * @var array
      */
