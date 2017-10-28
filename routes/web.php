@@ -31,6 +31,7 @@ Route::resource('authorPapers', 'AuthorPaperController');
 
 Route::resource('coAuthors', 'CoAuthorController');
 
+Route::get('candidates/search', 'CandidateController@search')->name('candidates.search');
 Route::resource('candidates', 'CandidateController');
 
 Route::resource('universities', 'UniversityController');

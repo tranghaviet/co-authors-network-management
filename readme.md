@@ -1,5 +1,7 @@
 # Co-authors network management
 
+[![StyleCI](https://styleci.io/repos/106026282/shield?branch=dev)](https://styleci.io/repos/106026282)
+
 ## Installation
 
 ### Requirements
