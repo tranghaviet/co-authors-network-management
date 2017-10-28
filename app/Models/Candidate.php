@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Eloquent as Model;
+use Laravel\Scout\Searchable;
 
 /**
  * Class Candidate.
@@ -15,16 +16,18 @@ use Eloquent as Model;
  * @property \Illuminate\Database\Eloquent\Collection coAuthorPaper
  * @property \Illuminate\Database\Eloquent\Collection keywordPaper
  * @property integer co_author_id
- * @property smallInteger no_of_mutual_authors
- * @property smallInteger no_of_joint_papers
- * @property smallInteger no_of_joint_subjects
- * @property smallInteger no_of_joint_keywords
+ * @property int no_of_mutual_authors
+ * @property int no_of_joint_papers
+ * @property int no_of_joint_subjects
+ * @property int no_of_joint_keywords
  * @property float score_1
  * @property float score_2
  * @property float score_3
  */
 class Candidate extends Model
 {
+    use Searchable;
+
     public $table = 'candidates';
 
     public $timestamps = false;
@@ -62,8 +65,22 @@ class Candidate extends Model
      * @var array
      */
     public static $rules = [
-
     ];
+
+    /**
+     * Get the indexable data array for the model. (TNTSearch).
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        $a = ['id' => $this->id];
+
+        $a['first_author'] = $this->coAuthor->firstAuthor['given_name'] . ' ' . $this->coAuthor->firstAuthor['surname'];
+        $a['second_author'] = $this->coAuthor->secondAuthor['given_name'] . ' ' . $this->coAuthor->secondAuthor['surname'];
+
+        return $a;
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

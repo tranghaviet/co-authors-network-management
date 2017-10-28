@@ -64,9 +64,9 @@ class CoAuthor extends Model
         ];
 
         $a['first_author'] = $this->firstAuthor['given_name'] . ' ' .
-            $this->firstAuthor['surname'];
+            $this->firstAuthor['surname'] . ' ' . $this->firstAuthor->university['name'];
         $a['second_author'] = $this->secondAuthor['given_name'] . ' ' .
-            $this->firstAuthor['surname'];
+            $this->secondAuthor['surname'] . ' ' . $this->secondAuthor->university['name'];
 
         return $a;
     }
