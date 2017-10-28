@@ -72,8 +72,8 @@ class Author extends Model
 //        unset($a['url']);
         $a = [
             'id' => $this->id,
-            'name' => $this->given_name.' '.$this->surname,
-            'email' => $this->email,
+            'name' => $this->given_name . ' ' . $this->surname,
+            'email' => $this->email
         ];
 
         $a['university'] = $this->university['name'];

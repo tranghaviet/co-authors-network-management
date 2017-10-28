@@ -76,10 +76,9 @@ class Paper extends Model
             'issn' => $this->issn,
         ];
 
-        $authors = $this->authors()->get(['given_name', 'surname'])
-            ->map(function ($author) {
-                return $author['given_name'].' '.$author['surname'];
-            });
+        $authors = $this->authors()->get(['given_name', 'surname'])->map(function ($author) {
+            return $author['given_name'] . ' ' . $author['surname'];
+        });
         $a['authors'] = implode(' ', $authors->toArray());
 
         $keywords = $this->keywords()->get(['content'])->map(function ($keyword) {
