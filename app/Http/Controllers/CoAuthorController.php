@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
-use App\Models\Author;
 
 class CoAuthorController extends AppBaseController
 {
@@ -30,7 +29,7 @@ class CoAuthorController extends AppBaseController
     public function index(Request $request)
     {
         $this->coAuthorRepository->pushCriteria(new RequestCriteria($request));
-        $coAuthors = $this->coAuthorRepository->all();
+        $coAuthors = $this->coAuthorRepository->paginate(config('constants.DEFAULT_PAGINATION'));
 
         // TODO: $coAuthor->firstAuthor and $coAuthor->firstAuthor maybe null
 
@@ -109,7 +108,7 @@ class CoAuthorController extends AppBaseController
     /**
      * Update the specified CoAuthor in storage.
      *
-     * @param  int              $id
+     * @param  int $id
      * @param UpdateCoAuthorRequest $request
      *
      * @return Response
@@ -153,5 +152,13 @@ class CoAuthorController extends AppBaseController
         Flash::success('Co Author deleted successfully.');
 
         return redirect(route('coAuthors.index'));
+    }
+
+    public function search(Request $request)
+    {
+        $coAuthors = $this->coAuthorRepository->search($request->q)
+            ->paginate(config('constants.DEFAULT_PAGINATION', 15));
+
+        return view('co_authors.index', compact('coAuthors'));
     }
 }

@@ -168,7 +168,8 @@ class AuthorController extends AppBaseController
 
     public function search(Request $request)
     {
-        $authors = $this->authorRepository->search($request->q)->paginate(15);
+        $authors = $this->authorRepository->search($request->q)->paginate
+        (config('constants.DEFAULT_PAGINATION', 15));
 //        foreach($authors as $author) {
 //            $author['university'] = $author->university()->first();
 //        }

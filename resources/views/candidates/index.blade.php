@@ -16,7 +16,7 @@
             </div>
             <div class="form-group col-sm-3">
                 {!! Form::number('mutual_authors', null, ['class' => 'form-control',
-                'placeholder' => 'Mutual Author']) !!}
+                'placeholder' => 'No. of Mutual Authors']) !!}
             </div>
             <div class="form-group col-sm-3">
                 {!! Form::number('joint_papers', null, ['class' => 'form-control',
@@ -24,11 +24,11 @@
             </div>
             <div class="form-group col-sm-3">
                 {!! Form::number('joint_subjects', null, ['class' => 'form-control',
-                'placeholder' => 'Joint Subjects']) !!}
+                'placeholder' => 'No. of Joint Subjects']) !!}
             </div>
             <div class="form-group col-sm-3">
                 {!! Form::number('joint_keywords', null, ['class' => 'form-control',
-                'placeholder' => 'Joint Keywords']) !!}
+                'placeholder' => 'No. of Joint Keywords']) !!}
             </div>
             <div class="form-group col-sm-3">
                 {!! Form::number('score_1', null, ['class' => 'form-control',
@@ -42,7 +42,7 @@
                 {!! Form::number('score_3', null, ['class' => 'form-control',
                 'placeholder' => 'Score 3']) !!}
             </div>
-            <div class="form-group col-sm-1">
+            <div class="form-group col-sm-3">
                 {!! Form::submit('Search', ['class' => 'btn btn-primary btn-block']) !!}
             </div>
             {!! Form::close() !!}

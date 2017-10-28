@@ -167,8 +167,6 @@ return [
          * Package Service Providers...
          */
         Laravel\Tinker\TinkerServiceProvider::class,
-        // laravel-pug
-        Bkwld\LaravelPug\ServiceProvider::class,
         // debug bar
         Barryvdh\Debugbar\ServiceProvider::class,
         // ide helper
@@ -185,8 +183,6 @@ return [
         Laravel\Scout\ScoutServiceProvider::class,
         // TNT search driver
         TeamTNT\Scout\TNTSearchScoutServiceProvider::class,
-
-        Sofa\Eloquence\BaseServiceProvider::class,
 
         /*
          * Application Service Providers...
