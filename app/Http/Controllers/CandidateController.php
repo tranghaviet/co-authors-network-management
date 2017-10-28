@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
+use App\Models\Candidate;
 
 class CandidateController extends AppBaseController
 {
@@ -32,7 +33,10 @@ class CandidateController extends AppBaseController
         $candidates = $this->candidateRepository->paginate(30);
 
         return view('candidates.index')
-            ->with('candidates', $candidates);
+            ->with([
+                'candidates' => $candidates,
+                'isPaginated' => true,
+            ]);
     }
 
     /**
@@ -106,7 +110,7 @@ class CandidateController extends AppBaseController
     /**
      * Update the specified Candidate in storage.
      *
-     * @param  int              $id
+     * @param  int $id
      * @param UpdateCandidateRequest $request
      *
      * @return Response
@@ -150,5 +154,47 @@ class CandidateController extends AppBaseController
         Flash::success('Candidate deleted successfully.');
 
         return redirect(route('candidates.index'));
+    }
+
+    public function search(Request $request)
+    {
+        $input = $request->all();
+
+        $candidatesByName = $this->candidateRepository->search($request->q)->get();
+
+        $criteria = null;
+        unset($input['q']);
+
+        foreach ($input as $key => $value) {
+            if ($value != null) {
+                $criteria[$key] = $value;
+            }
+        }
+
+        $candidatesByOtherCriteria = null;
+
+        // if user search on at least one criteria
+        if ($criteria != null) {
+            $candidatesByOtherCriteria = Candidate::where($criteria)->get();
+
+            if (!$candidatesByName->isEmpty()) {
+                $candidateIdsByName = $candidatesByName->map(function ($candidate) {
+                    return $candidate['id'];
+                });
+
+                $candidatesByOtherCriteria = $candidatesByOtherCriteria->map(function ($candidate) use ($candidateIdsByName) {
+                    if (in_array($candidate['id'], $candidateIdsByName->toArray())) {
+                        return $candidate;
+                    }
+                });
+            }
+
+            return view('candidates.index')->with([
+                'candidates' => $candidatesByOtherCriteria,
+                'isPaginated' => false,
+            ]);
+        }
+
+        return view('candidates.index')->with('candidates', $candidatesByName);
     }
 }

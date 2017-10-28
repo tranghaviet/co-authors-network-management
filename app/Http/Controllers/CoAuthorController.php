@@ -156,8 +156,7 @@ class CoAuthorController extends AppBaseController
 
     public function search(Request $request)
     {
-        $coAuthors = $this->coAuthorRepository->search($request->q)
-            ->paginate(config('constants.DEFAULT_PAGINATION', 15));
+        $coAuthors = $this->coAuthorRepository->search($request->q)->paginate(config('constants.DEFAULT_PAGINATION', 15));
 
         return view('co_authors.index', compact('coAuthors'));
     }

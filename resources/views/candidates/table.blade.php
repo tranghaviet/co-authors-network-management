@@ -17,7 +17,7 @@
     @foreach($candidates as $candidate)
         <tr>
             <td>
-                <a href="{!! route('authors.show', [$candidate->coAuthor->firstAuthor->id]) !!}">
+                <a href="{!! route('authors.show', [$candidate->coAuthor->firstAuthor['id']]) !!}">
                     {!! $candidate->coAuthor->firstAuthor->given_name.' '.$candidate->coAuthor->firstAuthor->surname !!}
                 </a>
             </td>

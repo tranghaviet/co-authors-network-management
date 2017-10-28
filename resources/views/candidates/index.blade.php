@@ -15,19 +15,20 @@
                 'placeholder' => 'Type Author name']) !!}
             </div>
             <div class="form-group col-sm-3">
-                {!! Form::number('mutual_authors', null, ['class' => 'form-control',
-                'placeholder' => 'No. of Mutual Authors']) !!}
+                {!! Form::number('no_of_mutual_authors', null, ['class' =>
+                'form-control',
+                'placeholder' => 'No. of Mutual authors']) !!}
             </div>
             <div class="form-group col-sm-3">
-                {!! Form::number('joint_papers', null, ['class' => 'form-control',
-                'placeholder' => 'Joint Papers']) !!}
+                {!! Form::number('no_of_joint_papers', null, ['class' => 'form-control',
+                'placeholder' => 'No. of Joint Papers']) !!}
             </div>
             <div class="form-group col-sm-3">
-                {!! Form::number('joint_subjects', null, ['class' => 'form-control',
+                {!! Form::number('no_of_joint_subjects', null, ['class' => 'form-control',
                 'placeholder' => 'No. of Joint Subjects']) !!}
             </div>
             <div class="form-group col-sm-3">
-                {!! Form::number('joint_keywords', null, ['class' => 'form-control',
+                {!! Form::number('no_of_joint_keywords', null, ['class' => 'form-control',
                 'placeholder' => 'No. of Joint Keywords']) !!}
             </div>
             <div class="form-group col-sm-3">
@@ -57,9 +58,15 @@
         <div class="clearfix"></div>
         <div class="box box-primary">
             <div class="box-body">
-                    @include('candidates.table')
+                    @if($candidates->isEmpty())
+                        <h1>Empty</h1>
+                    @else
+                        @include('candidates.table')
+                    @endif
             </div>
-            <div class="text-center">{{ $candidates->render() }}</div>
+            @if($isPaginated)
+                <div class="text-center">{{ $candidates->render() }}</div>
+            @endif
         </div>
     </div>
 @endsection
