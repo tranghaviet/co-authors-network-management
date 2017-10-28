@@ -73,7 +73,7 @@ class Author extends Model
         $a = [
             'id' => $this->id,
             'name' => $this->given_name . ' ' . $this->surname,
-            'email' => $this->email
+            'email' => $this->email,
         ];
 
         $a['university'] = $this->university['name'];
