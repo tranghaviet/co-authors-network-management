@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
-use Sofa\Eloquence\Eloquence;
 use Watson\Rememberable\Rememberable;
 
 /**
@@ -24,7 +23,6 @@ use Watson\Rememberable\Rememberable;
 class Author extends Model
 {
     use Searchable;
-//    use Eloquence;
     use Rememberable;
 
     protected $rememberFor = 10;
@@ -61,19 +59,6 @@ class Author extends Model
      * @var array
      */
     public static $rules = [
-    ];
-
-    /**
-     * Default searchable columns (Eloquence).
-     *
-     * @var array
-     */
-    protected $searchableColumns = [
-        'given_name' => 10,
-        'surname' => 10,
-        'email' => 10,
-        'university.name' => 7,
-        'papers.title' => 5,
     ];
 
     /**

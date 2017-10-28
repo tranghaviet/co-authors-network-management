@@ -29,6 +29,7 @@ Route::resource('papers', 'PaperController');
 
 Route::resource('authorPapers', 'AuthorPaperController');
 
+Route::get('coAuthors/search', 'CoAuthorController@search')->name('coAuthors.search');
 Route::resource('coAuthors', 'CoAuthorController');
 
 Route::get('candidates/search', 'CandidateController@search')->name('candidates.search');

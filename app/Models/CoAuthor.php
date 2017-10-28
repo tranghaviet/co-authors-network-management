@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Eloquent as Model;
+use Laravel\Scout\Searchable;
 
 /**
  * Class CoAuthor.
@@ -20,6 +21,8 @@ use Eloquent as Model;
  */
 class CoAuthor extends Model
 {
+    use Searchable;
+
     public $table = 'co_authors';
 
     public $timestamps = false;
@@ -48,6 +51,25 @@ class CoAuthor extends Model
     public static $rules = [
 
     ];
+
+    /**
+     * Get the indexable data array for the model. (TNTSearch).
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        $a = [
+            'id' => $this->id,
+        ];
+
+        $a['first_author'] = $this->firstAuthor['given_name'] . ' ' .
+            $this->firstAuthor['surname'];
+        $a['second_author'] = $this->secondAuthor['given_name'] . ' ' .
+            $this->firstAuthor['surname'];
+
+        return $a;
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
