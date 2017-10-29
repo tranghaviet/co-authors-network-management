@@ -4,6 +4,7 @@
 [![Build Status](https://www.travis-ci.org/tranghaviet/co-authors-network-management.svg?branch=master)](https://www.travis-ci.org/tranghaviet/co-authors-network-management)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/tranghaviet/co-authors-network-management/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/tranghaviet/co-authors-network-management/?branch=master)
 [![Build Status](https://scrutinizer-ci.com/g/tranghaviet/co-authors-network-management/badges/build.png?b=master)](https://scrutinizer-ci.com/g/tranghaviet/co-authors-network-management/build-status/master)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d0ac126c068248e29a0e25edd684b5f4)](https://www.codacy.com/app/tranghaviet/co-authors-network-management?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=tranghaviet/co-authors-network-management&amp;utm_campaign=Badge_Grade)
 
 ## Installation
 

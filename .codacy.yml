@@ -1,0 +1,31 @@
+---
+engines:
+  eslint:
+      enabled: false
+  jacksonlinter:
+    enabled: true
+  phpmd:
+    enabled: false
+  rubocop:
+    enabled: false
+  shellcheck:
+    enabled: false
+  stylelint:
+    enabled: true
+  duplication:
+    enabled: true
+  metrics:
+    enabled: true
+  coverage:
+    enabled: true
+  exclude_paths:
+    - "vendor/**/*"
+    - "public/**/*"
+    - "storage/**/*"
+    - "tests/**/*"
+    - "_libs/**"
+    - "**.min.css"
+    - "**.custom.css"
+    - "**.min.js"
+    - "**.pack.js"
+    - "**.custom.js"
