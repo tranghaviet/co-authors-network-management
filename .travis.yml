@@ -1,0 +1,15 @@
+language: php
+
+php:
+  - 7.1
+
+before_script:
+  - phpenv config-rm xdebug.ini || true
+  - cp .env.travis .env
+  - mysql -e 'create database co_authors_network_test_test;'
+  - composer self-update
+  - composer install --no-interaction
+  - php artisan key:generate
+
+script:
+  - vendor/bin/phpunit
