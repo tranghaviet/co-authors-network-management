@@ -19,24 +19,28 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::resource('users', 'UserController');
-
+// TODO: return different view for admin and user, do it in controller.
 Route::get('authors/search', 'AuthorController@search')->name('authors.search');
-Route::resource('authors', 'AuthorController');
-
 Route::get('papers/search', 'PaperController@search')->name('papers.search');
-Route::resource('papers', 'PaperController');
-
-Route::resource('authorPapers', 'AuthorPaperController');
-
 Route::get('coAuthors/search', 'CoAuthorController@search')->name('coAuthors.search');
-Route::resource('coAuthors', 'CoAuthorController');
-
 Route::get('candidates/search', 'CandidateController@search')->name('candidates.search');
-Route::resource('candidates', 'CandidateController');
 
-Route::resource('universities', 'UniversityController');
+Route::group(['prefix' => 'admin/', 'middleware' => 'auth'], function () {
+    Route::resource('users', 'UserController');
 
-Route::resource('cities', 'CityController');
+    Route::resource('authors', 'AuthorController');
 
-Route::resource('countries', 'CountryController');
+    Route::resource('papers', 'PaperController');
+
+    Route::resource('authorPapers', 'AuthorPaperController');
+
+    Route::resource('coAuthors', 'CoAuthorController');
+
+    Route::resource('candidates', 'CandidateController');
+
+    Route::resource('universities', 'UniversityController');
+
+    Route::resource('cities', 'CityController');
+
+    Route::resource('countries', 'CountryController');
+});
