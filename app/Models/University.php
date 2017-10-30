@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Eloquent as Model;
+use Laravel\Scout\Searchable;
 use Watson\Rememberable\Rememberable;
 
 /**
@@ -21,6 +22,7 @@ use Watson\Rememberable\Rememberable;
  */
 class University extends Model
 {
+    use Searchable;
     use Rememberable;
 
     /**
@@ -57,6 +59,19 @@ class University extends Model
      */
     public static $rules = [
     ];
+
+    /**
+     * Get the indexable data array for the model. (TNTSearch).
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+        ];
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
