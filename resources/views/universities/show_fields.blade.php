@@ -10,15 +10,17 @@
     {!! $university->name !!}
 </div>
 
-<!-- City Id Field -->
+<!-- City Field -->
 <div class="form-group">
-    {!! Form::label('city_id', 'City Id:') !!}
-    {!! $university->city_id !!}
+    {!! Form::label('city', 'City:') !!}
+        <a href="{!! route('cities.show', [$university->city['id']]) !!}">
+            {!! $university->city['name'] !!}
+        </a>
 </div>
 
 <!-- Authors Field -->
 <div class="form-group">
-    {!! Form::label('author', 'Authors:') !!}
+    {!! Form::label('authors', 'Authors:') !!}
     <ol>
         @foreach($university->authors as $author)
             <li>

@@ -10,9 +10,22 @@
     {!! $city->name !!}
 </div>
 
-<!-- Country Id Field -->
+<!-- Country Field -->
 <div class="form-group">
-    {!! Form::label('country_id', 'Country Id:') !!}
-    {!! $city->country_id !!}
+    {!! Form::label('country', 'Country:') !!}
+    <a href="{!! route('countries.show', [$city->country['id']]) !!}">
+        {!! $city->country['name'] !!}
+    </a>
 </div>
 
+<!-- Universities Field -->
+<div class="form-group">
+    {!! Form::label('universities', 'Universities:') !!}
+    <ol>
+        @foreach($city->universities as $university)
+            <li>
+                <a href="{!! route('universities.show', [$university['id']]) !!}">{!! $university['name'] !!}</a>
+            </li>
+        @endforeach
+    </ol>
+</div>
