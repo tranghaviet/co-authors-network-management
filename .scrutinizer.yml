@@ -1,5 +1,12 @@
 filter:
-    excluded_paths: [tests/*]
+    excluded_paths:
+      - tests/*
+      - vendor/*
+      - storage/*
+      - public/*
+      - *.min.js
+      - *.min.css
+
 checks:
     php:
         code_rating: true
