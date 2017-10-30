@@ -106,7 +106,7 @@ class UniversityController extends AppBaseController
     /**
      * Update the specified University in storage.
      *
-     * @param  int              $id
+     * @param  int $id
      * @param UpdateUniversityRequest $request
      *
      * @return Response
@@ -150,5 +150,12 @@ class UniversityController extends AppBaseController
         Flash::success('University deleted successfully.');
 
         return redirect(route('universities.index'));
+    }
+
+    public function search(Request $request)
+    {
+        $universities = $this->universityRepository->search($request->q)->paginate(config('constants.DEFAULT_PAGINATION', 15));
+
+        return view('universities.index', compact('universities'));
     }
 }
