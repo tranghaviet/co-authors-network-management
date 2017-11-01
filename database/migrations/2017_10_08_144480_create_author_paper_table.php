@@ -14,8 +14,12 @@ class CreateAuthorPaperTable extends Migration
     public function up()
     {
         Schema::create('author_paper', function (Blueprint $table) {
-            $table->string('author_id', 12);
-            $table->string('paper_id', 25);
+            $table->charset = 'ascii';
+            $table->collation = 'ascii_general_ci';
+
+            // $table->string('author_id', 12);
+            $table->bigInteger('author_id', false, true);
+            $table->string('paper_id', 23);
 
             $table->foreign('author_id')
                 ->references('id')

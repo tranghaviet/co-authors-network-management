@@ -4,6 +4,8 @@ filter:
       - vendor/*
       - storage/*
       - public/*
+      - "*.min.js"
+      - "*.min.css"
 
 checks:
     php:

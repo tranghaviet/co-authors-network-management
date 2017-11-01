@@ -14,7 +14,8 @@ class CreateAuthorSubjectTable extends Migration
     public function up()
     {
         Schema::create('author_subject', function (Blueprint $table) {
-            $table->string('author_id', 15);
+            // $table->string('author_id', 12);
+            $table->bigInteger('author_id', false, true);
             $table->integer('subject_id', false, true);
 
             $table->foreign('author_id')

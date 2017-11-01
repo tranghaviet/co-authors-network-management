@@ -14,8 +14,11 @@ class CreateKeywordPaperTable extends Migration
     public function up()
     {
         Schema::create('keyword_paper', function (Blueprint $table) {
+            $table->charset = 'ascii';
+            $table->collation = 'ascii_general_ci';
+
             $table->integer('keyword_id', false, true);
-            $table->string('paper_id', 25);
+            $table->string('paper_id', 23);
 
             $table->foreign('keyword_id')
                 ->references('id')
