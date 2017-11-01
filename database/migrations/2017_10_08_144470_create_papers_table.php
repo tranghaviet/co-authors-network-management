@@ -14,8 +14,11 @@ class CreatePapersTable extends Migration
     public function up()
     {
         Schema::create('papers', function (Blueprint $table) {
+            // TODO: Change charset = utf8, collation = utf8_general_ci in table manually
+            $table->charset = 'ascii';
+            $table->collation = 'ascii_general_ci';
             // $table->increments('id');
-            $table->string('id', 25);
+            $table->string('id', 23);
             $table->mediumText('title');
             $table->datetime('cover_date')->nullable();
             $table->mediumText('abstract');
