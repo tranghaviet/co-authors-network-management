@@ -13,19 +13,19 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        \App\Console\Commands\SynchronizeCoAuthorNetwork::class,
     ];
 
     /**
-     * Define the application's command schedule.
+     * Define the application's command schedule. To run use 'schedule:run'
      *
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+         $schedule->command('co-author:sync')
+                  ->dailyAt('02:00');
     }
 
     /**

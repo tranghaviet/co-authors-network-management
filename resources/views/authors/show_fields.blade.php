@@ -48,7 +48,7 @@
 
 <!-- Url Field -->
 <div class="form-group">
-    {!! Form::label('url', 'Url:') !!}
+    {!! Form::label('url', 'URL:') !!}
     <a href="{!! $author->url !!}" target="_blank">{!! $author->url !!}</a>
 </div>
 
@@ -56,7 +56,7 @@
 
 <!-- Papers Field -->
 <div class="form-group">
-    {!! Form::label('papers', 'Papers:') !!}
+    {!! Form::label('papers', 'Papers:') !!} {{ $papers->count() }}
     <ol>
     @foreach($papers as $paper)
         <li>
@@ -70,7 +70,7 @@
 
 <!-- Collaborators Field -->
 <div class="form-group">
-    {!! Form::label('collaborator', 'Collaborators:') !!}
+    {!! Form::label('collaborator', 'Collaborators:') !!} {{ $collaborators->count() }}
     <ol>
         @foreach($collaborators as $collaborator)
             <li>
