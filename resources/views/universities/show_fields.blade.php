@@ -20,7 +20,7 @@
 
 <!-- Authors Field -->
 <div class="form-group">
-    {!! Form::label('authors', 'Authors:') !!}
+    {!! Form::label('authors', 'Authors:') !!} {{ $university->authors->count() }}
     <ol>
         @foreach($university->authors as $author)
             <li>
