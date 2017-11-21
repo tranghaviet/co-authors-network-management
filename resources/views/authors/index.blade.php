@@ -7,7 +7,7 @@
             {!! Form::open(['route' => ['authors.search'], 'method' => 'get']) !!}
             <div class="form-group col-sm-8">
                 {!! Form::text('q', null, ['class' => 'form-control',
-                'placeholder' => 'Type Author name, University, Email or Paper Title']) !!}
+                'placeholder' => 'Type Author name or University']) !!}
             </div>
             <div class="form-group col-sm-2">
                 {!! Form::submit('Search', ['class' => 'btn btn-primary btn-block']) !!}

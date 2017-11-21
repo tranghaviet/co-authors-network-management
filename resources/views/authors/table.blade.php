@@ -19,7 +19,7 @@
             <td>{!! $author->email !!}</td>
             <td>{!! $author->university['name'] !!}</td>
             {{--<td>{!! $author->university()->first(['name'])['name'] !!}</td>--}}
-            <td><a href="{!! $author->url !!}" target="_blank">View author on Scopus</a></td>
+            <td><a href="{!! $author->url !!}" target="_blank">Author on Scopus</a></td>
             <td>
                 {!! Form::open(['route' => ['authors.destroy', $author->id], 'method' => 'delete']) !!}
                 <div class='btn-group'>
