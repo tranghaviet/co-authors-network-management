@@ -7,7 +7,7 @@
             {!! Form::open(['route' => ['papers.search'], 'method' => 'get']) !!}
             <div class="form-group col-sm-8">
                 {!! Form::text('q', null, ['class' => 'form-control',
-                'placeholder' => 'Type ID, Title, ISSN, Authors or Keywords']) !!}
+                'placeholder' => 'Type ID, Title, ISSN or Keywords']) !!}
             </div>
             <div class="form-group col-sm-2">
                 {!! Form::submit('Search', ['class' => 'btn btn-primary btn-block']) !!}
