@@ -6,6 +6,7 @@
             <th>University</th>
             <th>Second Author</th>
             <th>University</th>
+            <th>Joint papers</th>
             <th colspan="3">Action</th>
         </tr>
     </thead>
@@ -14,7 +15,7 @@
         <tr>
             <td>{!! $coAuthor->id !!}</td>
             <td>
-                <a href="{!! route('authors.show', [$coAuthor['firstAuthor']['id']]) !!}">
+                <a href="{!! route('authors.show', [$coAuthor['first_author_id']]) !!}">
                     {!! $coAuthor['firstAuthor']['given_name'].' '.$coAuthor['firstAuthor']['surname'] !!}
                 </a>
             </td>
@@ -22,14 +23,16 @@
                 {!! $coAuthor['firstAuthor']->university['name'] !!}
             </td>
             <td>
-                <a href="{!! route('authors.show', [$coAuthor['secondAuthor']['id']]) !!}">
+                <a href="{!! route('authors.show', [$coAuthor['second_author_id']]) !!}">
                     {!! $coAuthor['secondAuthor']['given_name'].' '.$coAuthor['secondAuthor']['surname'] !!}
                 </a>
             </td>
             <td>
-                {!! $coAuthor['secondAuthor']->university['name'] !!}
+                {!! $coAuthor['secondAuthor']['university']['name'] !!}
             </td>
-
+            <td>
+                {{ $coAuthor['candidate']['no_of_joint_papers'] }}
+            </td>
             <td>
                 {!! Form::open(['route' => ['coAuthors.destroy', $coAuthor->id], 'method' => 'delete']) !!}
                 <div class='btn-group'>

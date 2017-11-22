@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Flash;
+use Response;
+use Illuminate\Http\Request;
+use App\Repositories\CoAuthorRepository;
 use App\Http\Requests\CreateCoAuthorRequest;
 use App\Http\Requests\UpdateCoAuthorRequest;
-use App\Repositories\CoAuthorRepository;
-use Illuminate\Http\Request;
-use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
-use Response;
 
 class CoAuthorController extends AppBaseController
 {
@@ -29,9 +29,12 @@ class CoAuthorController extends AppBaseController
     public function index(Request $request)
     {
         $this->coAuthorRepository->pushCriteria(new RequestCriteria($request));
-        $coAuthors = $this->coAuthorRepository->paginate(config('constants.DEFAULT_PAGINATION'));
 
-        // TODO: $coAuthor->firstAuthor and $coAuthor->firstAuthor maybe null
+        $coAuthors = $this->coAuthorRepository
+            ->with('candidate')
+            ->with('firstAuthor.university')
+            ->with('secondAuthor.university')
+            ->paginate(config('constants.DEFAULT_PAGINATION'));
 
         return view('co_authors.index')
             ->with('coAuthors', $coAuthors);
