@@ -46,7 +46,7 @@ class SynchronizeCoAuthorNetwork extends Command
 
                 foreach ($coAuthors as $coAuthor) {
                     if (CoAuthor::where(['first_author_id' => $coAuthors->id,
-                        'second_author_id' => $author->id])->exists()) {
+                        'second_author_id' => $author->id, ])->exists()) {
                         continue;
                     }
 

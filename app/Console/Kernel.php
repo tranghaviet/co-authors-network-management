@@ -17,14 +17,14 @@ class Kernel extends ConsoleKernel
     ];
 
     /**
-     * Define the application's command schedule. To run use 'schedule:run'
+     * Define the application's command schedule. To run use 'schedule:run'.
      *
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('co-author:sync')
+        $schedule->command('co-author:sync')
                   ->dailyAt('02:00');
     }
 

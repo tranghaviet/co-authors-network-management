@@ -73,7 +73,7 @@ class Author extends Model
             'name' => $this->given_name . ' ' . $this->surname,
         ];
 
-         $a['university'] = $this->university['name'];
+        $a['university'] = $this->university['name'];
 //        $papers = $this->papers()->get(['title'])->map(function ($paper) {
 //            return $paper['title'];
 //        });

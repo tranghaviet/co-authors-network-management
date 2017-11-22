@@ -5,7 +5,7 @@ use App\Models\KeywordPaper;
 
 if (! function_exists('handle_keywords')) {
     /**
-     * Handle keywords
+     * Handle keywords.
      *
      * @param  int $paper_id id of the paper
      * @param  array $keywords from a row of csv file
@@ -17,7 +17,6 @@ if (! function_exists('handle_keywords')) {
             // Check if keyword exists
             if (Keyword::where(['content' => $keyword])->exists()) {
                 continue;
-
             }
             // If not exist, create one
             $keyword = Keyword::create(['content' => $keyword]);
