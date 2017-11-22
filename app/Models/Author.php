@@ -107,6 +107,9 @@ class Author extends Model
         return $this->belongsToMany(\App\Models\Paper::class, 'author_paper');
     }
 
+    /*
+     * @return Co-authors has any joint paper with this Author.
+     */
     public function collaborators($columns = ['*'])
     {
         $papers = $this->papers;

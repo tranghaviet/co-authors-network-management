@@ -72,11 +72,11 @@ class CoAuthor extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      **/
-    public function candidates()
+    public function candidate()
     {
-        return $this->hasMany(\App\Models\Candidate::class);
+        return $this->hasOne(\App\Models\Candidate::class);
     }
 
     /**

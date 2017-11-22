@@ -29,7 +29,7 @@ class AuthorPaperController extends AppBaseController
     public function index(Request $request)
     {
         $this->authorPaperRepository->pushCriteria(new RequestCriteria($request));
-        $authorPapers = $this->authorPaperRepository->paginate(30);
+        $authorPapers = $this->authorPaperRepository->paginate(config('constants.DEFAULT_PAGINATION'));
 
         return view('author_papers.index')
             ->with('authorPapers', $authorPapers);
