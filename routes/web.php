@@ -45,3 +45,14 @@ Route::group(['prefix' => 'admin/', 'middleware' => 'auth'], function () {
 
     Route::resource('countries', 'CountryController');
 });
+
+/*
+ *  Write test import logic in here, for example:
+ *  $papers = fgetcsv(...);
+ *  handle_keywords($papers[0]['id], $papers[0]['keywords'];
+ *  to show data use dump($variable) (will show data and continue run program)
+ *  or dd($variable) (will show data end end the program).
+ */
+Route::get('/test_import', function () {
+    // Your code here
+});
