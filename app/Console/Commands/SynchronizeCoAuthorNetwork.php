@@ -2,10 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Paper;
 use App\Models\Author;
 use App\Models\CoAuthor;
-use App\Models\AuthorPaper;
 use Illuminate\Console\Command;
 
 class SynchronizeCoAuthorNetwork extends Command
@@ -38,7 +36,7 @@ class SynchronizeCoAuthorNetwork extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
      */
     public function handle()
     {
@@ -59,6 +57,5 @@ class SynchronizeCoAuthorNetwork extends Command
                 }
             }
         });
-
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Watson\Rememberable\Rememberable;
 
 /**
  * Class User.
@@ -24,8 +25,16 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     use Notifiable;
+    use Rememberable;
 
     public $table = 'users';
+
+    /**
+     * Time for cache a query.
+     *
+     * @var int
+     */
+    protected $rememberFor = 30;
 
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';

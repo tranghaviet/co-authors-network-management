@@ -30,7 +30,10 @@ class CandidateController extends AppBaseController
     public function index(Request $request)
     {
         $this->candidateRepository->pushCriteria(new RequestCriteria($request));
-        $candidates = $this->candidateRepository->paginate(30);
+        $candidates = $this->candidateRepository
+            ->with('coAuthor.firstAuthor')
+            ->with('coAuthor.secondAuthor')
+            ->paginate(config('constants.DEFAULT_PAGINATION'));
 
         return view('candidates.index')
             ->with([

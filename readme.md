@@ -47,7 +47,7 @@ Tạo key cho app
 ```
 php artisan key:generate
 ```
-Import Databse vào MySQL và khởi động Databse.
+Import Databse vào MySQL và khởi động Database.
 Khởi động app:
 ```
 php artisan serve

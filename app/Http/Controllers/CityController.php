@@ -29,7 +29,9 @@ class CityController extends AppBaseController
     public function index(Request $request)
     {
         $this->cityRepository->pushCriteria(new RequestCriteria($request));
-        $cities = $this->cityRepository->paginate(30);
+        $cities = $this->cityRepository
+            ->with('country')
+            ->paginate(config('constants.DEFAULT_PAGINATION'));
 
         return view('cities.index')
             ->with('cities', $cities);
