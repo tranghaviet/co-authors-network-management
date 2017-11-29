@@ -11,11 +11,50 @@
 ## Installation
 
 ### Requirements
-- PHP >= 5.6.4 (kiểm tra bằng câu lệnh `php --version`)
-- MySQL (có thể cài cả PHP và MySQL bằng Xampp/LAMP)
-- Composer (chạy được câu lệnh `composer`)
-- Git
+- PHP >= 7.0.0 (kiểm tra bằng câu lệnh `php --version`)
+Reference: https://www.digitalocean.com/community/tutorials/how-to-install-linux-apache-mysql-php-lamp-stack-on-ubuntu-16-04
 
+Nếu không dùng Xampp mà cài riêng lẻ:
+```
+sudo apt-get install software-properties-common
+sudo add-apt-repository ppa:ondrej/php
+sudo apt-get update
+sudo apt-get install php7.1
+# Check
+php --version
+# packages
+sudo apt-get install php7.1-cli php7.1-common php7.1-json php7.1-mysql php7.1-mbstring php7.1-fpm php7.1-opcache libapache2-mod-php php7.1-curl
+```
+- MariaDB (có thể cài cả PHP và MariaDB bằng Xampp/LAMP)
+Nếu không dùng Xampp mà cài riêng lẻ:
+```
+sudo apt-get install software-properties-common
+sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
+sudo add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://download.nus.edu.sg/mirror/mariadb/repo/10.2/ubuntu xenial main'
+sudo apt-get update
+sudo apt-get install mariadb-server
+# check
+mysql -V
+sudo systemctl start mysql
+# Login with root account (default if you did not setup password when install)
+mysql -u root -p
+```
+- Composer
+```
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+php composer-setup.php
+php -r "unlink('composer-setup.php');"
+# Check
+composer -v
+```
+On windows, to use php, mysql, composer command you need to add follơwing path to System enviroment:
+```
+C:\xampp\php
+C:\ProgramData\ComposerSetup\bin
+C:\xampp\mysql\bin
+```
+- Git
 TIPS: Cài đặt hirak/prestissimo để tiến hành setup project nhanh hơn:
 ```
 composer global require hirak/prestissimo
