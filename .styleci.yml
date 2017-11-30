@@ -1,13 +1,14 @@
 preset: laravel
 
 enabled:
-  - single_array_no_trailing_comma
+
 disabled:
   - length_ordered_imports
   - phpdoc_scalar
   - phpdoc_no_package
   - phpdoc_single_line_var_spacing
   - concat_without_spaces
+  - single_array_no_trailing_comma
 
 linting: true
 
