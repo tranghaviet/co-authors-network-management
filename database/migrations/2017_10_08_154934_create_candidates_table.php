@@ -14,15 +14,13 @@ class CreateCandidatesTable extends Migration
     public function up()
     {
         Schema::create('candidates', function (Blueprint $table) {
-            $table->increments('id');
+//            $table->increments('id');
             $table->integer('co_author_id', false, true);
-            $table->smallInteger('no_of_mutual_authors', false, true)->nullable();
-            $table->smallInteger('no_of_joint_papers', false, true)->nullable();
-            $table->smallInteger('no_of_joint_subjects', false, true)->nullable();
-            $table->smallInteger('no_of_joint_keywords', false, true)->nullable();
             $table->float('score_1')->nullable();
             $table->float('score_2')->nullable();
             $table->float('score_3')->nullable();
+
+            $table->primary('co_author_id');
 
             $table->foreign('co_author_id')
                 ->references('id')

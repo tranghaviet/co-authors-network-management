@@ -16,10 +16,6 @@ use Laravel\Scout\Searchable;
  * @property \Illuminate\Database\Eloquent\Collection coAuthorPaper
  * @property \Illuminate\Database\Eloquent\Collection keywordPaper
  * @property integer co_author_id
- * @property int no_of_mutual_authors
- * @property int no_of_joint_papers
- * @property int no_of_joint_subjects
- * @property int no_of_joint_keywords
  * @property float score_1
  * @property float score_2
  * @property float score_3
@@ -34,10 +30,6 @@ class Candidate extends Model
 
     public $fillable = [
         'co_author_id',
-        'no_of_mutual_authors',
-        'no_of_joint_papers',
-        'no_of_joint_subjects',
-        'no_of_joint_keywords',
         'score_1',
         'score_2',
         'score_3',
@@ -50,10 +42,6 @@ class Candidate extends Model
      */
     protected $casts = [
         'co_author_id' => 'integer',
-        'no_of_mutual_authors' => 'integer',
-        'no_of_joint_papers' => 'integer',
-        'no_of_joint_subjects' => 'integer',
-        'no_of_joint_keywords' => 'integer',
         'score_1' => 'float',
         'score_2' => 'float',
         'score_3' => 'float',

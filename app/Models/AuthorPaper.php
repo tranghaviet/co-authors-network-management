@@ -35,7 +35,7 @@ class AuthorPaper extends Model
      * @var array
      */
     protected $casts = [
-        'author_id' => 'string',
+        'author_id' => 'integer',
         'paper_id' => 'string',
     ];
 

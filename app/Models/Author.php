@@ -32,6 +32,7 @@ class Author extends Model
     public $timestamps = false;
 
     public $fillable = [
+        'id',
         'given_name',
         'surname',
         'email',

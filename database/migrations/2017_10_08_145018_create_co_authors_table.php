@@ -14,13 +14,19 @@ class CreateCoAuthorsTable extends Migration
     public function up()
     {
         Schema::create('co_authors', function (Blueprint $table) {
+            $table->charset = 'ascii';
+            $table->collation = 'ascii_general_ci';
+
             $table->increments('id');
             // $table->string('first_author_id', 12);
-            $table->bigInteger('first_author_id', false, true);
+            $table->bigInteger('first_author_id', false, true)->index();
             // $table->string('second_author_id', 12);
-            $table->bigInteger('second_author_id', false, true);
+            $table->bigInteger('second_author_id', false, true)->index();
+            $table->smallInteger('no_of_mutual_authors', false, true)->nullable();
+            $table->smallInteger('no_of_joint_papers', false, true)->nullable();
+            $table->smallInteger('no_of_joint_subjects', false, true)->nullable();
+            $table->smallInteger('no_of_joint_keywords', false, true)->nullable();
 
-            $table->index(['first_author_id', 'second_author_id']);
             $table->unique(['first_author_id', 'second_author_id']);
         });
     }

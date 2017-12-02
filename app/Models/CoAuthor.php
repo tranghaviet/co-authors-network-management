@@ -18,6 +18,10 @@ use Laravel\Scout\Searchable;
  * @property \Illuminate\Database\Eloquent\Collection keywordPaper
  * @property string first_author_id
  * @property string second_author_id
+ * @property int no_of_mutual_authors
+ * @property int no_of_joint_papers
+ * @property int no_of_joint_subjects
+ * @property int no_of_joint_keywords
  */
 class CoAuthor extends Model
 {
@@ -30,6 +34,10 @@ class CoAuthor extends Model
     public $fillable = [
         'first_author_id',
         'second_author_id',
+        'no_of_mutual_authors',
+        'no_of_joint_papers',
+        'no_of_joint_subjects',
+        'no_of_joint_keywords',
     ];
 
     /**
@@ -41,6 +49,10 @@ class CoAuthor extends Model
         'id' => 'integer',
         'first_author_id' => 'string',
         'second_author_id' => 'string',
+        'no_of_mutual_authors' => 'integer',
+        'no_of_joint_papers' => 'integer',
+        'no_of_joint_subjects' => 'integer',
+        'no_of_joint_keywords' => 'integer',
     ];
 
     /**
@@ -101,5 +113,10 @@ class CoAuthor extends Model
     public function secondAuthor()
     {
         return $this->hasOne(\App\Models\Author::class, 'id', 'second_author_id');
+    }
+
+    public static function noOfJointPaper($first_author_id, $second_author_id)
+    {
+        return CoAuthor::where(compact($first_author_id, $second_author_id))->first('no_of_joint_papers');
     }
 }
