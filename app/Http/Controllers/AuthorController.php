@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Flash;
+use Response;
+use App\Models\Author;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use App\Repositories\AuthorRepository;
 use App\Http\Requests\CreateAuthorRequest;
 use App\Http\Requests\UpdateAuthorRequest;
-use App\Repositories\AuthorRepository;
-use Illuminate\Http\Request;
-use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
-use Response;
-use Illuminate\Support\Facades\Cache;
 
 class AuthorController extends AppBaseController
 {
@@ -91,7 +92,7 @@ class AuthorController extends AppBaseController
 
         $papers = $author->papers()->get(['id', 'title']);
         // TODO: find $coAuthor, $topCandidates
-        $collaborators = $author->collaborators(['id', 'given_name', 'surname']);
+        $collaborators = Author::collaborators($author, ['id', 'given_name', 'surname']);
 
         return view('authors.show', compact('author', 'subjects', 'papers', 'collaborators'));
     }

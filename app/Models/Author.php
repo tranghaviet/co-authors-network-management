@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
 use Watson\Rememberable\Rememberable;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Author.
@@ -46,13 +46,15 @@ class Author extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
+        'id' => 'string',
         'given_name' => 'string',
         'surname' => 'string',
         'email' => 'string',
         'university_id' => 'integer',
         'url' => 'string',
     ];
+
+    protected $hidden = ['pivot'];
 
     /**
      * Validation rules.
@@ -109,17 +111,22 @@ class Author extends Model
     }
 
     /**
+     * @param int | Author $author
      * @param array $columns
      * @return \Illuminate\Support\Collection|static Co-authors has any joint paper with this Author.
      */
-    public function collaborators($columns = ['*'])
+    public static function collaborators($author, $columns = ['*'])
     {
-        $papers = $this->papers;
+        if (is_numeric($author)) {
+            $author = Author::find($author);
+        }
+
+        $papers = $author->papers;
         $collaborators = collect();
         $authorIds = [];
 
         foreach ($papers as $paper) {
-            $authors = $paper->authors()->where('id', '!=', $this->id)
+            $authors = $paper->authors()->where('id', '!=', $author->id)
                 ->whereNotIn('id', $authorIds)->get($columns);
 
             $authorIds = array_merge($authorIds, $authors->map(function ($author) {
@@ -130,5 +137,15 @@ class Author extends Model
         }
 
         return $collaborators;
+    }
+
+    /**
+     * @param int $authorId Id of the author
+     * @return \Illuminate\Database\Eloquent\Builder|static
+     */
+    public static function coAuthors($authorId)
+    {
+        return CoAuthor::where('first_author_id', $authorId)
+            ->orWhere('second_author_id', $authorId);
     }
 }
