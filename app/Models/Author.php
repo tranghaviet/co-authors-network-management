@@ -46,7 +46,7 @@ class Author extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'string',
+        'id' => 'integer',
         'given_name' => 'string',
         'surname' => 'string',
         'email' => 'string',
@@ -74,7 +74,7 @@ class Author extends Model
             'name' => $this->given_name . ' ' . $this->surname,
         ];
 
-         $a['university'] = $this->university['name'];
+        $a['university'] = $this->university['name'];
 //        $papers = $this->papers()->get(['title'])->map(function ($paper) {
 //            return $paper['title'];
 //        });
@@ -108,20 +108,24 @@ class Author extends Model
         return $this->belongsToMany(\App\Models\Paper::class, 'author_paper');
     }
 
-    /*
-     * @return Co-authors has any joint paper with this Author.
+    /**
+     * @param array $columns
+     * @return \Illuminate\Support\Collection|static Co-authors has any joint paper with this Author.
      */
     public function collaborators($columns = ['*'])
     {
         $papers = $this->papers;
         $collaborators = collect();
+        $authorIds = [];
 
         foreach ($papers as $paper) {
-            $ids = $collaborators->map(function ($author) {
-                return $author->id;
-            });
             $authors = $paper->authors()->where('id', '!=', $this->id)
-                ->whereNotIn('id', $ids)->get($columns);
+                ->whereNotIn('id', $authorIds)->get($columns);
+
+            $authorIds = array_merge($authorIds, $authors->map(function ($author) {
+                return $author->id;
+            })->toArray());
+
             $collaborators = $collaborators->merge($authors);
         }
 
