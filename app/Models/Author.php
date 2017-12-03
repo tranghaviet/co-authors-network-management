@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Laravel\Scout\Searchable;
-use Watson\Rememberable\Rememberable;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -23,9 +22,6 @@ use Illuminate\Database\Eloquent\Model;
 class Author extends Model
 {
     use Searchable;
-    use Rememberable;
-
-    protected $rememberFor = 10;
 
     public $table = 'authors';
 
@@ -46,7 +42,7 @@ class Author extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'string',
+        'id' => 'float',
         'given_name' => 'string',
         'surname' => 'string',
         'email' => 'string',
@@ -113,15 +109,19 @@ class Author extends Model
     /**
      * @param int | Author $author
      * @param array $columns
+     * @param Paper|null $papers papers that keywords belongs to
      * @return \Illuminate\Support\Collection|static Co-authors has any joint paper with this Author.
      */
-    public static function collaborators($author, $columns = ['*'])
+    public static function collaborators($author, $columns = ['*'], $papers = null)
     {
         if (is_numeric($author)) {
-            $author = Author::find($author);
+            $author = self::where('id', $author)->first(['id']);
         }
 
-        $papers = $author->papers;
+        if (is_null($papers)) {
+            $papers = $author->papers()->get(['id']);
+        }
+
         $collaborators = collect();
         $authorIds = [];
 
@@ -129,9 +129,7 @@ class Author extends Model
             $authors = $paper->authors()->where('id', '!=', $author->id)
                 ->whereNotIn('id', $authorIds)->get($columns);
 
-            $authorIds = array_merge($authorIds, $authors->map(function ($author) {
-                return $author->id;
-            })->toArray());
+            $authorIds = array_merge($authorIds, $authors->pluck('id')->toArray());
 
             $collaborators = $collaborators->merge($authors);
         }
@@ -147,5 +145,34 @@ class Author extends Model
     {
         return CoAuthor::where('first_author_id', $authorId)
             ->orWhere('second_author_id', $authorId);
+    }
+
+    /**
+     * @param int|Author $author Id of the author
+     * @param array $columns columns to get
+     * @param Paper|null $papers papers that keywords belongs to
+     * @return \Illuminate\Support\Collection|static
+     */
+    public static function keywords($author, $columns = ['*'], $papers = null)
+    {
+        if (is_numeric($author)) {
+            $author = self::where('id', $author)->first(['id']);
+        }
+
+        if (is_null($papers)) {
+            $papers = $author->papers()->get(['id']);
+        }
+
+        $keywords = collect();
+        $keywordIds = [];
+
+        foreach ($papers as $paper) {
+            $paperKeywords = $paper->keywords()->whereNotIn('id', $keywordIds)->get($columns);
+            $keywordIds = array_merge($keywordIds, $paperKeywords->pluck('id')->toArray());
+
+            $keywords = $keywords->merge($paperKeywords);
+        }
+
+        return $keywords;
     }
 }

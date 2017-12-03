@@ -14,18 +14,19 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \App\Console\Commands\SynchronizeCoAuthorNetwork::class,
+        \App\Console\Commands\DatabaseForeignKeyCheck::class,
     ];
 
     /**
-     * Define the application's command schedule. To run use 'schedule:run'
+     * Define the application's command schedule. To run use 'schedule:run'.
      *
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('co-author:sync')
-                  ->dailyAt('02:00');
+        $schedule->command('co-author:sync')
+            ->yearly();
     }
 
     /**

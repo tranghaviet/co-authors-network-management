@@ -10,7 +10,7 @@ use App\Models\KeywordPaper;
 
 if (! function_exists('handle_keywords')) {
     /**
-     * Handle keywords
+     * Handle keywords.
      *
      * @param  int $paperId id of the paper
      * @param  array $keywords from a row of csv file

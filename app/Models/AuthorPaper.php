@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
  * Class AuthorPaper.
@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string author_id
  * @property string paper_id
  */
-class AuthorPaper extends Model
+class AuthorPaper extends Pivot
 {
     public $table = 'author_paper';
 

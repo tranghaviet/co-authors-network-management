@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Eloquent as Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
  * Class AuthorSubject.
@@ -17,7 +17,7 @@ use Eloquent as Model;
  * @property integer subject_id
  */
 
-class AuthorSubject extends Model
+class AuthorSubject extends Pivot
 {
     public $table = 'author_subject';
     public $timestamps = false;
@@ -38,7 +38,7 @@ class AuthorSubject extends Model
     ];
 
     /**
-     * Validation rules
+     * Validation rules.
      *
      * @var array
      */

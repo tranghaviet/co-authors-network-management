@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
-use Watson\Rememberable\Rememberable;
 
 /**
  * Class Paper.
@@ -24,9 +23,6 @@ use Watson\Rememberable\Rememberable;
 class Paper extends Model
 {
     use Searchable;
-    use Rememberable;
-
-    protected $rememberFor = 10;
 
     public $table = 'papers';
 
@@ -53,6 +49,10 @@ class Paper extends Model
         'abstract' => 'string',
         'url' => 'string',
         'issn' => 'string',
+    ];
+
+    protected $hidden = [
+        'pivot',
     ];
 
     /**

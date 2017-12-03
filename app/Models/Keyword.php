@@ -35,6 +35,8 @@ class Keyword extends Model
         'content' => 'string',
     ];
 
+    protected $hidden = ['pivot'];
+
     /**
      * Validation rules.
      *

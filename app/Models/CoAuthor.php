@@ -115,8 +115,23 @@ class CoAuthor extends Model
         return $this->hasOne(\App\Models\Author::class, 'id', 'second_author_id');
     }
 
+    /**
+     * @param $first_author_id
+     * @param $second_author_id
+     * @return int no_of_joint_papers of the two authors or null.
+     */
     public static function noOfJointPaper($first_author_id, $second_author_id)
     {
-        return CoAuthor::where(compact($first_author_id, $second_author_id))->first('no_of_joint_papers');
+        $result = self::where([
+            'first_author_id' => $first_author_id,
+            'second_author_id' => $second_author_id,
+        ])
+            ->orWhere([
+                'first_author_id' => $second_author_id,
+                'second_author_id' => $first_author_id,
+            ])
+            ->first(['no_of_joint_papers'])['no_of_joint_papers'];
+
+        return $result ?: 0;
     }
 }
