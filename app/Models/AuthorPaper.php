@@ -9,12 +9,6 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @package App\Models
  * @version October 8, 2017, 8:47 pm ICT
  *
- * @property \App\Models\Author author
- * @property \App\Models\Paper paper
- * @property \Illuminate\Database\Eloquent\Collection authorSubject
- * @property \Illuminate\Database\Eloquent\Collection coAuthorPaper
- * @property \Illuminate\Database\Eloquent\Collection coAuthors
- * @property \Illuminate\Database\Eloquent\Collection keywordPaper
  * @property string author_id
  * @property string paper_id
  */
@@ -35,7 +29,7 @@ class AuthorPaper extends Pivot
      * @var array
      */
     protected $casts = [
-        'author_id' => 'integer',
+        'author_id' => 'float',
         'paper_id' => 'string',
     ];
 

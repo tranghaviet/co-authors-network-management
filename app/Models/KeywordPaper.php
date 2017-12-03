@@ -9,11 +9,6 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @package App\Models
  * @version October 11, 2017, 5:06 pm ICT
  *
- * @property \App\Models\Keyword keyword
- * @property \App\Models\Paper paper
- * @property \Illuminate\Database\Eloquent\Collection authorPaper
- * @property \Illuminate\Database\Eloquent\Collection authorSubject
- * @property \Illuminate\Database\Eloquent\Collection coAuthorPaper
  * @property integer keyword_id
  * @property string paper_id
  */

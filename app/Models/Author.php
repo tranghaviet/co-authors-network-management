@@ -10,9 +10,6 @@ use Illuminate\Database\Eloquent\Model;
  * @package App\Models
  * @version October 8, 2017, 7:41 pm ICT
  *
- * @property \Illuminate\Database\Eloquent\Collection authorSubject
- * @property \Illuminate\Database\Eloquent\Collection coAuthorPaper
- * @property \Illuminate\Database\Eloquent\Collection keywordPaper
  * @property string given_name
  * @property string surname
  * @property string email

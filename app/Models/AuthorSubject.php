@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use Eloquent as Model;
 
 /**
  * Class AuthorSubject.
@@ -11,13 +11,9 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  *
  * @property \App\Models\Author author
  * @property \App\Models\Subject subject
- * @property \Illuminate\Database\Eloquent\Collection authorPaper
- * @property \Illuminate\Database\Eloquent\Collection coAuthorPaper
- * @property \Illuminate\Database\Eloquent\Collection keywordPaper
  * @property integer subject_id
  */
-
-class AuthorSubject extends Pivot
+class AuthorSubject extends Model
 {
     public $table = 'author_subject';
     public $timestamps = false;
@@ -33,7 +29,7 @@ class AuthorSubject extends Pivot
      * @var array
      */
     protected $casts = [
-        'author_id' => 'integer',
+        'author_id' => 'float',
         'subject_id' => 'integer',
     ];
 

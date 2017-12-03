@@ -10,12 +10,6 @@ use Laravel\Scout\Searchable;
  * @package App\Models
  * @version October 8, 2017, 9:23 pm ICT
  *
- * @property \App\Models\Author author
- * @property \Illuminate\Database\Eloquent\Collection authorPaper
- * @property \Illuminate\Database\Eloquent\Collection authorSubject
- * @property \Illuminate\Database\Eloquent\Collection Candidate
- * @property \Illuminate\Database\Eloquent\Collection coAuthorPaper
- * @property \Illuminate\Database\Eloquent\Collection keywordPaper
  * @property string first_author_id
  * @property string second_author_id
  * @property int no_of_mutual_authors
@@ -46,7 +40,7 @@ class CoAuthor extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
+        'id' => 'float',
         'first_author_id' => 'string',
         'second_author_id' => 'string',
         'no_of_mutual_authors' => 'integer',

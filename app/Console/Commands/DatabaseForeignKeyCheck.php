@@ -31,9 +31,9 @@ class DatabaseForeignKeyCheck extends Command
         if ($this->confirm('Do you want to disable foreign key check in database?')) {
             DB::statement('SET FOREIGN_KEY_CHECKS=0;');
             $this->info('Disable foreign key check successfully');
+        } else {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+            $this->info('Enable foreign key check successfully');
         }
-
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-        $this->info('Enable foreign key check successfully');
     }
 }

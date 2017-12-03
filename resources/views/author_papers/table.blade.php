@@ -1,17 +1,17 @@
 <table class="table table-responsive" id="authorPapers-table">
     <thead>
-        <tr>
-            <th>Author</th>
-            <th>Paper</th>
-            <th colspan="3">Action</th>
-        </tr>
+    <tr>
+        <th>Author</th>
+        <th>Paper</th>
+        <th colspan="3">Action</th>
+    </tr>
     </thead>
     <tbody>
     @foreach($authorPapers as $authorPaper)
         <tr>
             <td>
                 <a href="{!! route('authors.show', [$authorPaper->author['id']]) !!}">
-                    {{ $authorPaper->author['given_name'].' '.$authorPaper->author['surname'] }}
+                    {{ $authorPaper->author['given_name'] .' '. $authorPaper->author['surname'] }}
                 </a>
             </td>
             <td>

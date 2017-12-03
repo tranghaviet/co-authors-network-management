@@ -22,7 +22,6 @@ if (! function_exists('handle_keywords')) {
             // Check if keyword exists
             if (Keyword::where(['content' => $keyword])->exists()) {
                 continue;
-
             }
             // If not exist, create one
             $keyword = Keyword::create(['content' => $keyword]);

@@ -5,12 +5,14 @@ namespace App\Console\Commands;
 use Exception;
 use App\Models\Author;
 use App\Models\CoAuthor;
+use App\Models\CoAuthorPaper;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
 class SynchronizeCoAuthorNetwork extends Command
 {
     protected $isRefreshTable;
+    protected $isRefreshCoAuthorPaperTable;
 
     /**
      * The name and signature of the console command.
@@ -37,6 +39,8 @@ class SynchronizeCoAuthorNetwork extends Command
         // @TODO Test
         $this->isRefreshTable = $this->confirm('Do you want to refresh entirely co_authors table?
         If yes, you need to re-compute candidate table due to incorrect co_author_id.');
+
+        $this->isRefreshCoAuthorPaperTable = $this->confirm('Due to incorrect co_author_id. Do you want to refresh co_author_paper table?');
 
         if ($this->isRefreshTable) {
             DB::statement('SET FOREIGN_KEY_CHECKS=0;');
@@ -86,7 +90,7 @@ class SynchronizeCoAuthorNetwork extends Command
 
 //                            DB::enableQueryLog();
                             // check if record already exist
-                                // TODO: why for each $author this query always return a record except first collaborator?
+                            // TODO: why for each $author this query always return a record except first collaborator?
 //                            $coAuthorRecord = CoAuthor::where([
 //                                'first_author_id' => $collaborator->id,
 //                                'second_author_id' => $author->id,
@@ -95,8 +99,8 @@ class SynchronizeCoAuthorNetwork extends Command
 //                                    'first_author_id' => $author->id,
 //                                    'second_author_id' => $collaborator->id,
 //                                ])->first();
-                                $coAuthorRecord = CoAuthor::where([
-                                    'first_author_id' => $first_author_id,
+                            $coAuthorRecord = CoAuthor::where([
+                                'first_author_id' => $first_author_id,
                                 'second_author_id' => $second_author_id,
                             ])
                                 ->orWhere([
@@ -143,7 +147,7 @@ class SynchronizeCoAuthorNetwork extends Command
                             $this->line('KEYWORDS: ' . count($collaboratorKeywords) . ' -->' . json_encode($collaboratorKeywords->pluck('id')->toArray()));
                             $this->line('JOINT KEYWORDS: ' . $noOfJointKeywords . ' -->' . json_encode($jointKeywords->pluck('id')->toArray()));
 
-                            if (count($coAuthorRecord) != 0 && !$this->isRefreshTable) {
+                            if (count($coAuthorRecord) != 0 && ! $this->isRefreshTable) {
                                 $coAuthorRecord->update([
                                     'no_of_mutual_authors' => $noOfMutualAuthors,
                                     'no_of_joint_papers' => $noOfJointPapers,
@@ -162,6 +166,24 @@ class SynchronizeCoAuthorNetwork extends Command
                             }
 
                             $this->info('SUCCESS: ' . json_encode($coAuthorRecord->attributesToArray()));
+
+                            // update co_author_paper table
+                            if ($this->isRefreshCoAuthorPaperTable) {
+                                DB::statement('TRUNCATE TABLE `co_author_paper`');
+                                $coAuthorPapers = [];
+
+                                foreach ($jointPapers as $jointPaper) {
+                                    array_push($coAuthorPapers, [
+                                        'co_author_id' => $coAuthorRecord->id,
+                                        'paper_id' => $jointPaper->id,
+                                    ]);
+                                }
+
+                                if (CoAuthorPaper::insert($coAuthorPapers)) {
+                                    $this->info('CoAuthorPaper(s) INSERTED: ' . json_encode($coAuthorPapers));
+                                }
+                            }
+
                             unset($coAuthorRecord, $second_author_id,
                                 $coAuthorCollaborators, $mutualAuthors, $noOfMutualAuthors,
                                 $collaboratorPapers, $jointPapers, $noOfJointPapers,

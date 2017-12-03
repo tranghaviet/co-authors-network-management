@@ -17,7 +17,7 @@ class CreateCoAuthorPaperTable extends Migration
             $table->charset = 'ascii';
             $table->collation = 'ascii_general_ci';
 
-            $table->integer('co_author_id', false, true);
+            $table->bigInteger('co_author_id', false, true);
             $table->string('paper_id', 23);
 
             $table->foreign('co_author_id')

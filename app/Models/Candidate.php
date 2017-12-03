@@ -11,11 +11,7 @@ use Laravel\Scout\Searchable;
  * @version October 8, 2017, 9:45 pm ICT
  *
  * @property \App\Models\CoAuthor coAuthor
- * @property \Illuminate\Database\Eloquent\Collection authorPaper
- * @property \Illuminate\Database\Eloquent\Collection authorSubject
- * @property \Illuminate\Database\Eloquent\Collection coAuthorPaper
- * @property \Illuminate\Database\Eloquent\Collection keywordPaper
- * @property integer co_author_id
+ * @property float co_author_id
  * @property float score_1
  * @property float score_2
  * @property float score_3
@@ -41,7 +37,7 @@ class Candidate extends Model
      * @var array
      */
     protected $casts = [
-        'co_author_id' => 'integer',
+        'co_author_id' => 'float',
         'score_1' => 'float',
         'score_2' => 'float',
         'score_3' => 'float',

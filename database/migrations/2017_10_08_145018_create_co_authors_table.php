@@ -14,7 +14,7 @@ class CreateCoAuthorsTable extends Migration
     public function up()
     {
         Schema::create('co_authors', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             // $table->string('first_author_id', 12);
             $table->bigInteger('first_author_id', false, true)->index();
             // $table->string('second_author_id', 12);

@@ -10,11 +10,6 @@ use Eloquent as Model;
  * @version October 11, 2017, 2:31 pm ICT
  *
  * @property \App\Models\Country country
- * @property \Illuminate\Database\Eloquent\Collection authorPaper
- * @property \Illuminate\Database\Eloquent\Collection authorSubject
- * @property \Illuminate\Database\Eloquent\Collection coAuthorPaper
- * @property \Illuminate\Database\Eloquent\Collection keywordPaper
- * @property \Illuminate\Database\Eloquent\Collection University
  * @property string name
  * @property integer country_id
  */

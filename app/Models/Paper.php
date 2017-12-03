@@ -10,10 +10,6 @@ use Laravel\Scout\Searchable;
  * @package App\Models
  * @version October 8, 2017, 8:05 pm ICT
  *
- * @property \Illuminate\Database\Eloquent\Collection authorSubject
- * @property \Illuminate\Database\Eloquent\Collection coAuthorPaper
- * @property \Illuminate\Database\Eloquent\Collection coAuthors
- * @property \Illuminate\Database\Eloquent\Collection keywordPaper
  * @property string title
  * @property datetime cover_date
  * @property string abstract

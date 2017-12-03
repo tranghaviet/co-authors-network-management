@@ -9,10 +9,6 @@ use Eloquent as Model;
  * @package App\Models
  * @version October 11, 2017, 5:05 pm ICT
  *
- * @property \Illuminate\Database\Eloquent\Collection authorPaper
- * @property \Illuminate\Database\Eloquent\Collection authorSubject
- * @property \Illuminate\Database\Eloquent\Collection coAuthorPaper
- * @property \Illuminate\Database\Eloquent\Collection keywordPaper
  * @property string content
  */
 class Keyword extends Model
