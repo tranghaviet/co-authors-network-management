@@ -12,17 +12,12 @@ if (! function_exists('wcn')) {
     /**
      * compute measure linking base on wcn.
      *
-     * @param  float $firstAuthorId id of first author
-     * @param  float $secondAuthorId id of second author
-     * @return float
+     * @param  \Illuminate\Database\Eloquent\Collection $firstCoAuthors co-authors of first author with their no_of_joint_papers
+     * @param  \Illuminate\Database\Eloquent\Collection $secondCoAuthors co-authors of second author with their no_of_joint_papers
+     * @return float Sum of joint papers of all joint author.
      */
-    function wcn($firstAuthorId, $secondAuthorId)
+    function wcn($firstCoAuthors, $secondCoAuthors)
     {
-        $firstCoAuthors = CoAuthor::coAuthorWithoutInfo($firstAuthorId, DEFAULT_COLUMNS);
-        $secondCoAuthors = CoAuthor::coAuthorWithoutInfo($secondAuthorId, DEFAULT_COLUMNS);
-//        dump($firstCoAuthors);
-//        dd($secondCoAuthors);
-
         $result = 0;
 
         foreach ($firstCoAuthors as $firstCoAuthor) {
@@ -42,35 +37,32 @@ if (! function_exists('waa')) {
     /**
      * compute measure linking base on waa.
      *
-     * @param  float $firstAuthorId id of first author
-     * @param  float $secondAuthorId id of second author
-     * @return float
+     * @param  \Illuminate\Database\Eloquent\Collection $firstCoAuthors co-authors of first author with their no_of_joint_papers
+     * @param  \Illuminate\Database\Eloquent\Collection $secondCoAuthors co-authors of second author with their no_of_joint_papers
+     * @return float Sum of joint papers of all joint author.
      */
-    function waa($firstAuthorId, $secondAuthorId)
+    function waa($firstCoAuthors, $secondCoAuthors)
     {
-        $firstCoAuthors = CoAuthor::coAuthorWithoutInfo($firstAuthorId, DEFAULT_COLUMNS);
-        $secondCoAuthors = CoAuthor::coAuthorWithoutInfo($secondAuthorId, DEFAULT_COLUMNS);
-
         $result = 0;
-        $authorIds = [];
+        $jointAuthorIds = [];
 
         foreach ($firstCoAuthors as $firstCoauthor) {
             foreach ($secondCoAuthors as $secondCoauthor) {
                 if ($firstCoauthor->id == $secondCoauthor->id) {
-                    array_push($authorIds, $firstCoauthor->id);
+                    array_push($jointAuthorIds, $firstCoauthor->id);
                     $result += $firstCoauthor->no_of_joint_papers + $secondCoauthor->no_of_joint_papers;
                     break;
                 }
             }
         }
 
-        if (length($authorIds) == 0) {
+        if (count($jointAuthorIds) == 0) {
             return 0;
         }
 
         $allJointPapers = 0;
 
-        foreach ($authorIds as $authorId) {
+        foreach ($jointAuthorIds as $authorId) {
             foreach (CoAuthor::coAuthorWithoutInfo($authorId, DEFAULT_COLUMNS) as $coAuthor) {
                 $allJointPapers += $coAuthor->no_of_joint_papers;
             }
@@ -84,15 +76,12 @@ if (! function_exists('wjc')) {
     /**
      * compute measure linking base on wjc.
      *
-     * @param  float $firstAuthorId id of first author
-     * @param  float $secondAuthorId id of second author
-     * @return float
+     * @param  \Illuminate\Database\Eloquent\Collection $firstCoAuthors co-authors of first author with their no_of_joint_papers
+     * @param  \Illuminate\Database\Eloquent\Collection $secondCoAuthors co-authors of second author with their no_of_joint_papers
+     * @return float Sum of joint papers of all joint author.
      */
-    function wjc($firstAuthorId, $secondAuthorId)
+    function wjc($firstCoAuthors, $secondCoAuthors)
     {
-        $firstCoAuthors = CoAuthor::coAuthorWithoutInfo($firstAuthorId, DEFAULT_COLUMNS);
-        $secondCoAuthors = CoAuthor::coAuthorWithoutInfo($secondAuthorId, DEFAULT_COLUMNS);
-
         $result = 0;
         $allJointPapers = 0;
 
@@ -100,7 +89,7 @@ if (! function_exists('wjc')) {
             $allJointPapers += $firstCoauthor->no_of_joint_papers;
 
             foreach ($secondCoAuthors as $secondCoauthor) {
-                $allJointPapers += $secondCoauthor->no_of_joint_papers;
+                $allJointPapers += $secondCoauthor->no_of_joint_papers; // TODO: should this be in individual loop?
 
                 if ($firstCoauthor->id == $secondCoauthor->id) {
                     $result += $firstCoauthor->no_of_joint_papers + $secondCoauthor->no_of_joint_papers;
@@ -121,15 +110,12 @@ if (! function_exists('wca')) {
     /**
      * compute measure linking base on wca.
      *
-     * @param  float $firstAuthorId id of first author
-     * @param  float $secondAuthorId id of second author
-     * @return float
+     * @param  \Illuminate\Database\Eloquent\Collection $firstCoAuthors co-authors of first author with their no_of_joint_papers
+     * @param  \Illuminate\Database\Eloquent\Collection $secondCoAuthors co-authors of second author with their no_of_joint_papers
+     * @return float Sum of joint papers of all joint author.
      */
-    function wca($firstAuthorId, $secondAuthorId)
+    function wca($firstCoAuthors, $secondCoAuthors)
     {
-        $firstCoAuthors = CoAuthor::coAuthorWithoutInfo($firstAuthorId, DEFAULT_COLUMNS);
-        $secondCoAuthors = CoAuthor::coAuthorWithoutInfo($secondAuthorId, DEFAULT_COLUMNS);
-
         $result = 0;
         $allJointPapers = 0;
 
