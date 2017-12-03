@@ -46,10 +46,12 @@ class SynchronizeCoAuthorNetwork extends Command
 
         Author::chunk(200, function ($authors) {
             foreach ($authors as $author) {
-                $this->info('Author id: ' . $author->id);
+                $first_author_id = $author->id;
+
+                $this->line("-----------------------------\nAuthor id: " . $first_author_id);
 
                 try {
-                    $papers = $author->papers; // papers that author wrote
+                    $papers = $author->papers()->get(['id']); // papers that author wrote
 
                     if (count($papers) == 0) {
                         continue;
@@ -61,7 +63,7 @@ class SynchronizeCoAuthorNetwork extends Command
                     $collaboratorIds = []; // ids of all author has any joint paper with $author
 
                     foreach ($papers as $paper) {
-                        $authorsWriteOnePaper = $paper->authors()->where('id', '!=', $author->id)
+                        $authorsWriteOnePaper = $paper->authors()->where('id', '!=', $first_author_id)
                             ->whereNotIn('id', $collaboratorIds)->get(['id']);
 
                         $collaboratorIds = array_merge($collaboratorIds, $authorsWriteOnePaper->map(function ($authorWriteOnePaper) {
@@ -71,38 +73,75 @@ class SynchronizeCoAuthorNetwork extends Command
 
                         $keywords = $keywords->merge($paper->keywords()->get(['id']));
                     }
-                    $this->info('Collaborators ' . $collaborators->toJson());
+                    $this->line("AUTHOR's PAPERS: " . count($papers) . ' -->' . json_encode($papers->pluck('id')->toArray()));
+                    $this->line("AUTHOR's SUBJECTS: " . count($subjects) . ' -->' . json_encode($subjects->pluck('id')->toArray()));
+                    $this->line("AUTHOR's KEYWORDS: " . count($keywords) . ' -->' . json_encode($keywords->pluck('id')->toArray()));
+                    $this->line("AUTHOR's COLLABORATORS: " . count($collaborators) . ' -->' . json_encode($collaborators->pluck('id')->toArray()));
 
                     foreach ($collaborators as $collaborator) {
                         try {
+                            $second_author_id = $collaborator->id;
+
+                            $this->line('+++++++ COLLABORATOR: ' . $second_author_id);
+
+//                            DB::enableQueryLog();
                             // check if record already exist
-                            $coAuthorRecord = CoAuthor::where(['first_author_id' => $collaborator->id,
-                                'second_author_id' => $author->id])
-                                ->orWhere(['first_author_id' => $author->id,
-                                    'second_author_id' => $collaborator->id])->first();
+                                // TODO: why for each $author this query always return a record except first collaborator?
+//                            $coAuthorRecord = CoAuthor::where([
+//                                'first_author_id' => $collaborator->id,
+//                                'second_author_id' => $author->id,
+//                            ])
+//                                ->orWhere([
+//                                    'first_author_id' => $author->id,
+//                                    'second_author_id' => $collaborator->id,
+//                                ])->first();
+                                $coAuthorRecord = CoAuthor::where([
+                                    'first_author_id' => $first_author_id,
+                                'second_author_id' => $second_author_id,
+                            ])
+                                ->orWhere([
+                                    'first_author_id' => $second_author_id,
+                                    'second_author_id' => $first_author_id,
+                                ])->first();
+
+//                            $laQuery = DB::getQueryLog();
+//                            $this->line('QUERY: ' . json_encode($laQuery));
+//                            $lcWhatYouWant = $laQuery[0]['query'] . '; BINDINGS: ' . implode(', ', $laQuery[0]['bindings']);
+//                            $this->line($lcWhatYouWant);
+//                            DB::disableQueryLog();
 
                             if (count($coAuthorRecord) != 0 && $this->isRefreshTable) {
-                                $this->line('RECORD ' . $coAuthorRecord->id . ' EXISTED');
+                                $this->line('RECORD EXISTED: ' . json_encode($coAuthorRecord->attributesToArray()));
                                 continue;
                             }
-                            // compute no. of mutual authors
-                            $coAuthorCollaborators = Author::collaborators($collaborator, ['id']);
-                            $noOfMutualAuthors = $coAuthorCollaborators->intersect($collaborators)->count();
-
                             // compute no. of joint papers
                             $collaboratorPapers = $collaborator->papers()->get(['id']);
-                            $noOfJointPapers = $collaboratorPapers->intersect($papers)->count();
+                            $jointPapers = $collaboratorPapers->intersect($papers);
+                            $noOfJointPapers = $jointPapers->count();
+                            $this->line('PAPERS: ' . count($collaboratorPapers) . ' -->' . json_encode($collaboratorPapers->pluck('id')->toArray()));
+                            $this->line('JOINT PAPERS: ' . $noOfJointPapers . ' -->' . json_encode($jointPapers->pluck('id')->toArray()));
+
+                            // compute no. of mutual authors
+                            $coAuthorCollaborators = Author::collaborators($collaborator, ['id'], $collaboratorPapers);
+                            $mutualAuthors = $coAuthorCollaborators->intersect($collaborators);
+//                            $mutualAuthors = $coAuthorCollaborators->pluck('id')->intersect($collaborators->pluck('id'));
+                            $noOfMutualAuthors = $mutualAuthors->count();
+                            $this->line('COLLABORATORS: ' . count($coAuthorCollaborators) . ' -->' . json_encode($coAuthorCollaborators->pluck('id')->toArray()));
+                            $this->line('MUTUAL AUTHORS: ' . $noOfMutualAuthors . ' -->' . json_encode($mutualAuthors->pluck('id')->toArray()));
 
                             // compute no. of joint subjects
                             $collaboratorSubjects = $collaborator->subjects()->get(['id']);
-                            $noOfJointSubjects = $collaboratorSubjects->intersect($subjects)->count();
+                            $jointSubjects = $collaboratorSubjects->intersect($subjects);
+                            $noOfJointSubjects = $jointSubjects->count();
+                            $this->line('SUBJECTS: ' . count($collaboratorSubjects) . ' -->' . json_encode($collaboratorSubjects->pluck('id')->toArray()));
+                            $this->line('JOINT SUBJECTS: ' . $noOfJointSubjects . ' -->' . json_encode($jointSubjects->pluck('id')->toArray()));
 
                             // compute no. of joint keywords
-                            $collaboratorKeywords = collect();
-                            foreach ($collaboratorPapers as $collaboratorPaper) {
-                                $collaboratorKeywords = $collaboratorKeywords->merge($collaboratorPaper->keywords()->get(['id']));
-                            }
-                            $noOfJointKeywords = $collaboratorKeywords->intersect($keywords)->count();
+                            $collaboratorKeywords = Author::keywords($collaborator, ['id'], $collaboratorPapers);
+                            $jointKeywords = $collaboratorKeywords->intersect($keywords);
+                            $noOfJointKeywords = $jointKeywords->count();
+                            $this->line('KEYWORDS: ' . count($collaboratorKeywords) . ' -->' . json_encode($collaboratorKeywords->pluck('id')->toArray()));
+                            $this->line('JOINT KEYWORDS: ' . $noOfJointKeywords . ' -->' . json_encode($jointKeywords->pluck('id')->toArray()));
 
                             if (count($coAuthorRecord) != 0 && !$this->isRefreshTable) {
                                 $coAuthorRecord->update([
@@ -113,8 +152,8 @@ class SynchronizeCoAuthorNetwork extends Command
                                 ]);
                             } else {
                                 $coAuthorRecord = CoAuthor::create([
-                                    'first_author_id' => $author->id,
-                                    'second_author_id' => $collaborator->id,
+                                    'first_author_id' => $first_author_id,
+                                    'second_author_id' => $second_author_id,
                                     'no_of_mutual_authors' => $noOfMutualAuthors,
                                     'no_of_joint_papers' => $noOfJointPapers,
                                     'no_of_joint_subjects' => $noOfJointSubjects,
@@ -123,6 +162,11 @@ class SynchronizeCoAuthorNetwork extends Command
                             }
 
                             $this->info('SUCCESS: ' . json_encode($coAuthorRecord->attributesToArray()));
+                            unset($coAuthorRecord, $second_author_id,
+                                $coAuthorCollaborators, $mutualAuthors, $noOfMutualAuthors,
+                                $collaboratorPapers, $jointPapers, $noOfJointPapers,
+                                $collaboratorSubjects, $jointSubjects, $noOfJointSubjects,
+                                $collaboratorKeywords, $jointKeywords, $noOfJointKeywords);
                         } catch (Exception $e) {
                             $this->error($e->getMessage());
                         }

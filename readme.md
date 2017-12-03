@@ -92,3 +92,11 @@ Khởi động app:
 php artisan serve
 ```
 Login vào admin bằng email **admin@example.com** và password là **password**.
+### Use co-author sync function
+```
+php artisan co-author:sync
+```
+### Enable/disable foreign key check in database
+```
+php artisan db:foreign-key
+```
