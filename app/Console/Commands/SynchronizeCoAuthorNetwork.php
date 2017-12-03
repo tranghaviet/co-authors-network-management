@@ -66,21 +66,9 @@ class SynchronizeCoAuthorNetwork extends Command
                     }
 
                     $subjects = $author->subjects()->get(['id']); // subject that author research
-                    $keywords = collect(); // all keywords in papers that author wrote
-                    $collaborators = collect(); // all author has any joint paper with $author
-                    $collaboratorIds = []; // ids of all author has any joint paper with $author
+                    $keywords = Author::keywords($author, ['id'], $papers); // all keywords in papers that author wrote
+                    $collaborators = Author::collaborators($author, ['id'], $papers); // all author has any joint paper with $author
 
-                    foreach ($papers as $paper) {
-                        $authorsWriteOnePaper = $paper->authors()->where('id', '!=', $first_author_id)
-                            ->whereNotIn('id', $collaboratorIds)->get(['id']);
-
-                        $collaboratorIds = array_merge($collaboratorIds, $authorsWriteOnePaper->map(function ($authorWriteOnePaper) {
-                            return $authorWriteOnePaper->id;
-                        })->toArray());
-                        $collaborators = $collaborators->merge($authorsWriteOnePaper);
-
-                        $keywords = $keywords->merge($paper->keywords()->get(['id']));
-                    }
                     // $this->line("AUTHOR's PAPERS: " . count($papers) . ' -->' . json_encode($papers->pluck('id')->toArray()));
                     // $this->line("AUTHOR's SUBJECTS: " . count($subjects) . ' -->' . json_encode($subjects->pluck('id')->toArray()));
                     // $this->line("AUTHOR's KEYWORDS: " . count($keywords) . ' -->' . json_encode($keywords->pluck('id')->toArray()));
