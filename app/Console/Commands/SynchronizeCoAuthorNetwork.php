@@ -48,6 +48,10 @@ class SynchronizeCoAuthorNetwork extends Command
             $this->info('Disable foreign key check and truncate co_authors table success');
         }
 
+        if ($this->isRefreshCoAuthorPaperTable) {
+            DB::statement('TRUNCATE TABLE `co_author_paper`');
+        }
+
         Author::chunk(200, function ($authors) {
             foreach ($authors as $author) {
                 $first_author_id = $author->id;
@@ -77,16 +81,16 @@ class SynchronizeCoAuthorNetwork extends Command
 
                         $keywords = $keywords->merge($paper->keywords()->get(['id']));
                     }
-                    $this->line("AUTHOR's PAPERS: " . count($papers) . ' -->' . json_encode($papers->pluck('id')->toArray()));
-                    $this->line("AUTHOR's SUBJECTS: " . count($subjects) . ' -->' . json_encode($subjects->pluck('id')->toArray()));
-                    $this->line("AUTHOR's KEYWORDS: " . count($keywords) . ' -->' . json_encode($keywords->pluck('id')->toArray()));
-                    $this->line("AUTHOR's COLLABORATORS: " . count($collaborators) . ' -->' . json_encode($collaborators->pluck('id')->toArray()));
+                    // $this->line("AUTHOR's PAPERS: " . count($papers) . ' -->' . json_encode($papers->pluck('id')->toArray()));
+                    // $this->line("AUTHOR's SUBJECTS: " . count($subjects) . ' -->' . json_encode($subjects->pluck('id')->toArray()));
+                    // $this->line("AUTHOR's KEYWORDS: " . count($keywords) . ' -->' . json_encode($keywords->pluck('id')->toArray()));
+                    // $this->line("AUTHOR's COLLABORATORS: " . count($collaborators) . ' -->' . json_encode($collaborators->pluck('id')->toArray()));
 
                     foreach ($collaborators as $collaborator) {
                         try {
                             $second_author_id = $collaborator->id;
 
-                            $this->line('+++++++ COLLABORATOR: ' . $second_author_id);
+                            // $this->line('+++++++ COLLABORATOR: ' . $second_author_id);
 
 //                            DB::enableQueryLog();
                             // check if record already exist
@@ -122,30 +126,30 @@ class SynchronizeCoAuthorNetwork extends Command
                             $collaboratorPapers = $collaborator->papers()->get(['id']);
                             $jointPapers = $collaboratorPapers->intersect($papers);
                             $noOfJointPapers = $jointPapers->count();
-                            $this->line('PAPERS: ' . count($collaboratorPapers) . ' -->' . json_encode($collaboratorPapers->pluck('id')->toArray()));
-                            $this->line('JOINT PAPERS: ' . $noOfJointPapers . ' -->' . json_encode($jointPapers->pluck('id')->toArray()));
+                            // $this->line('PAPERS: ' . count($collaboratorPapers) . ' -->' . json_encode($collaboratorPapers->pluck('id')->toArray()));
+                            // $this->line('JOINT PAPERS: ' . $noOfJointPapers . ' -->' . json_encode($jointPapers->pluck('id')->toArray()));
 
                             // compute no. of mutual authors
                             $coAuthorCollaborators = Author::collaborators($collaborator, ['id'], $collaboratorPapers);
                             $mutualAuthors = $coAuthorCollaborators->intersect($collaborators);
 //                            $mutualAuthors = $coAuthorCollaborators->pluck('id')->intersect($collaborators->pluck('id'));
                             $noOfMutualAuthors = $mutualAuthors->count();
-                            $this->line('COLLABORATORS: ' . count($coAuthorCollaborators) . ' -->' . json_encode($coAuthorCollaborators->pluck('id')->toArray()));
-                            $this->line('MUTUAL AUTHORS: ' . $noOfMutualAuthors . ' -->' . json_encode($mutualAuthors->pluck('id')->toArray()));
+                            // $this->line('COLLABORATORS: ' . count($coAuthorCollaborators) . ' -->' . json_encode($coAuthorCollaborators->pluck('id')->toArray()));
+                            // $this->line('MUTUAL AUTHORS: ' . $noOfMutualAuthors . ' -->' . json_encode($mutualAuthors->pluck('id')->toArray()));
 
                             // compute no. of joint subjects
                             $collaboratorSubjects = $collaborator->subjects()->get(['id']);
                             $jointSubjects = $collaboratorSubjects->intersect($subjects);
                             $noOfJointSubjects = $jointSubjects->count();
-                            $this->line('SUBJECTS: ' . count($collaboratorSubjects) . ' -->' . json_encode($collaboratorSubjects->pluck('id')->toArray()));
-                            $this->line('JOINT SUBJECTS: ' . $noOfJointSubjects . ' -->' . json_encode($jointSubjects->pluck('id')->toArray()));
+                            // $this->line('SUBJECTS: ' . count($collaboratorSubjects) . ' -->' . json_encode($collaboratorSubjects->pluck('id')->toArray()));
+                            // $this->line('JOINT SUBJECTS: ' . $noOfJointSubjects . ' -->' . json_encode($jointSubjects->pluck('id')->toArray()));
 
                             // compute no. of joint keywords
                             $collaboratorKeywords = Author::keywords($collaborator, ['id'], $collaboratorPapers);
                             $jointKeywords = $collaboratorKeywords->intersect($keywords);
                             $noOfJointKeywords = $jointKeywords->count();
-                            $this->line('KEYWORDS: ' . count($collaboratorKeywords) . ' -->' . json_encode($collaboratorKeywords->pluck('id')->toArray()));
-                            $this->line('JOINT KEYWORDS: ' . $noOfJointKeywords . ' -->' . json_encode($jointKeywords->pluck('id')->toArray()));
+                            // $this->line('KEYWORDS: ' . count($collaboratorKeywords) . ' -->' . json_encode($collaboratorKeywords->pluck('id')->toArray()));
+                            // $this->line('JOINT KEYWORDS: ' . $noOfJointKeywords . ' -->' . json_encode($jointKeywords->pluck('id')->toArray()));
 
                             if (count($coAuthorRecord) != 0 && ! $this->isRefreshTable) {
                                 $coAuthorRecord->update([
@@ -169,7 +173,6 @@ class SynchronizeCoAuthorNetwork extends Command
 
                             // update co_author_paper table
                             if ($this->isRefreshCoAuthorPaperTable) {
-                                DB::statement('TRUNCATE TABLE `co_author_paper`');
                                 $coAuthorPapers = [];
 
                                 foreach ($jointPapers as $jointPaper) {
@@ -180,7 +183,7 @@ class SynchronizeCoAuthorNetwork extends Command
                                 }
 
                                 if (CoAuthorPaper::insert($coAuthorPapers)) {
-                                    $this->info('CoAuthorPaper(s) INSERTED: ' . json_encode($coAuthorPapers));
+                                    $this->info('CoAuthorPaper INSERTED: ' . json_encode($coAuthorPapers));
                                 }
                             }
 
