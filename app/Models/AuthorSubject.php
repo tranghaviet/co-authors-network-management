@@ -11,12 +11,8 @@ use Eloquent as Model;
  *
  * @property \App\Models\Author author
  * @property \App\Models\Subject subject
- * @property \Illuminate\Database\Eloquent\Collection authorPaper
- * @property \Illuminate\Database\Eloquent\Collection coAuthorPaper
- * @property \Illuminate\Database\Eloquent\Collection keywordPaper
  * @property integer subject_id
  */
-
 class AuthorSubject extends Model
 {
     public $table = 'author_subject';
@@ -33,12 +29,12 @@ class AuthorSubject extends Model
      * @var array
      */
     protected $casts = [
-        'author_id' => 'integer',
+        'author_id' => 'float',
         'subject_id' => 'integer',
     ];
 
     /**
-     * Validation rules
+     * Validation rules.
      *
      * @var array
      */

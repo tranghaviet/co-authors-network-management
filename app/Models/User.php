@@ -11,10 +11,6 @@ use Watson\Rememberable\Rememberable;
  * @package App\Models
  * @version October 8, 2017, 5:28 pm ICT
  *
- * @property \Illuminate\Database\Eloquent\Collection authorSubject
- * @property \Illuminate\Database\Eloquent\Collection coAuthorPaper
- * @property \Illuminate\Database\Eloquent\Collection coAuthors
- * @property \Illuminate\Database\Eloquent\Collection keywordPaper
  * @property string name
  * @property string email
  * @property string password

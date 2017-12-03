@@ -3,20 +3,26 @@
 namespace App\Models;
 
 use Eloquent as Model;
+use Watson\Rememberable\Rememberable;
 
 /**
  * Class Subject.
  * @package App\Models
  * @version October 11, 2017, 4:58 pm ICT
  *
- * @property \Illuminate\Database\Eloquent\Collection authorPaper
- * @property \Illuminate\Database\Eloquent\Collection authorSubject
- * @property \Illuminate\Database\Eloquent\Collection coAuthorPaper
- * @property \Illuminate\Database\Eloquent\Collection keywordPaper
  * @property string name
  */
 class Subject extends Model
 {
+    use Rememberable;
+
+    /**
+     * Time for cache a query.
+     *
+     * @var int
+     */
+    protected $rememberFor = 30;
+
     public $table = 'subjects';
 
     public $timestamps = false;
@@ -34,6 +40,8 @@ class Subject extends Model
         'id' => 'integer',
         'name' => 'string',
     ];
+
+    protected $hidden = ['pivot'];
 
     /**
      * Validation rules.

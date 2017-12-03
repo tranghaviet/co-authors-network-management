@@ -92,7 +92,7 @@ class AuthorController extends AppBaseController
 
         $papers = $author->papers()->get(['id', 'title']);
         // TODO: find $coAuthor, $topCandidates
-        $collaborators = Author::collaborators($author, ['id', 'given_name', 'surname']);
+        $collaborators = Author::collaborators($author, ['id', 'given_name', 'surname'], $papers);
 
         return view('authors.show', compact('author', 'subjects', 'papers', 'collaborators'));
     }

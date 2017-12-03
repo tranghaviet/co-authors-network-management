@@ -15,7 +15,7 @@ class CreateCandidatesTable extends Migration
     {
         Schema::create('candidates', function (Blueprint $table) {
 //            $table->increments('id');
-            $table->integer('co_author_id', false, true);
+            $table->bigInteger('co_author_id', false, true);
             $table->float('score_1')->nullable();
             $table->float('score_2')->nullable();
             $table->float('score_3')->nullable();

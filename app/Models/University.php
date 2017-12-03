@@ -11,12 +11,6 @@ use Watson\Rememberable\Rememberable;
  * @package App\Models
  * @version October 11, 2017, 1:54 pm ICT
  *
- * @property \App\Models\City city
- * @property \Illuminate\Database\Eloquent\Collection authorPaper
- * @property \Illuminate\Database\Eloquent\Collection authorSubject
- * @property \Illuminate\Database\Eloquent\Collection Author
- * @property \Illuminate\Database\Eloquent\Collection coAuthorPaper
- * @property \Illuminate\Database\Eloquent\Collection keywordPaper
  * @property string name
  * @property integer city_id
  */

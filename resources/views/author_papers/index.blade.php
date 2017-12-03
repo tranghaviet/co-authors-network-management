@@ -17,8 +17,8 @@
             <div class="box-body">
                     @include('author_papers.table')
             </div>
-            @if(isset($author_papers))
-            <div class="text-center">{{ $author_papers->render() }}</div>
+            @if(isset($authorPapers))
+            <div class="text-center">{{ $authorPapers->render() }}</div>
             @endif
         </div>
     </div>
