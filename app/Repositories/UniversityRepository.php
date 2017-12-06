@@ -31,4 +31,9 @@ class UniversityRepository extends BaseRepository
     {
         return University::class;
     }
+
+    public function search($q)
+    {
+        return $this->model->search($q);
+    }
 }

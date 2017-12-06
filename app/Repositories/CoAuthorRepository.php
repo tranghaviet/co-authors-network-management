@@ -31,4 +31,9 @@ class CoAuthorRepository extends BaseRepository
     {
         return CoAuthor::class;
     }
+
+    public function search($q)
+    {
+        return $this->model->search($q);
+    }
 }

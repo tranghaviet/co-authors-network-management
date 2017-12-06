@@ -31,4 +31,9 @@ class AuthorPaperRepository extends BaseRepository
     {
         return AuthorPaper::class;
     }
+
+    public function search($q)
+    {
+        return $this->model->search($q);
+    }
 }

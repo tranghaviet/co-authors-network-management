@@ -34,4 +34,9 @@ class AuthorRepository extends BaseRepository
     {
         return Author::class;
     }
+
+    public function search($q)
+    {
+        return $this->model->search($q);
+    }
 }

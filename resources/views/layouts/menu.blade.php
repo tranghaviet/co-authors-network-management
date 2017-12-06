@@ -34,7 +34,7 @@
     <a href="{!! route('countries.index') !!}"><i class="fa fa-flag-checkered"></i><span>Countries</span></a>
 </li>
 
-<li class="{{ Request::is('admin/countries*') ? 'active' : '' }}">
-    <a href="{!! route('sync.index') !!}"><i class="fa fa-flag-checkered"></i><span>Sync</span></a>
+<li class="{{ Request::is('admin/sync*') ? 'active' : '' }}">
+    <a href="{!! route('sync.index') !!}"><i class="fa fa-refresh"></i><span>Sync</span></a>
 </li>
 

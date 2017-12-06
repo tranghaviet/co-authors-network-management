@@ -92,7 +92,8 @@ class AuthorController extends AppBaseController
 
         $papers = $author->papers()->get(['id', 'title']);
         // TODO: find $coAuthor, $topCandidates
-        $collaborators = Author::collaborators($author, ['id', 'given_name', 'surname'], $papers);
+//        $collaborators = Author::collaborators($author, ['id', 'given_name', 'surname'], $papers);
+        $collaborators = $author->collaborators($papers, ['id', 'given_name', 'surname']);
 
         return view('authors.show', compact('author', 'subjects', 'papers', 'collaborators'));
     }
@@ -169,6 +170,8 @@ class AuthorController extends AppBaseController
     public function search(Request $request)
     {
         $authors = $this->authorRepository->search($request->q)->paginate(config('constants.DEFAULT_PAGINATION', 15));
+
+//        dd($authors);
 
         return view('authors.index', compact('authors'));
     }
