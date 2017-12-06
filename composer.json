@@ -34,8 +34,7 @@
             "App\\": "app/"
         },
         "files": [
-            "app/Helpers/import_data.php",
-            "app/Helpers/compute_measure_linking.php"
+            "app/Helpers/import_data.php"
         ]
     },
     "autoload-dev": {

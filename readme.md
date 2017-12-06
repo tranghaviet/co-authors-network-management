@@ -92,6 +92,10 @@ Khởi động app:
 php artisan serve
 ```
 Login vào admin bằng email **admin@example.com** và password là **password**.
+### Config file `php.ini`
+```
+memory_limit=-1
+```
 ### Use co-author sync function
 ```
 php artisan co-author:sync

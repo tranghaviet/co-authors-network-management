@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
@@ -14,6 +15,8 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  */
 class AuthorPaper extends Pivot
 {
+    use Searchable;
+
     public $table = 'author_paper';
 
     public $timestamps = false;
@@ -40,6 +43,22 @@ class AuthorPaper extends Pivot
      */
     public static $rules = [
     ];
+
+    /**
+     * Get the indexable data array for the model. (TNTSearch).
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        $arr = [
+            'id' => $this->author_id . '_' . $this->paper_id,
+            'author' => $this->author['given_name'] . ' ' . $this->author['surname'],
+            'paper' => $this->paper['title'],
+        ];
+
+        return $arr;
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
