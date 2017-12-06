@@ -52,7 +52,7 @@ class SynchronizeCoAuthorNetwork extends Command
             DB::statement('TRUNCATE TABLE `co_author_paper`');
         }
 
-        Author::chunk(200, function ($authors) {
+        Author::chunk(100, function ($authors) {
             foreach ($authors as $author) {
                 $first_author_id = $author->id;
 
@@ -65,8 +65,8 @@ class SynchronizeCoAuthorNetwork extends Command
                         continue;
                     }
 
-                    $subjects = $author->subjects()->get(['id']); // subject that author research
-                    $keywords = Author::keywords($author, ['id'], $papers); // all keywords in papers that author wrote
+//                    $subjects = $author->subjects()->get(['id']); // subject that author research
+//                    $keywords = Author::keywords($author, ['id'], $papers); // all keywords in papers that author wrote
                     $collaborators = Author::collaborators($author, ['id'], $papers); // all author has any joint paper with $author
 
                     // $this->line("AUTHOR's PAPERS: " . count($papers) . ' -->' . json_encode($papers->pluck('id')->toArray()));
@@ -125,6 +125,8 @@ class SynchronizeCoAuthorNetwork extends Command
                             // $this->line('COLLABORATORS: ' . count($coAuthorCollaborators) . ' -->' . json_encode($coAuthorCollaborators->pluck('id')->toArray()));
                             // $this->line('MUTUAL AUTHORS: ' . $noOfMutualAuthors . ' -->' . json_encode($mutualAuthors->pluck('id')->toArray()));
 
+
+                            /*
                             // compute no. of joint subjects
                             $collaboratorSubjects = $collaborator->subjects()->get(['id']);
                             $jointSubjects = $collaboratorSubjects->intersect($subjects);
@@ -139,23 +141,26 @@ class SynchronizeCoAuthorNetwork extends Command
                             // $this->line('KEYWORDS: ' . count($collaboratorKeywords) . ' -->' . json_encode($collaboratorKeywords->pluck('id')->toArray()));
                             // $this->line('JOINT KEYWORDS: ' . $noOfJointKeywords . ' -->' . json_encode($jointKeywords->pluck('id')->toArray()));
 
-                            if (count($coAuthorRecord) != 0 && ! $this->isRefreshTable) {
-                                $coAuthorRecord->update([
-                                    'no_of_mutual_authors' => $noOfMutualAuthors,
-                                    'no_of_joint_papers' => $noOfJointPapers,
-                                    'no_of_joint_subjects' => $noOfJointSubjects,
-                                    'no_of_joint_keywords' => $noOfJointKeywords,
-                                ]);
-                            } else {
+                            */
+
+
+//                            if (count($coAuthorRecord) != 0 && ! $this->isRefreshTable) {
+//                                $coAuthorRecord->update([
+//                                    'no_of_mutual_authors' => $noOfMutualAuthors,
+//                                    'no_of_joint_papers' => $noOfJointPapers,
+//                                    'no_of_joint_subjects' => $noOfJointSubjects,
+//                                    'no_of_joint_keywords' => $noOfJointKeywords,
+//                                ]);
+//                            } else {
                                 $coAuthorRecord = CoAuthor::create([
                                     'first_author_id' => $first_author_id,
                                     'second_author_id' => $second_author_id,
                                     'no_of_mutual_authors' => $noOfMutualAuthors,
                                     'no_of_joint_papers' => $noOfJointPapers,
-                                    'no_of_joint_subjects' => $noOfJointSubjects,
-                                    'no_of_joint_keywords' => $noOfJointKeywords,
+//                                    'no_of_joint_subjects' => $noOfJointSubjects,
+//                                    'no_of_joint_keywords' => $noOfJointKeywords,
                                 ]);
-                            }
+//                            }
 
                             $this->info('SUCCESS: ' . json_encode($coAuthorRecord->attributesToArray()));
 

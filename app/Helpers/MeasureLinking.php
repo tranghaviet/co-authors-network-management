@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Helpers;
+
 use App\Models\CoAuthor;
 
 const DEFAULT_COLUMNS = [
@@ -8,15 +10,16 @@ const DEFAULT_COLUMNS = [
     'no_of_joint_papers',
 ];
 
-if (! function_exists('wcn')) {
+class MeasureLinking
+{
     /**
      * compute measure linking base on wcn.
      *
-     * @param  \Illuminate\Database\Eloquent\Collection $firstCoAuthors co-authors of first author with their no_of_joint_papers
-     * @param  \Illuminate\Database\Eloquent\Collection $secondCoAuthors co-authors of second author with their no_of_joint_papers
+     * @param  Illuminate\Support\Collection $firstCoAuthors co-authors of first author with their no_of_joint_papers
+     * @param  Illuminate\Support\Collection $secondCoAuthors co-authors of second author with their no_of_joint_papers
      * @return float Sum of joint papers of all joint author.
      */
-    function wcn($firstCoAuthors, $secondCoAuthors)
+    public static function wcn($firstCoAuthors, $secondCoAuthors)
     {
         $result = 0;
 
@@ -31,17 +34,15 @@ if (! function_exists('wcn')) {
 
         return $result / 2;
     }
-}
 
-if (! function_exists('waa')) {
     /**
      * compute measure linking base on waa.
      *
-     * @param  \Illuminate\Database\Eloquent\Collection $firstCoAuthors co-authors of first author with their no_of_joint_papers
-     * @param  \Illuminate\Database\Eloquent\Collection $secondCoAuthors co-authors of second author with their no_of_joint_papers
+     * @param  Illuminate\Support\Collection $firstCoAuthors co-authors of first author with their no_of_joint_papers
+     * @param  Illuminate\Support\Collection $secondCoAuthors co-authors of second author with their no_of_joint_papers
      * @return float Sum of joint papers of all joint author.
      */
-    function waa($firstCoAuthors, $secondCoAuthors)
+    public static function waa($firstCoAuthors, $secondCoAuthors)
     {
         $result = 0;
         $jointAuthorIds = [];
@@ -70,17 +71,16 @@ if (! function_exists('waa')) {
 
         return $result / (2 * log10($allJointPapers));
     }
-}
 
-if (! function_exists('wjc')) {
     /**
      * compute measure linking base on wjc.
      *
-     * @param  \Illuminate\Database\Eloquent\Collection $firstCoAuthors co-authors of first author with their no_of_joint_papers
-     * @param  \Illuminate\Database\Eloquent\Collection $secondCoAuthors co-authors of second author with their no_of_joint_papers
+     * @param  Illuminate\Support\Collection $firstCoAuthors co-authors of first author with their no_of_joint_papers
+     * @param  Illuminate\Support\Collection $secondCoAuthors co-authors of second author with their no_of_joint_papers
      * @return float Sum of joint papers of all joint author.
      */
-    function wjc($firstCoAuthors, $secondCoAuthors)
+    public
+    static function wjc($firstCoAuthors, $secondCoAuthors)
     {
         $result = 0;
         $allJointPapers = 0;
@@ -104,17 +104,16 @@ if (! function_exists('wjc')) {
 
         return $result / $allJointPapers;
     }
-}
 
-if (! function_exists('wca')) {
     /**
      * compute measure linking base on wca.
      *
-     * @param  \Illuminate\Database\Eloquent\Collection $firstCoAuthors co-authors of first author with their no_of_joint_papers
-     * @param  \Illuminate\Database\Eloquent\Collection $secondCoAuthors co-authors of second author with their no_of_joint_papers
+     * @param  Illuminate\Support\Collection $firstCoAuthors co-authors of first author with their no_of_joint_papers
+     * @param  Illuminate\Support\Collection $secondCoAuthors co-authors of second author with their no_of_joint_papers
      * @return float Sum of joint papers of all joint author.
      */
-    function wca($firstCoAuthors, $secondCoAuthors)
+    public
+    static function wca($firstCoAuthors, $secondCoAuthors)
     {
         $result = 0;
         $allJointPapers = 0;
