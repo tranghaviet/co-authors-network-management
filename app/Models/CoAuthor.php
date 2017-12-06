@@ -14,8 +14,6 @@ use Laravel\Scout\Searchable;
  * @property string second_author_id
  * @property int no_of_mutual_authors
  * @property int no_of_joint_papers
- * @property int no_of_joint_subjects
- * @property int no_of_joint_keywords
  */
 class CoAuthor extends Model
 {
@@ -30,8 +28,6 @@ class CoAuthor extends Model
         'second_author_id',
         'no_of_mutual_authors',
         'no_of_joint_papers',
-        'no_of_joint_subjects',
-        'no_of_joint_keywords',
     ];
 
     /**
@@ -41,12 +37,9 @@ class CoAuthor extends Model
      */
     protected $casts = [
         'id' => 'float',
-        'first_author_id' => 'string',
-        'second_author_id' => 'string',
+        'first_author_id' => 'float',
+        'second_author_id' => 'float',
         'no_of_mutual_authors' => 'integer',
-        'no_of_joint_papers' => 'integer',
-        'no_of_joint_subjects' => 'integer',
-        'no_of_joint_keywords' => 'integer',
     ];
 
     /**

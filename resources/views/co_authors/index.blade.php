@@ -31,7 +31,7 @@
 
         <div class="clearfix"></div>
         <div class="box box-primary">
-        @if(isset($candidates))
+        @if(isset($coAuthors))
             <div class="box-body">
                     @include('co_authors.table')
             </div>

@@ -20,6 +20,8 @@ class Candidate extends Model
 {
     use Searchable;
 
+    protected $primaryKey = 'co_author_id';
+
     public $table = 'candidates';
 
     public $timestamps = false;
@@ -67,10 +69,11 @@ class Candidate extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\hasOne
      **/
     public function coAuthor()
     {
-        return $this->belongsTo(\App\Models\CoAuthor::class);
+//        return $this->belongsTo(\App\Models\CoAuthor::class);
+        return $this->hasOne(\App\Models\CoAuthor::class, 'id', 'co_author_id   ');
     }
 }

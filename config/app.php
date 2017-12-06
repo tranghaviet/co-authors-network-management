@@ -167,10 +167,6 @@ return [
          * Package Service Providers...
          */
         Laravel\Tinker\TinkerServiceProvider::class,
-        // debug bar
-        Barryvdh\Debugbar\ServiceProvider::class,
-        // ide helper
-        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         // Use l5-repository for Repository pattern
         Prettus\Repository\Providers\RepositoryServiceProvider::class,
 

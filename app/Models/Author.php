@@ -104,26 +104,17 @@ class Author extends Model
     }
 
     /**
-     * @param int | Author $author
+     * @param \Illuminate\Database\Eloquent\Collection|Paper|null $papers papers that keywords belongs to
      * @param array $columns
-     * @param Paper|null $papers papers that keywords belongs to
      * @return \Illuminate\Support\Collection|static Co-authors has any joint paper with this Author.
      */
-    public static function collaborators($author, $columns = ['*'], $papers = null)
+    public function collaborators($papers, $columns = ['*'])
     {
-        if (is_numeric($author)) {
-            $author = self::where('id', $author)->first(['id']);
-        }
-
-        if (is_null($papers)) {
-            $papers = $author->papers()->get(['id']);
-        }
-
         $collaborators = collect();
         $authorIds = [];
 
         foreach ($papers as $paper) {
-            $authors = $paper->authors()->where('id', '!=', $author->id)
+            $authors = $paper->authors()->where('id', '!=', $this->id)
                 ->whereNotIn('id', $authorIds)->get($columns);
 
             $authorIds = array_merge($authorIds, $authors->pluck('id')->toArray());

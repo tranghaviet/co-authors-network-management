@@ -15,8 +15,8 @@ class MeasureLinking
     /**
      * compute measure linking base on wcn.
      *
-     * @param  Illuminate\Support\Collection $firstCoAuthors co-authors of first author with their no_of_joint_papers
-     * @param  Illuminate\Support\Collection $secondCoAuthors co-authors of second author with their no_of_joint_papers
+     * @param  \App\Models\CoAuthor|\Illuminate\Support\Collection $firstCoAuthors co-authors of first author with their no_of_joint_papers
+     * @param  \App\Models\CoAuthor|\Illuminate\Support\Collection $secondCoAuthors co-authors of second author with their no_of_joint_papers
      * @return float Sum of joint papers of all joint author.
      */
     public static function wcn($firstCoAuthors, $secondCoAuthors)
@@ -38,8 +38,8 @@ class MeasureLinking
     /**
      * compute measure linking base on waa.
      *
-     * @param  Illuminate\Support\Collection $firstCoAuthors co-authors of first author with their no_of_joint_papers
-     * @param  Illuminate\Support\Collection $secondCoAuthors co-authors of second author with their no_of_joint_papers
+     * @param  \App\Models\CoAuthor|\Illuminate\Support\Collection $firstCoAuthors co-authors of first author with their no_of_joint_papers
+     * @param  \App\Models\CoAuthor|\Illuminate\Support\Collection $secondCoAuthors co-authors of second author with their no_of_joint_papers
      * @return float Sum of joint papers of all joint author.
      */
     public static function waa($firstCoAuthors, $secondCoAuthors)
@@ -75,8 +75,8 @@ class MeasureLinking
     /**
      * compute measure linking base on wjc.
      *
-     * @param  Illuminate\Support\Collection $firstCoAuthors co-authors of first author with their no_of_joint_papers
-     * @param  Illuminate\Support\Collection $secondCoAuthors co-authors of second author with their no_of_joint_papers
+     * @param  \App\Models\CoAuthor|\Illuminate\Support\Collection $firstCoAuthors co-authors of first author with their no_of_joint_papers
+     * @param  \App\Models\CoAuthor|\Illuminate\Support\Collection $secondCoAuthors co-authors of second author with their no_of_joint_papers
      * @return float Sum of joint papers of all joint author.
      */
     public
@@ -108,8 +108,8 @@ class MeasureLinking
     /**
      * compute measure linking base on wca.
      *
-     * @param  Illuminate\Support\Collection $firstCoAuthors co-authors of first author with their no_of_joint_papers
-     * @param  Illuminate\Support\Collection $secondCoAuthors co-authors of second author with their no_of_joint_papers
+     * @param  \App\Models\CoAuthor|\Illuminate\Support\Collection $firstCoAuthors co-authors of first author with their no_of_joint_papers
+     * @param  \App\Models\CoAuthor|\Illuminate\Support\Collection $secondCoAuthors co-authors of second author with their no_of_joint_papers
      * @return float Sum of joint papers of all joint author.
      */
     public
