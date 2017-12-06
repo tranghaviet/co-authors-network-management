@@ -4,7 +4,9 @@
             <th>ID</th>
             <th>Name</th>
             <th>City</th>
+            @auth
             <th colspan="3">Action</th>
+            @endAuth
         </tr>
     </thead>
     <tbody>
@@ -13,6 +15,7 @@
             <td>{!! $university->id !!}</td>
             <td>{!! $university->name !!}</td>
             <td>{!! $university->city['name'] !!}</td>
+            @auth
             <td>
                 {!! Form::open(['route' => ['universities.destroy', $university->id], 'method' => 'delete']) !!}
                 <div class='btn-group'>
@@ -22,6 +25,7 @@
                 </div>
                 {!! Form::close() !!}
             </td>
+            @endAuth
         </tr>
     @endforeach
     </tbody>

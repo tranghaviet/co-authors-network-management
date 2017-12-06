@@ -26,7 +26,15 @@ Route::get('coAuthors/search', 'CoAuthorController@search')->name('coAuthors.sea
 Route::get('candidates/search', 'CandidateController@search')->name('candidates.search');
 Route::get('universities/search', 'UniversityController@search')->name('universities.search');
 
-Route::group(['prefix' => 'admin/', 'middleware' => 'auth'], function () {
+Route::get('authors', 'AuthorController@index')->name('user.authors');
+Route::get('papers', 'PaperController@index')->name('user.papers');
+Route::get('authorPapers', 'AuthorPaperController@index')->name('user.author-paper');
+Route::get('coAuthors', 'CoAuthorController@index')->name('user.co-authors');
+Route::get('candidates', 'CandidateController@index')->name('user.candidates');
+Route::get('universities', 'UniversityController@index')->name('user.universities');
+
+// Route::group(['prefix' => 'admin/', 'middleware' => 'auth'], function () {
+Route::group(['prefix' => 'admin/'], function () {
     Route::resource('users', 'UserController');
 
     Route::resource('authors', 'AuthorController');

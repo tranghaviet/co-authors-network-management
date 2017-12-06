@@ -14,11 +14,13 @@
                 {!! Form::submit('Search', ['class' => 'btn btn-primary btn-block']) !!}
             </div>
             {!! Form::close() !!}
+            @auth
             <div class="col-sm-1 pull-right">
                 <a class="btn btn-primary btn-block" style="margin-right:
                 35px;margin-bottom: 5px" href="{!! route('coAuthors.create')
                 !!}">New</a>
             </div>
+            @endAuth
         </section>
     </div>
 
@@ -29,10 +31,14 @@
 
         <div class="clearfix"></div>
         <div class="box box-primary">
+        @if(isset($candidates))
             <div class="box-body">
                     @include('co_authors.table')
             </div>
             <div class="text-center">{{ $coAuthors->render() }}</div>
+        @else
+            <h1>Empty</h1>
+        @endif
         </div>
     </div>
 @endsection

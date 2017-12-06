@@ -111,23 +111,21 @@
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{!! url('/') !!}">
-                    InfyOm Generator
+                    Co-author NetWork
                 </a>
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
-                    <li><a href="{!! url('/home') !!}">Home</a></li>
+                    <li><a href="/">Home</a></li>
+                    <li>{!! Html::link(route('user.authors'), 'Author') !!}</li>
+                    <li>{!! Html::link(route('user.papers'), 'Paper') !!}</li>
+                    <li>{!! Html::link(route('user.author-paper'), 'Author Paper') !!}</li>
+                    <li>{!! Html::link(route('user.co-authors'), 'Co-authors') !!}</li>
+                    <li>{!! Html::link(route('user.candidates'), 'Candidate') !!}</li>
                 </ul>
 
-                <!-- Right Side Of Navbar -->
-                <ul class="nav navbar-nav navbar-right">
-                    <!-- Authentication Links -->
-                    <li><a href="{!! url('/login') !!}">Login</a></li>
-                    <li><a href="{!! url('/register') !!}">Register</a></li>
-                </ul>
-            </div>
         </div>
     </nav>
 

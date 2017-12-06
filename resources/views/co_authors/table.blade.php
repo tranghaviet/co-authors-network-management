@@ -7,7 +7,9 @@
             <th>Second Author</th>
             <th>University</th>
             <th>Joint papers</th>
+            @auth
             <th colspan="3">Action</th>
+            @endAuth
         </tr>
     </thead>
     <tbody>

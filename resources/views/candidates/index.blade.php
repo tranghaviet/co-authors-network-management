@@ -3,10 +3,7 @@
 @section('content')
     <div class="container-fluid">
         <section class="content-header row">
-            <h1 class="col-sm-6 pull-left">Candidates</h1>
-            <div class="col-sm-6 pull-right">
-                <a class="btn btn-primary pull-right" style="margin-right: 35px;margin-bottom: 5px" href="{!! route('candidates.create') !!}">New</a>
-            </div>
+            <h1 class="col-sm-12 pull-left">Candidates</h1>
         </section>
         <div class="row">
             {!! Form::open(['route' => ['candidates.search'], 'method' => 'get']) !!}

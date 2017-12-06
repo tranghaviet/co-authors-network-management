@@ -33,6 +33,7 @@
             <td>{!! $candidate->score_1 !!}</td>
             <td>{!! $candidate->score_2 !!}</td>
             <td>{!! $candidate->score_3 !!}</td>
+            @auth
             <td>
                 {!! Form::open(['route' => ['candidates.destroy', $candidate->id], 'method' => 'delete']) !!}
                 <div class='btn-group'>
@@ -42,6 +43,7 @@
                 </div>
                 {!! Form::close() !!}
             </td>
+            @endAuth
         </tr>
     @endforeach
     </tbody>

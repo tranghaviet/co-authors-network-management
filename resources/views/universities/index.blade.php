@@ -8,13 +8,10 @@
             <div class="form-group col-sm-8">
                 {!! Form::text('q', null, ['class' => 'form-control', 'placeholder' => 'University name']) !!}
             </div>
-            <div class="form-group col-sm-1">
+            <div class="form-group col-sm-2">
                 {!! Form::submit('Search', ['class' => 'btn btn-primary btn-block']) !!}
             </div>
             {!! Form::close() !!}
-            <div class="col-sm-1 pull-right">
-                <a class="btn btn-primary btn-block" style="margin-right: 35px;margin-bottom: 5px" href="{!! route('authors.create') !!}">New</a>
-            </div>
         </section>
     </div>
     <div class="content">
