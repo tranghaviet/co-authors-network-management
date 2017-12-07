@@ -17,15 +17,6 @@ class AuthorPaper extends Pivot
 {
     use Searchable;
 
-    public $table = 'author_paper';
-
-    public $timestamps = false;
-
-    public $fillable = [
-        'author_id',
-        'paper_id',
-    ];
-
     /**
      * The attributes that should be casted to native types.
      *
@@ -36,6 +27,15 @@ class AuthorPaper extends Pivot
         'paper_id' => 'string',
     ];
 
+    public $table = 'author_paper';
+
+    public $timestamps = false;
+
+    public $fillable = [
+        'author_id',
+        'paper_id',
+    ];
+
     /**
      * Validation rules.
      *
@@ -43,22 +43,6 @@ class AuthorPaper extends Pivot
      */
     public static $rules = [
     ];
-
-    /**
-     * Get the indexable data array for the model. (TNTSearch).
-     *
-     * @return array
-     */
-    public function toSearchableArray()
-    {
-        $arr = [
-            'id' => $this->author_id . '_' . $this->paper_id,
-            'author' => $this->author['given_name'] . ' ' . $this->author['surname'],
-            'paper' => $this->paper['title'],
-        ];
-
-        return $arr;
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
