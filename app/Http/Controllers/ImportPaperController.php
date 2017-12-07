@@ -11,7 +11,7 @@ use ImportPaper;
 use App\Models\Paper;
 use App\Models\Keyword;
 use App\Models\KeywordPaper;
-use App\Models\AuthorSubject;
+
 
 class ImportPaperController extends Controller
 {
@@ -29,6 +29,7 @@ class ImportPaperController extends Controller
 			})->get();
 			// $data->toArray();
 			if(!empty($data) && $data->count()){
+				dd($data->count());
 
 				foreach ($data as $key => $value) {
 

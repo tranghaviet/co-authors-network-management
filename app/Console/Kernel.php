@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \App\Console\Commands\SynchronizeCoAuthorNetwork::class,
+        \App\Console\Commands\foo::class
     ];
 
     /**
@@ -25,7 +26,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('co-author:sync')
-                  ->dailyAt('02:00');
+        ->dailyAt('02:00');
     }
 
     /**
