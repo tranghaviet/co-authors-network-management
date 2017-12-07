@@ -57,3 +57,5 @@ Route::post('/upload_authors',['as'=>'upload_authors','uses'=>'ImportAuthorContr
 //route upload authors_papers
 Route::get('/view_upload_authors_papers',['as'=>'view_upload_authors_papers','uses'=>'ImportAuthor_PaperController@view_upload_authors_papers']);
 Route::post('/upload_authors_papers',['as'=>'upload_authors_papers','uses'=>'ImportAuthor_PaperController@upload_authors_papers']);
+
+Route::get('/test',['as'=>'test','uses'=>'TestProcessController@testprocess']);
