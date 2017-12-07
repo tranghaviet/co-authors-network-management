@@ -55,6 +55,7 @@ class SynchronizeCoAuthorNetwork extends Command
             Cache::put('status', [], 1440);
         }
 
+dump($this->option('offset'));
         $this->ask('continue?');
 
         $offset = $this->option('offset');

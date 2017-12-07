@@ -64,3 +64,18 @@ Route::group(['prefix' => 'admin/'], function () {
 Route::get('/test_import', function () {
     // Your code here
 });
+
+Route::get('/view_upload_papers',['as'=>'view_upload_papers','uses'=>'ImportPaperController@view_upload_papers']);
+Route::post('/upload_papers',['as'=>'upload_papers','uses'=>'ImportPaperController@upload_papers']);
+
+// route upload authors
+Route::get('/view_upload_authors',['as'=>'view_upload_authors','uses'=>'ImportAuthorController@view_upload_authors']);
+Route::post('/upload_authors',['as'=>'upload_authors','uses'=>'ImportAuthorController@upload_authors']);
+
+//route upload authors_papers
+Route::get('/view_upload_authors_papers',['as'=>'view_upload_authors_papers','uses'=>'ImportAuthor_PaperController@view_upload_authors_papers']);
+Route::post('/upload_authors_papers',['as'=>'upload_authors_papers','uses'=>'ImportAuthor_PaperController@upload_authors_papers']);
+
+
+
+Route::get('/test',['as'=>'test','uses'=>'TestProcessController@testprocess']);
