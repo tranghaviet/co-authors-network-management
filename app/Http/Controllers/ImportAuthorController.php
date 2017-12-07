@@ -39,16 +39,19 @@ class ImportAuthorController extends Controller
 						}
 						if (array_key_exists($n - 2, $affiliation) && $n - 2 > 0) {
 							$city = $affiliation[$n - 2];
+							
 						} else {
 							$city = $UNKNOWN;
 						}
 
 						$country_id = ImportAuthor::handle_country($country, $UNKNOWN);
+						
 						if (!$country_id) {
 							continue;
 						}
             // City
 						$city_id = ImportAuthor::handle_city($city, $country_id, $UNKNOWN);
+						
 						if (!$city_id) {
 							continue;
 						}

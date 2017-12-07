@@ -7,6 +7,7 @@ use App\Models\Country;
 use App\Models\Subject;
 use App\Models\City;
 use App\Models\University;
+use App\Models\AuthorSubject;
 
 class ImportAuthorData
 {
@@ -66,6 +67,8 @@ class ImportAuthorData
         }
     }
 
+
+    // vuducdung
     public static function insert_authors($id, $surname, $given_name, $email, $url, $university_id)
     {
         if (!$university_id) {
@@ -122,12 +125,15 @@ class ImportAuthorData
         if (count($matches) > 0) {
             $city = $UNKNOWN;
         }
+        
 
         if(!City::where([['name','=',$city],['country_id','=',$country_id]])->exists())
             {
+
                 $new_city=new City;
                 $new_city->name=$city;
                 $new_city->country_id=$country_id;
+                $new_city->save();
             }
             else
             {
@@ -152,6 +158,7 @@ class ImportAuthorData
                     $new_university=new University;
                     $new_university->name=$university;
                     $new_university->city_id=$city_id;
+                    $new_university->save();
                 }
                 else
                 {
@@ -184,11 +191,17 @@ class ImportAuthorData
                        {
                         $new_subject = Subject::where('name', '=', $subject)->first();
                     }
+                    if(!AuthorSubject::where([['author_id','=',$author_id],['subject_id','=',$new_subject->id]])->exists())
+                        {
+                         $new_AuthorSubject=new AuthorSubject;
+                         $new_AuthorSubject->author_id=$author_id;
+                         $new_AuthorSubject->subject_id=$new_subject->id;
+                         $new_AuthorSubject->save();
+                     }
+                    // $author_subject=Subject::find($new_subject->id);
+                    // $author_subject->authors()->attach($author_id);
+                 }
 
-                    $author_subject=Subject::find($new_subject->id);
-                    $author_subject->authors()->attach($author_id);
-                }
+             }
 
-            }
-
-        }
+         }

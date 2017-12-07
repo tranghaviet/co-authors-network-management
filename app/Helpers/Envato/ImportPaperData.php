@@ -40,6 +40,7 @@ class ImportPaperData
             $keyword_paper=new KeywordPaper;
             $keyword_paper->keyword_id=$keywordd->id;
             $keyword_paper->paper_id=$paper_id;
+            $keyword_paper->save();
         }
     }
 }

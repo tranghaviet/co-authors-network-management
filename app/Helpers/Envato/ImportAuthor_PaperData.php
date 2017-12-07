@@ -14,7 +14,7 @@ class ImportAuthor_PaperData
     public static function check_paper_exists($paper_id)
     {
 
-        if (Paper::where(['id' => $paper_id])->exists()){
+        if (Paper::where('id', 'like', '%'.$paper_id.'%')->exists()){
             return true; 
         }
         else 
