@@ -43,7 +43,7 @@
                         <!-- User Account Menu -->
 
                         {!! Form::open(['url'=> url('/logout'), 'id' => 'logout-form', 'method' => 'POST']) !!}
-                            {!! Form::submit('Logout', ['style' => 'display: normal;']) !!}
+                            {!! Form::submit('Logout', ['style' => 'border: none; font-size: 20px; padding: 10; color:white; margin: 10px 10px 0px 0px; background: none;']) !!}
                         {!! Form::close() !!}
                     </ul>
                 </div>

@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\University;
 
 class UpdateUniversityRequest extends FormRequest
 {
@@ -24,6 +23,6 @@ class UpdateUniversityRequest extends FormRequest
      */
     public function rules()
     {
-        return University::$rules;
+        return [];
     }
 }

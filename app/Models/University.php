@@ -40,14 +40,6 @@ class University extends Model
     ];
 
     /**
-     * Validation rules.
-     *
-     * @var array
-     */
-    public static $rules = [
-    ];
-
-    /**
      * Get the indexable data array for the model. (TNTSearch).
      *
      * @return array

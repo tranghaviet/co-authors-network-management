@@ -32,15 +32,6 @@ class Country extends Model
     ];
 
     /**
-     * Validation rules.
-     *
-     * @var array
-     */
-    public static $rules = [
-
-    ];
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      **/
     public function cities()

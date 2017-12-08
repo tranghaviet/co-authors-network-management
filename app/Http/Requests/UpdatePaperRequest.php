@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\Paper;
 
 class UpdatePaperRequest extends FormRequest
 {
@@ -24,6 +23,6 @@ class UpdatePaperRequest extends FormRequest
      */
     public function rules()
     {
-        return Paper::$rules;
+        return [];
     }
 }

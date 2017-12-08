@@ -36,15 +36,6 @@ class City extends Model
     ];
 
     /**
-     * Validation rules.
-     *
-     * @var array
-     */
-    public static $rules = [
-
-    ];
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      **/
     public function country()

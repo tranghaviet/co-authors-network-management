@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\City;
 
 class UpdateCityRequest extends FormRequest
 {
@@ -24,6 +23,6 @@ class UpdateCityRequest extends FormRequest
      */
     public function rules()
     {
-        return City::$rules;
+        return [];
     }
 }

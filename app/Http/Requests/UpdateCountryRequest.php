@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\Country;
 
 class UpdateCountryRequest extends FormRequest
 {
@@ -24,6 +23,6 @@ class UpdateCountryRequest extends FormRequest
      */
     public function rules()
     {
-        return Country::$rules;
+        return [];
     }
 }
