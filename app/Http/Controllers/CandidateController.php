@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateCandidateRequest;
 use App\Http\Requests\UpdateCandidateRequest;
 use App\Repositories\CandidateRepository;
 use Illuminate\Http\Request;
@@ -55,11 +54,11 @@ class CandidateController extends AppBaseController
     /**
      * Store a newly created Candidate in storage.
      *
-     * @param CreateCandidateRequest $request
+     * @param Request $request
      *
      * @return Response
      */
-    public function store(CreateCandidateRequest $request)
+    public function store(Request $request)
     {
         $input = $request->all();
 

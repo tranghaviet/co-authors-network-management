@@ -1,3 +1,8 @@
+<!-- Id Name Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('id', 'ID:') !!}
+    {!! Form::text('id', null, ['class' => 'form-control']) !!}
+</div>
 <!-- Given Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('given_name', 'Given Name:') !!}

@@ -16,7 +16,7 @@
     <ol>
         @foreach($paper->authors as $author)
             <li>
-                <a href="{!! route('authors.show', [$author->id]) !!}">{!! $author['given_name'] . ' ' . $author['surname'] !!}</a>
+                <a href="{!! route($routeType . 'authors.show', [$author->id]) !!}">{!! $author['given_name'] . ' ' . $author['surname'] !!}</a>
             </li>
         @endforeach
     </ol>
@@ -25,7 +25,7 @@
 <!-- Cover Date Field -->
 <div class="form-group">
     {!! Form::label('cover_date', 'Cover Date:') !!}
-    {!! $paper->cover_date !!}
+    {!! substr($paper['cover_date'], 0, 10) !!}
 </div>
 
 <!-- Url Field -->

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateCountryRequest;
 use App\Http\Requests\UpdateCountryRequest;
 use App\Repositories\CountryRepository;
 use Illuminate\Http\Request;
@@ -48,11 +47,11 @@ class CountryController extends AppBaseController
     /**
      * Store a newly created Country in storage.
      *
-     * @param CreateCountryRequest $request
+     * @param Request $request
      *
      * @return Response
      */
-    public function store(CreateCountryRequest $request)
+    public function store(Request $request)
     {
         $input = $request->all();
 

@@ -29,7 +29,7 @@ class UserController extends AppBaseController
     public function index(Request $request)
     {
         $this->userRepository->pushCriteria(new RequestCriteria($request));
-        $users = $this->userRepository->paginate(30);
+        $users = $this->userRepository->paginate(15);
 
         return view('users.index')
             ->with('users', $users);
@@ -42,7 +42,10 @@ class UserController extends AppBaseController
      */
     public function create()
     {
-        return view('users.create');
+        $genders = ['male' => 'Male',
+            'female' => 'Female',
+            'other' => 'Other',];
+        return view('users.create', compact('genders'));
     }
 
     /**
@@ -55,6 +58,8 @@ class UserController extends AppBaseController
     public function store(CreateUserRequest $request)
     {
         $input = $request->all();
+
+        $input['password'] = bcrypt($input['password']);
 
         $user = $this->userRepository->create($input);
 
@@ -100,13 +105,17 @@ class UserController extends AppBaseController
             return redirect(route('users.index'));
         }
 
-        return view('users.edit')->with('user', $user);
+        $genders = ['male' => 'Male',
+            'female' => 'Female',
+            'other' => 'Other',];
+
+        return view('users.edit', compact('user', 'genders'));
     }
 
     /**
      * Update the specified User in storage.
      *
-     * @param  int              $id
+     * @param  int $id
      * @param UpdateUserRequest $request
      *
      * @return Response

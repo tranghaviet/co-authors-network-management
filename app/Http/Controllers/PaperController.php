@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreatePaperRequest;
-use App\Http\Requests\UpdatePaperRequest;
-use App\Repositories\PaperRepository;
-use Illuminate\Http\Request;
 use Flash;
-use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Http\Request;
+use App\Repositories\PaperRepository;
+use App\Http\Requests\UpdatePaperRequest;
+use Prettus\Repository\Criteria\RequestCriteria;
 
 class PaperController extends AppBaseController
 {
     /** @var  PaperRepository */
     private $paperRepository;
 
-    public function __construct(PaperRepository $paperRepo)
+    private $routeType = '';
+
+    public function __construct(PaperRepository $paperRepo, Request $request)
     {
+        $this->routeType = $request->is('admin/*') ? '':'user.';
+
         $this->paperRepository = $paperRepo;
     }
 
@@ -30,14 +32,13 @@ class PaperController extends AppBaseController
     public function index(Request $request)
     {
         $this->paperRepository->pushCriteria(new RequestCriteria($request));
-        $papers = Cache::remember('papers.index',
-            config('constants.CACHE_TIME'), function () {
-                return $this->paperRepository
-                    ->paginate(config('constants.DEFAULT_PAGINATION'));
-            });
+        $papers = $this->paperRepository->paginate(config('constants.DEFAULT_PAGINATION'));
 
-        return view('papers.index')
-            ->with('papers', $papers);
+        $paginator = $papers->render();
+        $papers = $papers->toArray()['data'];
+        extract(get_object_vars($this));
+
+        return view('papers.index', compact('papers', 'paginator', 'routeType'));
     }
 
     /**
@@ -53,11 +54,11 @@ class PaperController extends AppBaseController
     /**
      * Store a newly created Paper in storage.
      *
-     * @param CreatePaperRequest $request
+     * @param Request $request
      *
      * @return Response
      */
-    public function store(CreatePaperRequest $request)
+    public function store(Request $request)
     {
         $input = $request->all();
 
@@ -89,7 +90,9 @@ class PaperController extends AppBaseController
         });
         $keywords = implode(', ', $keywords->toArray());
 
-        return view('papers.show', compact('paper', 'keywords'));
+        extract(get_object_vars($this));
+
+        return view('papers.show', compact('paper', 'keywords', 'routeType'));
     }
 
     /**
@@ -163,7 +166,14 @@ class PaperController extends AppBaseController
 
     public function search(Request $request)
     {
-        $papers = $this->paperRepository->search($request->q)->paginate(15);
+        $query = trim($request->q);
+
+        if (empty($query)) {
+            Flash::error('Enter a keyword.');
+            return redirect()->back();
+        }
+
+        $papers = $this->paperRepository->search($query)->paginate(15);
 
         return view('papers.index', compact('papers'));
     }

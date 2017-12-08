@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use Sofa\Eloquence\Eloquence;
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Scout\Searchable;
 
 /**
  * Class Paper.
@@ -18,7 +18,9 @@ use Laravel\Scout\Searchable;
  */
 class Paper extends Model
 {
-    use Searchable;
+    use Eloquence;
+
+    protected $searchableColumns = ['title'];
 
     public $table = 'papers';
 
@@ -58,32 +60,6 @@ class Paper extends Model
      */
     public static $rules = [
     ];
-
-    /**
-     * Get the indexable data array for the model. (TNTSearch).
-     *
-     * @return array
-     */
-    public function toSearchableArray()
-    {
-        $a = [
-            'id' => $this->id,
-            'title' => $this->title,
-            'issn' => $this->issn,
-        ];
-
-//        $authors = $this->authors()->get(['given_name', 'surname'])->map(function ($author) {
-//            return $author['given_name'] . ' ' . $author['surname'];
-//        });
-//        $a['authors'] = implode(' ', $authors->toArray());
-
-        $keywords = $this->keywords()->get(['content'])->map(function ($keyword) {
-            return $keyword['content'];
-        });
-        $a['keywords'] = implode(' ', $keywords->toArray());
-
-        return $a;
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

@@ -35,7 +35,9 @@
             <div class="box-body">
                     @include('co_authors.table')
             </div>
-            <div class="text-center">{{ $coAuthors->render() }}</div>
+            @if(isset($paginator))
+                <div class="text-center">{{ $paginator }}</div>
+            @endif
         @else
             <h1>Empty</h1>
         @endif

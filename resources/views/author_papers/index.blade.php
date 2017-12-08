@@ -1,14 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
-    <section class="content-header">
-        <h1 class="pull-left">Author Papers</h1>
-        @auth
-        <h1 class="pull-right">
-           <a class="btn btn-primary pull-right" style="margin-top: -10px;margin-bottom: 5px" href="{!! route('authorPapers.create') !!}">Add New</a>
-        </h1>
-        @endAuth
-    </section>
+    <div class="container-fluid">
+        <section class="content-header row">
+            <h1 class="col-sm-2 pull-left">Author Paper</h1>
+            {!! Form::open(['route' => ['author-paper.search'], 'method' => 'get']) !!}
+            <div class="form-group col-sm-7">
+                {!! Form::text('q', null, ['class' => 'form-control',
+                'placeholder' => 'Type Author name or Paper title']) !!}
+            </div>
+            <div class="form-group col-sm-2">
+                {!! Form::select('type',['author' => 'author', 'paper' => 'paper'], 'author', ['class' => 'form-control']) !!}
+            </div>
+            <div class="form-group col-sm-1">
+                {!! Form::submit('Search', ['class' => 'btn btn-primary btn-block']) !!}
+            </div>
+            {!! Form::close() !!}
+        </section>
+    </div>
     <div class="content">
         <div class="clearfix"></div>
 

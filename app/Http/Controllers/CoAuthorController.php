@@ -6,7 +6,6 @@ use Flash;
 use Response;
 use Illuminate\Http\Request;
 use App\Repositories\CoAuthorRepository;
-use App\Http\Requests\CreateCoAuthorRequest;
 use App\Http\Requests\UpdateCoAuthorRequest;
 use Prettus\Repository\Criteria\RequestCriteria;
 
@@ -28,16 +27,25 @@ class CoAuthorController extends AppBaseController
      */
     public function index(Request $request)
     {
+        $arr = [1,2,3,4,5,6];
+//        $a = new \Illuminate\Pagination\Paginator($arr, 3, 2);
+        $a = new \Illuminate\Pagination\LengthAwarePaginator($arr, count($arr), 2, 2);
+        dump($a);
+
         $this->coAuthorRepository->pushCriteria(new RequestCriteria($request));
 
         $coAuthors = $this->coAuthorRepository
-            ->with('candidate')
             ->with('firstAuthor.university')
             ->with('secondAuthor.university')
+//            ->all();
             ->paginate(config('constants.DEFAULT_PAGINATION'));
+        $paginator = $coAuthors->render();
+        dump($coAuthors);
 
-        return view('co_authors.index')
-            ->with('coAuthors', $coAuthors);
+        $coAuthors = $coAuthors->toArray()['data'];
+
+//        dd($coAuthors);
+        return view('co_authors.index', compact('coAuthors', 'paginator'));
     }
 
     /**
@@ -53,11 +61,11 @@ class CoAuthorController extends AppBaseController
     /**
      * Store a newly created CoAuthor in storage.
      *
-     * @param CreateCoAuthorRequest $request
+     * @param Request $request
      *
      * @return Response
      */
-    public function store(CreateCoAuthorRequest $request)
+    public function store(Request $request)
     {
         $input = $request->all();
 

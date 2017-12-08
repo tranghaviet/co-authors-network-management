@@ -6,6 +6,7 @@
             <th>University</th>
             <th>Second Author</th>
             <th>University</th>
+            <th>Mutual authors</th>
             <th>Joint papers</th>
             @auth
             <th colspan="3">Action</th>
@@ -15,31 +16,34 @@
     <tbody>
     @foreach($coAuthors as $coAuthor)
         <tr>
-            <td>{!! $coAuthor->id !!}</td>
+            <td>{!! $coAuthor['id'] !!}</td>
             <td>
                 <a href="{!! route('authors.show', [$coAuthor['first_author_id']]) !!}">
-                    {!! $coAuthor['firstAuthor']['given_name'].' '.$coAuthor['firstAuthor']['surname'] !!}
+                    {!! $coAuthor['first_author']['given_name'].' '.$coAuthor['first_author']['surname'] !!}
                 </a>
             </td>
             <td>
-                {!! $coAuthor['firstAuthor']->university['name'] !!}
+                {!! $coAuthor['first_author']['university']['name'] !!}
             </td>
             <td>
                 <a href="{!! route('authors.show', [$coAuthor['second_author_id']]) !!}">
-                    {!! $coAuthor['secondAuthor']['given_name'].' '.$coAuthor['secondAuthor']['surname'] !!}
+                    {!! $coAuthor['second_author']['given_name'].' '.$coAuthor['second_author']['surname'] !!}
                 </a>
             </td>
             <td>
-                {!! $coAuthor['secondAuthor']['university']['name'] !!}
+                {!! $coAuthor['second_author']['university']['name'] !!}
             </td>
             <td>
-                {{ $coAuthor['candidate']['no_of_joint_papers'] }}
+                {{ $coAuthor['no_of_mutual_authors'] }}
             </td>
             <td>
-                {!! Form::open(['route' => ['coAuthors.destroy', $coAuthor->id], 'method' => 'delete']) !!}
+                {{ $coAuthor['no_of_joint_papers'] }}
+            </td>
+            <td>
+                {!! Form::open(['route' => ['coAuthors.destroy', $coAuthor['id']], 'method' => 'delete']) !!}
                 <div class='btn-group'>
-                    <a href="{!! route('coAuthors.show', [$coAuthor->id]) !!}" class='btn btn-default btn-xs'><i class="fa fa-eye"></i></a>
-                    <a href="{!! route('coAuthors.edit', [$coAuthor->id]) !!}" class='btn btn-default btn-xs'><i class="fa fa-edit"></i></a>
+                    <a href="{!! route('coAuthors.show', [$coAuthor['id']]) !!}" class='btn btn-default btn-xs'><i class="fa fa-eye"></i></a>
+                    <a href="{!! route('coAuthors.edit', [$coAuthor['id']]) !!}" class='btn btn-default btn-xs'><i class="fa fa-edit"></i></a>
                     {!! Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}
                 </div>
                 {!! Form::close() !!}

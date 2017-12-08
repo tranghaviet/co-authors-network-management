@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateUniversityRequest;
 use App\Http\Requests\UpdateUniversityRequest;
 use App\Repositories\UniversityRepository;
 use Illuminate\Http\Request;
 use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
+use App\Models\University;
 
 class UniversityController extends AppBaseController
 {
     /** @var  UniversityRepository */
     private $universityRepository;
+    private $routeType = '';
 
-    public function __construct(UniversityRepository $universityRepo)
+    public function __construct(UniversityRepository $universityRepo, Request $request)
     {
         $this->universityRepository = $universityRepo;
+        $this->routeType = $request->is('admin/*') ? '':'user.';
     }
 
     /**
@@ -33,8 +35,9 @@ class UniversityController extends AppBaseController
             ->with('city')
             ->paginate(config('constants.DEFAULT_PAGINATION'));
 
-        return view('universities.index')
-            ->with('universities', $universities);
+        extract(get_object_vars($this));
+
+        return view('universities.index', compact('universities', 'routeType'));
     }
 
     /**
@@ -50,11 +53,11 @@ class UniversityController extends AppBaseController
     /**
      * Store a newly created University in storage.
      *
-     * @param CreateUniversityRequest $request
+     * @param Request $request
      *
      * @return Response
      */
-    public function store(CreateUniversityRequest $request)
+    public function store(Request $request)
     {
         $input = $request->all();
 
@@ -72,7 +75,7 @@ class UniversityController extends AppBaseController
      *
      * @return Response
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
         $university = $this->universityRepository->findWithoutFail($id);
 
@@ -82,7 +85,9 @@ class UniversityController extends AppBaseController
             return redirect(route('universities.index'));
         }
 
-        return view('universities.show')->with('university', $university);
+        extract(get_object_vars($this));
+
+        return view('universities.show', compact('university', 'routeType'));
     }
 
     /**
@@ -156,7 +161,10 @@ class UniversityController extends AppBaseController
 
     public function search(Request $request)
     {
-        $universities = $this->universityRepository->search($request->q)->paginate(config('constants.DEFAULT_PAGINATION', 15));
+        $universities = $this->universityRepository->search($request->q)
+            ->paginate(config('constants.DEFAULT_PAGINATION', 15));
+
+        $universities = University::search($request->q)->paginate(12);
 
         return view('universities.index', compact('universities'));
     }

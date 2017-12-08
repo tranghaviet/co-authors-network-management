@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateCityRequest;
 use App\Http\Requests\UpdateCityRequest;
 use App\Repositories\CityRepository;
 use Illuminate\Http\Request;
@@ -50,11 +49,11 @@ class CityController extends AppBaseController
     /**
      * Store a newly created City in storage.
      *
-     * @param CreateCityRequest $request
+     * @param Request $request
      *
      * @return Response
      */
-    public function store(CreateCityRequest $request)
+    public function store(Request $request)
     {
         $input = $request->all();
 

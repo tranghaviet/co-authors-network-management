@@ -3,8 +3,7 @@
 namespace App\Models;
 
 use Eloquent as Model;
-use Laravel\Scout\Searchable;
-use Watson\Rememberable\Rememberable;
+use Sofa\Eloquence\Eloquence;
 
 /**
  * Class University.
@@ -16,15 +15,9 @@ use Watson\Rememberable\Rememberable;
  */
 class University extends Model
 {
-    use Searchable;
-    use Rememberable;
+    use Eloquence;
 
-    /**
-     * Time for cache a query.
-     *
-     * @var int
-     */
-    protected $rememberFor = 30;
+    protected $searchableColumns = ['name'];
 
     /**
      * The attributes that should be casted to native types.
