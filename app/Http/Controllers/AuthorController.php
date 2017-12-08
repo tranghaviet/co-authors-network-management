@@ -38,8 +38,8 @@ class AuthorController extends AppBaseController
 
         $authors = $this->authorRepository->with('university')
             ->paginate(config('constants.DEFAULT_PAGINATION'));
-
         $paginator = $authors->render();
+        dump($authors);
         $authors = $authors->toArray()['data'];
         extract(get_object_vars($this));
 
@@ -192,10 +192,7 @@ class AuthorController extends AppBaseController
         $perPage = config('constants.DEFAULT_PAGINATION');
         $offset = $perPage * ($currentPage - 1);
 
-        dump($offset);
-        dump($perPage);
-
-        if (!$request->session()->has('author_search_' . $query)) {
+        if (!$request->session()->has('author_search_' . $query . '_' . strval($currentPage))) {
             $execution = "select authors.*, universities.name , match(authors.given_name, authors.surname) against ('{$query}') as s1,
                 match(universities.name) against ('{$query}') as s2 
                 from authors inner join universities on authors.university_id = universities.id
@@ -209,7 +206,6 @@ class AuthorController extends AppBaseController
         }
 
         $authors = json_decode(json_encode($authors), true);
-        dump($authors);
 
         for ($i = 0; $i < count($authors); $i++) {
             $authors[$i]['university'] = [];
@@ -217,15 +213,14 @@ class AuthorController extends AppBaseController
         }
 
         $itemsForCurrentPage = array_slice($authors, $offset, $perPage, true);
-        $result = new LengthAwarePaginator($itemsForCurrentPage, count($authors), $perPage, $currentPage);
-        dd($result);
-        $result = $result->toArray();
-
-        dd();
+        $result = new LengthAwarePaginator($authors, 50, $perPage, $currentPage);
+        $result->setPath('http://localhost:8000/authors/search?q=' . $query);
+        $paginator = $result->render();
 
         return view('authors.index')->with([
             'authors' => $authors,
             'routeType' => $this->routeType,
+            'paginator' => $paginator,
         ]);
     }
 }
