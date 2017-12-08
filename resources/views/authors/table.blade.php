@@ -19,7 +19,7 @@
             <td>{!! $author['given_name'] !!}</td>
             <td>{!! $author['surname'] !!}</td>
             <td>{!! $author['email'] !!}</td>
-            <td><a href="{!! route($routeType . 'universities.show', [$author['university']['id']]) !!}">{!! $author['university']['name'] !!}</a></td>
+            <td><a href="{!! route($routeType . 'universities.show', [$author['university_id']]) !!}">{!! $author['university']['name'] !!}</a></td>
             <td><a href="{!! $author['url'] !!}" target="_blank">Author on Scopus</a></td>
             @auth
             <td>

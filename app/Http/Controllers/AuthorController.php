@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Repositories\AuthorRepository;
 use App\Http\Requests\UpdateAuthorRequest;
 use Prettus\Repository\Criteria\RequestCriteria;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class AuthorController extends AppBaseController
 {
@@ -182,13 +183,17 @@ class AuthorController extends AppBaseController
             return redirect()->back();
         }
 
-        $currentPage = $request->page;
+        $currentPage = intval($request->page);
 
         if (! is_numeric($currentPage)) {
             Flash::error('Invalid page.');
         }
         
         $perPage = config('constants.DEFAULT_PAGINATION');
+        $offset = $perPage * $currentPage;
+
+        dump($offset);
+        dump($perPage);
 //
 //        if (! $request->session()->has('author_search_' . $query)) {
 //            $authors = Author::search($request->q)->get();
@@ -199,23 +204,31 @@ class AuthorController extends AppBaseController
 
 //        $authors = $this->authorRepository->search($request->q)->get();
 
-        $execution = "select *, match(authors.given_name, authors.surname) against ('{$query}') as s1,
-	          match(universities.name) against ('{$query}') as s2 
-              from authors inner join universities on authors.university_id = universities.id
-              order by (s1 + s2 ) desc;";
+        $execution = "select authors.*, universities.name , match(authors.given_name, authors.surname) against ('{$query}') as s1,
+                match(universities.name) against ('{$query}') as s2 
+                from authors inner join universities on authors.university_id = universities.id
+                order by (s1 + s2 ) desc limit {$perPage} offset {$offset}";
 
         $authors = DB::select($execution);
-        dd($authors);
+        $authors = json_decode(json_encode($authors), true);
 
-        $authors = Author::search($query, [
-            'given_name' => 5,
-            'surname' => 5,
-            'university.name' => 10
-        ])
-            ->paginate(15);
+        for ($i=0; $i < count($authors); $i++) { 
+            $authors[$i]['university'] = [];
+            $authors[$i]['university']['name'] = $authors[$i]['name'];
+        }
 
-//        dd($authors);
+        // dump(json_decode(json_encode($authors), true));
+        dump($authors);
 
-        return view('authors.index', compact('authors'));
+        $paginator = new LengthAwarePaginator($authors, count($authors), $perPage, $currentPage);
+        dump($paginator);
+        dump($paginator->render(view('vendor/pagination/bootstrap-4')));
+
+       dd();
+
+        return view('authors.index')->with([
+            'authors' => json_decode(json_encode($authors), true),
+            'routeType' => $this->routeType,
+        ]);
     }
 }
