@@ -219,15 +219,19 @@ class AuthorController extends AppBaseController
 
 
 //        $result = new LengthAwarePaginator($authors, 50, $perPage, $currentPage);
-        $endpoint = $_SERVER['SERVER_ADDR'] . $_SERVER['SERVER_PORT'] == "8000" ? ':8000' : null;
-        $url = $endpoint . $this->routeType . route('authors.search') . '?q=' . $query . '?page=';
+        // $endpoint = $_SERVER['SERVER_ADDR'] . $_SERVER['SERVER_PORT'] == "8000" ? ':8000' : null;
+        $url = $this->routeType . route('authors.search') . '?q=' . $query . '?page=';
 //        $paginator = $result->render();
 
+        $nextPage = 1;
+        $previousPage = 1;
         if (count($authors) > 15) {
             $nextPage = $url . ($currentPage + 1);
+            $previousPage = ($currentPage - 1) > 0 ? $url . ($currentPage - 1) : 0;
         }
 
         if ($currentPage > 1) {
+            $nextPage = $url.($currentPage + 1);
             $previousPage = $url . ($currentPage - 1);
         }
 
@@ -235,7 +239,7 @@ class AuthorController extends AppBaseController
             'authors' => $authors,
             'routeType' => $this->routeType,
             'nextPage' => $nextPage,
-            'prevousPage' => $previousPage,
+            'previousPage' => $previousPage,
         ]);
     }
 }

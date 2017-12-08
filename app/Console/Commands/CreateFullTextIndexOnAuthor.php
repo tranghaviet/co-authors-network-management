@@ -34,7 +34,7 @@ class CreateFullTextIndexOnAuthor extends Command
         $query3 = 'DROP INDEX IF EXISTS `universities_ft_name` ON universities;';
         $query4 = 'CREATE FULLTEXT INDEX authors_ft_name ON `authors` (`surname`, `given_name`);';
 //        $query5 = 'CREATE FULLTEXT INDEX universities_ft_name ON `universities` (`name`);';
-        $query5 = 'ALTER TABLE `co_authors`.`universities` ADD FULLTEXT `universities_ft_name` (`name`);';
+        $query5 = 'ALTER TABLE `universities` ADD FULLTEXT `universities_ft_name` (`name`);';
 
 //        DB::statement($query1);
         DB::statement($query2);
