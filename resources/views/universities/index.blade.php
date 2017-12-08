@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <section class="content-header row">
             <h1 class="col-sm-2 pull-left">Universities</h1>
-            {!! Form::open(['route' => ['universities.search'], 'method' => 'get']) !!}
+            {!! Form::open(['route' => [$routeType . 'universities.search'], 'method' => 'get']) !!}
             <div class="form-group col-sm-8">
                 {!! Form::text('q', null, ['class' => 'form-control', 'placeholder' => 'University name']) !!}
             </div>

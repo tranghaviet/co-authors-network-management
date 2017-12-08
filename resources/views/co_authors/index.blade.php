@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <section class="content-header row">
             <h1 class="col-sm-2 pull-left">Co-authors</h1>
-            {!! Form::open(['route' => ['coAuthors.search'], 'method' =>
+            {!! Form::open(['route' => [$routeType . 'coAuthors.search'], 'method' =>
             'get']) !!}
             <div class="form-group col-sm-8">
                 {!! Form::text('q', null, ['class' => 'form-control',

@@ -6,7 +6,7 @@
             <h1 class="col-sm-12 pull-left">Candidates</h1>
         </section>
         <div class="row">
-            {!! Form::open(['route' => ['candidates.search'], 'method' => 'get']) !!}
+            {!! Form::open(['route' => [$routeType . 'candidates.search'], 'method' => 'get']) !!}
             <div class="form-group col-sm-3">
                 {!! Form::text('q', null, ['class' => 'form-control',
                 'placeholder' => 'Type Author name']) !!}
