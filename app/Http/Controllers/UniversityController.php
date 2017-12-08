@@ -161,7 +161,10 @@ class UniversityController extends AppBaseController
 
     public function search(Request $request)
     {
-        $universities = $this->universityRepository->search($request->q)->paginate(config('constants.DEFAULT_PAGINATION', 15));
+        $universities = $this->universityRepository->search($request->q)
+            ->paginate(config('constants.DEFAULT_PAGINATION', 15));
+
+        $universities = University::search($request->q)->paginate(12);
 
         return view('universities.index', compact('universities'));
     }

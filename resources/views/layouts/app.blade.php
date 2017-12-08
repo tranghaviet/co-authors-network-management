@@ -6,9 +6,9 @@
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
-    {{--<<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">--}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    {{--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">--}}
+    <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}">
+    {{--<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">--}}
     <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/AdminLTE.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/AdminLTE_all-skins.min.css') }}">
@@ -21,7 +21,7 @@
 </head>
 
 <body class="skin-blue sidebar-mini">
-@if (!Auth::guest())
+@if (! Auth::guest() && ! Route::is('admin/*'))
     <div class="wrapper">
         <!-- Main Header -->
         <header class="main-header" data-turbolinks-permenent>
@@ -41,42 +41,10 @@
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
                         <!-- User Account Menu -->
-                        <li class="dropdown user user-menu">
-                            <!-- Menu Toggle Button -->
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <!-- The user image in the navbar-->
-                                <img src="http://infyom.com/images/logo/blue_logo_150x150.jpg"
-                                     class="user-image" alt="User Image"/>
-                                <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                                <span class="hidden-xs">{!! Auth::user()->name !!}</span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <!-- The user image in the menu -->
-                                <li class="user-header">
-                                    <img src="http://infyom.com/images/logo/blue_logo_150x150.jpg"
-                                         class="img-circle" alt="User Image"/>
-                                    <p>
-                                        {!! Auth::user()->name !!}
-                                        <small>Member since {!! Auth::user()->created_at->format('M. Y') !!}</small>
-                                    </p>
-                                </li>
-                                <!-- Menu Footer-->
-                                <li class="user-footer">
-                                    <div class="pull-left">
-                                        <a href="#" class="btn btn-default btn-flat">Profile</a>
-                                    </div>
-                                    <div class="pull-right">
-                                        <a href="{!! url('/logout') !!}" class="btn btn-default btn-flat"
-                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                            Sign out
-                                        </a>
-                                        <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                                            {{ csrf_field() }}
-                                        </form>
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
+
+                        {!! Form::open(['url'=> url('/logout'), 'id' => 'logout-form', 'method' => 'POST']) !!}
+                            {!! Form::submit('Logout', ['style' => 'display: normal;']) !!}
+                        {!! Form::close() !!}
                     </ul>
                 </div>
             </nav>
@@ -119,13 +87,14 @@
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
                     <li><a href="/">Home</a></li>
-                    <li>{!! Html::link(route('user.authors'), 'Author') !!}</li>
-                    <li>{!! Html::link(route('user.papers'), 'Paper') !!}</li>
-                    <li>{!! Html::link(route('user.author-paper'), 'Author Paper') !!}</li>
-                    <li>{!! Html::link(route('user.co-authors'), 'Co-authors') !!}</li>
-                    <li>{!! Html::link(route('user.candidates'), 'Candidate') !!}</li>
+                    <li>{!! Html::link(route('user.authors.index'), 'Author') !!}</li>
+                    <li>{!! Html::link(route('user.papers.index'), 'Paper') !!}</li>
+                    <li>{!! Html::link(route('user.author-paper.index'), 'Author Paper') !!}</li>
+                    <li>{!! Html::link(route('user.co-authors.index'), 'Co-authors') !!}</li>
+                    <li>{!! Html::link(route('user.candidates.index'), 'Candidate') !!}</li>
+                    <li>{!! Html::link(route('user.universities.index'), 'University') !!}</li>
                 </ul>
-
+            </div>
         </div>
     </nav>
 
@@ -143,7 +112,7 @@
     <!-- jQuery 3.1.1 -->
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    {{--<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>--}}
     <script src="{{ asset('js/select2.min.js') }}"></script>
     <script src="{{ asset('js/icheck.min.js') }}"></script>
 

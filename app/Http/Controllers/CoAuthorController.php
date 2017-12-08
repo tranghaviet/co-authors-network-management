@@ -53,11 +53,11 @@ class CoAuthorController extends AppBaseController
     /**
      * Store a newly created CoAuthor in storage.
      *
-     * @param CreateCoAuthorRequest $request
+     * @param Request $request
      *
      * @return Response
      */
-    public function store(CreateCoAuthorRequest $request)
+    public function store(Request $request)
     {
         $input = $request->all();
 
