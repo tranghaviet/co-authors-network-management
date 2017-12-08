@@ -10,9 +10,7 @@
                      alt="User Image"/>
             </div>
             <div class="pull-left info">
-                @if (Auth::guest())
-                <p>InfyOm</p>
-                @else
+                @if (! Auth::guest())
                     <p>{{ Auth::user()->name}}</p>
                 @endif
                 <!-- Status -->

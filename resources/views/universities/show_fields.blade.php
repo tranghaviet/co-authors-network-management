@@ -13,9 +13,12 @@
 <!-- City Field -->
 <div class="form-group">
     {!! Form::label('city', 'City:') !!}
-        <a href="{!! route('cities.show', [$university->city['id']]) !!}">
-            {!! $university->city['name'] !!}
-        </a>
+        {!! $university->city['name'] !!}
+</div>
+<!-- Country Field -->
+<div class="form-group">
+    {!! Form::label('country', 'Country:') !!}
+        {!! $university['city']['country']['name'] !!}
 </div>
 
 <!-- Authors Field -->
@@ -24,7 +27,7 @@
     <ol>
         @foreach($university->authors as $author)
             <li>
-                <a href="{!! route('authors.show', [$author->id]) !!}">{!! $author['given_name'] . ' ' . $author['surname'] !!}</a>
+                <a href="{!! route($routeType . 'authors.show', [$author->id]) !!}">{!! $author['given_name'] . ' ' . $author['surname'] !!}</a>
             </li>
         @endforeach
     </ol>

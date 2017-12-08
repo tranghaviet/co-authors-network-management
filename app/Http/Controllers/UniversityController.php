@@ -75,7 +75,7 @@ class UniversityController extends AppBaseController
      *
      * @return Response
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
         $university = $this->universityRepository->findWithoutFail($id);
 
@@ -85,7 +85,9 @@ class UniversityController extends AppBaseController
             return redirect(route('universities.index'));
         }
 
-        return view('universities.show')->with('university', $university);
+        extract(get_object_vars($this));
+
+        return view('universities.show', compact('university', 'routeType'));
     }
 
     /**
