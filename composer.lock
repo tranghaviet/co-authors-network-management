@@ -368,7 +368,7 @@
                 "laravel",
                 "templates"
             ],
-            "time": "2017-11-25 04:58:12"
+            "time": "2017-11-25T04:58:12+00:00"
         },
         {
             "name": "infyomlabs/laravel-generator",
@@ -427,7 +427,7 @@
                 "test",
                 "view"
             ],
-            "time": "2017-11-25 05:12:03"
+            "time": "2017-11-25T05:12:03+00:00"
         },
         {
             "name": "jakub-onderka/php-console-color",

@@ -188,6 +188,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        // Maatwebsite\Excel\ExcelServiceProvider::class,
+        App\Providers\EnvatoServiceProvider::class,
 
     ],
 
@@ -241,6 +243,10 @@ return [
         'Form'      => Collective\Html\FormFacade::class,
         'Html'      => Collective\Html\HtmlFacade::class,
         'Flash'     => Laracasts\Flash\Flash::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'ImportPaper' => App\Helpers\Envato\ImportPaperData::class,
+        'ImportAuthor' => App\Helpers\Envato\ImportAuthorData::class,
+        'ImportAuthor_Paper' => App\Helpers\Envato\ImportAuthor_PaperData::class,
     ],
 
 ];

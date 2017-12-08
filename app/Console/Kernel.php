@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         \App\Console\Commands\SynchronizeCoAuthorNetwork::class,
         \App\Console\Commands\DatabaseForeignKeyCheck::class,
+        \App\Console\Commands\ImportAuthors::class,
         \App\Console\Commands\SynchronizeCandidate::class,
         \App\Console\Commands\CreateFullTextIndexOnAuthor::class,
         \App\Console\Commands\CreateFullTextIndexOnPaper::class,
