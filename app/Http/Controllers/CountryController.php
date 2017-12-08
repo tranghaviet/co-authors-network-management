@@ -20,31 +20,6 @@ class CountryController extends AppBaseController
     }
 
     /**
-     * Display a listing of the Country.
-     *
-     * @param Request $request
-     * @return Response
-     */
-    public function index(Request $request)
-    {
-        $this->countryRepository->pushCriteria(new RequestCriteria($request));
-        $countries = $this->countryRepository->paginate(30);
-
-        return view('countries.index')
-            ->with('countries', $countries);
-    }
-
-    /**
-     * Show the form for creating a new Country.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        return view('countries.create');
-    }
-
-    /**
      * Store a newly created Country in storage.
      *
      * @param Request $request

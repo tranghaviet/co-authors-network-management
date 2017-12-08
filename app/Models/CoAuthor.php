@@ -40,38 +40,11 @@ class CoAuthor extends Model
     ];
 
     /**
-     * Get the indexable data array for the model. (TNTSearch).
-     *
-     * @return array
-     */
-    public function toSearchableArray()
-    {
-        $arr = [
-            'id' => $this->id,
-        ];
-
-        $arr['first_author'] = $this->firstAuthor['given_name'] . ' ' .
-            $this->firstAuthor['surname'] . ' ' . $this->firstAuthor->university['name'];
-        $arr['second_author'] = $this->secondAuthor['given_name'] . ' ' .
-            $this->secondAuthor['surname'] . ' ' . $this->secondAuthor->university['name'];
-
-        return $arr;
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      **/
     public function candidate()
     {
         return $this->hasOne(\App\Models\Candidate::class);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     **/
-    public function coAuthorPaper()
-    {
-        return $this->hasMany(\App\Models\CoAuthorPaper::class);
     }
 
     /**

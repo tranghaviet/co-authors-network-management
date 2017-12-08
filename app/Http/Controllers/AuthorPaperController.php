@@ -39,34 +39,6 @@ class AuthorPaperController extends AppBaseController
     }
 
     /**
-     * Show the form for creating a new AuthorPaper.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        return view('author_papers.create');
-    }
-
-    /**
-     * Store a newly created AuthorPaper in storage.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-        $input = $request->all();
-
-        $authorPaper = $this->authorPaperRepository->create($input);
-
-        Flash::success('Author Paper saved successfully.');
-
-        return redirect(route('authorPapers.index'));
-    }
-
-    /**
      * Display the specified AuthorPaper.
      *
      * @param  int $id

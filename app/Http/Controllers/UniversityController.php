@@ -42,34 +42,6 @@ class UniversityController extends AppBaseController
     }
 
     /**
-     * Show the form for creating a new University.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        return view('universities.create');
-    }
-
-    /**
-     * Store a newly created University in storage.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-        $input = $request->all();
-
-        $university = $this->universityRepository->create($input);
-
-        Flash::success('University saved successfully.');
-
-        return redirect(route('universities.index'));
-    }
-
-    /**
      * Display the specified University.
      *
      * @param  int $id

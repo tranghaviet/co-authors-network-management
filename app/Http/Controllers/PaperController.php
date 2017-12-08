@@ -43,34 +43,6 @@ class PaperController extends AppBaseController
     }
 
     /**
-     * Show the form for creating a new Paper.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        return view('papers.create');
-    }
-
-    /**
-     * Store a newly created Paper in storage.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-        $input = $request->all();
-
-        $paper = $this->paperRepository->create($input);
-
-        Flash::success('Paper saved successfully.');
-
-        return redirect(route('papers.index'));
-    }
-
-    /**
      * Display the specified Paper.
      *
      * @param  int $id

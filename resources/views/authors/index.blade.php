@@ -6,8 +6,7 @@
             <h1 class="col-sm-1 pull-left">Authors</h1>
             {!! Form::open(['route' => [$routeType . 'authors.search'], 'method' => 'get']) !!}
             <div class="form-group col-sm-8">
-                {!! Form::text('q', null, ['class' => 'form-control',
-                'placeholder' => 'Type Author name or University']) !!}
+                {!! Form::text('q', null, ['class' => 'form-control', 'placeholder' => 'Type Author name or University']) !!}
             </div>
             <div class="form-group col-sm-2">
                 {!! Form::submit('Search', ['class' => 'btn btn-primary btn-block']) !!}

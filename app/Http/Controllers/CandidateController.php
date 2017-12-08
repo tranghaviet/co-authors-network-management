@@ -43,34 +43,6 @@ class CandidateController extends AppBaseController
     }
 
     /**
-     * Show the form for creating a new Candidate.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        return view('candidates.create');
-    }
-
-    /**
-     * Store a newly created Candidate in storage.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-        $input = $request->all();
-
-        $candidate = $this->candidateRepository->create($input);
-
-        Flash::success('Candidate saved successfully.');
-
-        return redirect(route('candidates.index'));
-    }
-
-    /**
      * Display the specified Candidate.
      *
      * @param  int $id
