@@ -60,7 +60,7 @@
     <ol>
     @foreach($papers as $paper)
         <li>
-            <a href="{!! route('papers.show', [$paper->id]) !!}">
+            <a href="{!! route($routeType . 'papers.show', [$paper->id]) !!}">
                 {!! $paper['title'] !!}
             </a>
         </li>
@@ -74,7 +74,7 @@
     <ol>
         @foreach($collaborators as $collaborator)
             <li>
-                <a href="{!! route('authors.show', [$collaborator['id']]) !!}">{!! $collaborator['given_name'] . ' ' . $collaborator['surname'] !!}</a>
+                <a href="{!! route($routeType . 'authors.show', [$collaborator['id']]) !!}">{!! $collaborator['given_name'] . ' ' . $collaborator['surname'] !!}</a>
             </li>
         @endforeach
     </ol>

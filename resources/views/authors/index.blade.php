@@ -31,7 +31,9 @@
             <div class="box-body">
                     @include('authors.table')
             </div>
-            <div class="text-center">{{ $authors->render() }}</div>
+            @if(isset($paginator))
+                <div class="text-center">{{ $paginator }}</div>
+            @endif
         </div>
     </div>
 @endsection
