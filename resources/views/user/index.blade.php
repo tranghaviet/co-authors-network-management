@@ -49,7 +49,7 @@
 
             <a class="waves-effect waves-light btn" href="{{ route('user.paper') }}">Paper</a>
 
-            <a class="waves-effect waves-light btn" href="{{ route('user.author-paper') }}">Author Paper</a>
+            <a class="waves-effect waves-light btn" href="{{ route('user.authorPaper') }}">Author Paper</a>
 
             <a class="waves-effect waves-light btn" href="{{ route('user.co-authors') }}">Co-authors</a>
 

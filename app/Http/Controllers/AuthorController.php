@@ -11,7 +11,6 @@ use App\Http\Requests\SearchRequest;
 use App\Repositories\AuthorRepository;
 use App\Http\Requests\UpdateAuthorRequest;
 use Prettus\Repository\Criteria\RequestCriteria;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class AuthorController extends AppBaseController
 {
@@ -39,7 +38,7 @@ class AuthorController extends AppBaseController
         $authors = $this->authorRepository->with('university')
             ->paginate(config('constants.DEFAULT_PAGINATION'));
         $paginator = $authors->render();
-        dump($authors);
+
         $authors = $authors->toArray()['data'];
         extract(get_object_vars($this));
 
@@ -66,7 +65,6 @@ class AuthorController extends AppBaseController
     public function store(Request $request)
     {
         $input = $request->all();
-        dd($input);
 
         $author = $this->authorRepository->create($input);
 
@@ -187,6 +185,7 @@ class AuthorController extends AppBaseController
 
         if (!is_numeric($currentPage) || $currentPage < 1) {
             Flash::error('Invalid page.');
+            return view('authors.index');
         }
 
         $perPage = config('constants.DEFAULT_PAGINATION');
@@ -205,6 +204,10 @@ class AuthorController extends AppBaseController
             $authors = $request->session()->get('author_search_' . $query);
         }
 
+        if (count($authors) == 0) {
+            return view('authors.index');
+        }
+
         $authors = json_decode(json_encode($authors), true);
 
         for ($i = 0; $i < count($authors); $i++) {
@@ -212,15 +215,24 @@ class AuthorController extends AppBaseController
             $authors[$i]['university']['name'] = $authors[$i]['name'];
         }
 
-        $itemsForCurrentPage = array_slice($authors, $offset, $perPage, true);
-        $result = new LengthAwarePaginator($authors, 50, $perPage, $currentPage);
-        $result->setPath('http://localhost:8000/authors/search?q=' . $query);
-        $paginator = $result->render();
+//        $result = new LengthAwarePaginator($authors, 50, $perPage, $currentPage);
+        $endpoint = $_SERVER['SERVER_ADDR'] . $_SERVER['SERVER_PORT'] == "8000" ? ':8000' : null;
+        $url = $endpoint . $this->routeType . route('authors.search') . '?q=' . $query . '?page=';
+//        $paginator = $result->render();
+
+        if (count($authors) > 15) {
+            $nextPage = $url . ($currentPage + 1);
+        }
+
+        if ($currentPage > 1) {
+            $previousPage = $url . ($currentPage - 1);
+        }
 
         return view('authors.index')->with([
             'authors' => $authors,
             'routeType' => $this->routeType,
-            'paginator' => $paginator,
+            'nextPage' => $nextPage,
+            'prevousPage' => $previousPage,
         ]);
     }
 }
