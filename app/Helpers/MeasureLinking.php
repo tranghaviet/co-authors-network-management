@@ -79,8 +79,7 @@ class MeasureLinking
      * @param  \App\Models\CoAuthor|\Illuminate\Support\Collection $secondCoAuthors co-authors of second author with their no_of_joint_papers
      * @return float Sum of joint papers of all joint author.
      */
-    public
-    static function wjc($firstCoAuthors, $secondCoAuthors)
+    public static function wjc($firstCoAuthors, $secondCoAuthors)
     {
         $result = 0;
         $allJointPapers = 0;

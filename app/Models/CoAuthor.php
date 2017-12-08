@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Eloquent as Model;
-use Laravel\Scout\Searchable;
 
 /**
  * Class CoAuthor.
@@ -17,8 +16,6 @@ use Laravel\Scout\Searchable;
  */
 class CoAuthor extends Model
 {
-    use Searchable;
-
     public $table = 'co_authors';
 
     public $timestamps = false;
