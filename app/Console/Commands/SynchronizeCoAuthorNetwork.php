@@ -42,20 +42,20 @@ class SynchronizeCoAuthorNetwork extends Command
 //        $candidates = &TemporaryVariables::$candidates;
 //        $status = &TemporaryVariables::$status;
 
-        if (! Cache::has('authors')) {
-            dump('132');
-        } else {
-            $this->ask('fsd');
-        }
+//        if (! Cache::has('authors')) {
+//            dump('cache has gone.');
+//            Cache::put('authors', 232, 56);
+//        } else {
+//            $this->ask('cache ok.');
+//        }
+
+//        dd();
 
         if ($this->option('begin')) {
-            $this->ask('Clear cache?');
             Cache::flush();
             $this->info('cache cleared');
             Cache::put('status', [], 1440);
         }
-
-        $this->ask('continue?');
 
         $offset = $this->option('offset');
 
@@ -99,7 +99,7 @@ class SynchronizeCoAuthorNetwork extends Command
 //            $this->confirm('Continue?');
 
             DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-//            DB::statement('TRUNCATE TABLE `co_authors`');
+            DB::statement('TRUNCATE TABLE `co_authors`');
 //            DB::statement('TRUNCATE TABLE `candidates`');
             DB::statement('SET GLOBAL max_allowed_packet=524288000;');
 

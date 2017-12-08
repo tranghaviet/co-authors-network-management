@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Flash;
 use Response;
 use App\Models\Author;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use App\Repositories\AuthorRepository;
-use App\Http\Requests\CreateAuthorRequest;
 use App\Http\Requests\UpdateAuthorRequest;
 use Prettus\Repository\Criteria\RequestCriteria;
 
@@ -17,8 +16,11 @@ class AuthorController extends AppBaseController
     /** @var  AuthorRepository */
     private $authorRepository;
 
-    public function __construct(AuthorRepository $authorRepo)
+    private $routeType = '';
+
+    public function __construct(AuthorRepository $authorRepo, Request $request)
     {
+        $this->routeType = $request->is('admin/*') ? '':'user.';
         $this->authorRepository = $authorRepo;
     }
 
@@ -31,13 +33,15 @@ class AuthorController extends AppBaseController
     public function index(Request $request)
     {
         $this->authorRepository->pushCriteria(new RequestCriteria($request));
-        $authors = Cache::remember('authors.index',
-            config('constants.CACHE_TIME'), function () {
-                return $this->authorRepository->with('university')
-                ->paginate(config('constants.DEFAULT_PAGINATION'));
-            });
 
-        return view('authors.index', compact('authors'));
+        $authors = $this->authorRepository->with('university')
+            ->paginate(config('constants.DEFAULT_PAGINATION'));
+
+        $paginator = $authors->render();
+        $authors = $authors->toArray()['data'];
+        extract(get_object_vars($this));
+
+        return view('authors.index', compact('authors', 'paginator', 'routeType'));
     }
 
     /**
@@ -53,13 +57,14 @@ class AuthorController extends AppBaseController
     /**
      * Store a newly created Author in storage.
      *
-     * @param CreateAuthorRequest $request
+     * @param Request $request
      *
      * @return Response
      */
-    public function store(CreateAuthorRequest $request)
+    public function store(Request $request)
     {
         $input = $request->all();
+        dd($input);
 
         $author = $this->authorRepository->create($input);
 
@@ -94,7 +99,9 @@ class AuthorController extends AppBaseController
         // TODO: find $coAuthor, $topCandidates
         $collaborators = $author->collaborators($papers, ['id', 'given_name', 'surname']);
 
-        return view('authors.show', compact('author', 'subjects', 'papers', 'collaborators'));
+        extract(get_object_vars($this));
+
+        return view('authors.show', compact('author', 'subjects', 'papers', 'collaborators', 'routeType'));
     }
 
     /**
@@ -168,7 +175,46 @@ class AuthorController extends AppBaseController
 
     public function search(Request $request)
     {
-        $authors = Author::search($request->q)->paginate(config('constants.DEFAULT_PAGINATION', 15));
+        $query = trim($request->q);
+
+        if (empty($query)) {
+            Flash::error('Enter a keyword.');
+            return redirect()->back();
+        }
+
+        $currentPage = $request->page;
+
+        if (! is_numeric($currentPage)) {
+            Flash::error('Invalid page.');
+        }
+        
+        $perPage = config('constants.DEFAULT_PAGINATION');
+//
+//        if (! $request->session()->has('author_search_' . $query)) {
+//            $authors = Author::search($request->q)->get();
+//            session(['author_search_' . $query => $authors]);
+//        } else {
+//            $authors = $request->session()->get('author_search_' . $query);
+//        }
+
+//        $authors = $this->authorRepository->search($request->q)->get();
+
+        $execution = "select *, match(authors.given_name, authors.surname) against ('{$query}') as s1,
+	          match(universities.name) against ('{$query}') as s2 
+              from authors inner join universities on authors.university_id = universities.id
+              order by (s1 + s2 ) desc;";
+
+        $authors = DB::select($execution);
+        dd($authors);
+
+        $authors = Author::search($query, [
+            'given_name' => 5,
+            'surname' => 5,
+            'university.name' => 10
+        ])
+            ->paginate(15);
+
+//        dd($authors);
 
         return view('authors.index', compact('authors'));
     }

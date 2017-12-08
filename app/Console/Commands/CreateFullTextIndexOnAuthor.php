@@ -12,7 +12,7 @@ class CreateFullTextIndexOnAuthor extends Command
      *
      * @var string
      */
-    protected $signature = 'author:re-index';
+    protected $signature = 'author:re-index {--university}';
 
     /**
      * The console command description.
@@ -28,18 +28,23 @@ class CreateFullTextIndexOnAuthor extends Command
      */
     public function handle()
     {
-        $query2 = 'SET GLOBAL innodb_optimize_fulltext_only=1;';
-        $query1 = 'ALTER TABLE `authors` DROP INDEX IF EXISTS `author_search`;';
-        $query3 = 'ALTER TABLE `authors` ADD FULLTEXT `author_search` (`given_name`, `surname`);';
-//        $query3 = 'ALTER TABLE `authors` ADD FULLTEXT `author_search` (`surname`);';
-        $query4 = 'ALTER TABLE `universities` DROP INDEX IF EXISTS `university_search`;';
-        $query5 = 'ALTER TABLE `universities` ADD FULLTEXT `university_search` (`name`);';
+//        $query1 = 'SET GLOBAL innodb_optimize_fulltext_only=1;';
+        $query2 = 'DROP INDEX IF EXISTS `authors_ft_name` ON AUTHORS;';
+//        $query3 = 'DROP INDEX IF EXISTS `universities_ft_name` ON universities;';
+        $query3 = 'DROP INDEX IF EXISTS `universities_ft_name` ON universities;';
+        $query4 = 'CREATE FULLTEXT INDEX authors_ft_name ON `authors` (`surname`, `given_name`);';
+//        $query5 = 'CREATE FULLTEXT INDEX universities_ft_name ON `universities` (`name`);';
+        $query5 = 'ALTER TABLE `co_authors`.`universities` ADD FULLTEXT `universities_ft_name` (`name`);';
 
-        DB::statement($query1);
+//        DB::statement($query1);
         DB::statement($query2);
-        DB::statement($query3);
         DB::statement($query4);
-        DB::statement($query5);
+
+        if ($this->option('university')) {
+            DB::statement($query3);
+            DB::statement($query5);
+        }
+
         $this->info('Success');
     }
 }

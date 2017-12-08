@@ -166,7 +166,14 @@ class PaperController extends AppBaseController
 
     public function search(Request $request)
     {
-        $papers = $this->paperRepository->search($request->q)->paginate(15);
+        $query = trim($request->q);
+
+        if (empty($query)) {
+            Flash::error('Enter a keyword.');
+            return redirect()->back();
+        }
+
+        $papers = $this->paperRepository->search($query)->paginate(15);
 
         return view('papers.index', compact('papers'));
     }

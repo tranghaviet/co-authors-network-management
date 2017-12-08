@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateAuthorPaperRequest;
-use App\Http\Requests\UpdateAuthorPaperRequest;
-use App\Repositories\AuthorPaperRepository;
-use Illuminate\Http\Request;
 use Flash;
-use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
+use App\Models\Author;
+use App\Models\AuthorPaper;
+use Illuminate\Http\Request;
+use App\Repositories\AuthorPaperRepository;
+use App\Http\Requests\UpdateAuthorPaperRequest;
+use Prettus\Repository\Criteria\RequestCriteria;
 
 class AuthorPaperController extends AppBaseController
 {
@@ -49,11 +50,11 @@ class AuthorPaperController extends AppBaseController
     /**
      * Store a newly created AuthorPaper in storage.
      *
-     * @param CreateAuthorPaperRequest $request
+     * @param Request $request
      *
      * @return Response
      */
-    public function store(CreateAuthorPaperRequest $request)
+    public function store(Request $request)
     {
         $input = $request->all();
 
@@ -151,5 +152,19 @@ class AuthorPaperController extends AppBaseController
         Flash::success('Author Paper deleted successfully.');
 
         return redirect(route('authorPapers.index'));
+    }
+
+    public function search(Request $request)
+    {
+        if ($request->type == 'author') {
+            $author = Author::search($request->q)->get(['id', 'given_name', 'surname']);
+//            $authorIds = Author::search($request->q)->get(['id']);
+//            dd($authorIds);
+//                ->plunk('id')->toArray();
+//            $searchResult = AuthorPaper::whereIn('author_id', $authorIds)
+//                ->with(['author', 'paper'])->get();
+        } else {
+//            $paper =
+        }
     }
 }

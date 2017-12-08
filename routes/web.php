@@ -21,20 +21,29 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 // TODO: return different view for admin and user, do it in controller.
 Route::get('authors/search', 'AuthorController@search')->name('authors.search');
+Route::get('authorPapers/search', 'AuthorPaperController@search')->name('author-paper.search');
 Route::get('papers/search', 'PaperController@search')->name('papers.search');
 Route::get('coAuthors/search', 'CoAuthorController@search')->name('coAuthors.search');
 Route::get('candidates/search', 'CandidateController@search')->name('candidates.search');
 Route::get('universities/search', 'UniversityController@search')->name('universities.search');
 
-Route::get('authors', 'AuthorController@index')->name('user.authors');
-Route::get('papers', 'PaperController@index')->name('user.papers');
-Route::get('authorPapers', 'AuthorPaperController@index')->name('user.author-paper');
-Route::get('coAuthors', 'CoAuthorController@index')->name('user.co-authors');
-Route::get('candidates', 'CandidateController@index')->name('user.candidates');
-Route::get('universities', 'UniversityController@index')->name('user.universities');
+Route::get('authors', 'AuthorController@index')->name('user.authors.index');
+Route::get('authors/{id}', 'AuthorController@show')->name('user.authors.show');
 
-// Route::group(['prefix' => 'admin/', 'middleware' => 'auth'], function () {
-Route::group(['prefix' => 'admin/'], function () {
+Route::get('papers', 'PaperController@index')->name('user.papers.index');
+Route::get('papers/{id}', 'PaperController@show')->name('user.papers.show');
+
+Route::get('authorPapers', 'AuthorPaperController@index')->name('user.author-paper.index');
+
+Route::get('coAuthors', 'CoAuthorController@index')->name('user.co-authors.index');
+
+Route::get('candidates', 'CandidateController@index')->name('user.candidates.index');
+
+Route::get('universities', 'UniversityController@index')->name('user.universities.index');
+Route::get('universities/{id}', 'UniversityController@show')->name('user.universities.show');
+
+ Route::group(['prefix' => 'admin/', 'middleware' => 'auth'], function () {
+//Route::group(['prefix' => 'admin/'], function () {
     Route::resource('users', 'UserController');
 
     Route::resource('authors', 'AuthorController');
@@ -52,6 +61,9 @@ Route::group(['prefix' => 'admin/'], function () {
     Route::resource('cities', 'CityController');
 
     Route::resource('countries', 'CountryController');
+
+    Route::get('sync', 'SyncController@index')->name('sync.index');
+    Route::post('sync', 'SyncController@active')->name('sync.active');
 });
 
 /*
@@ -61,6 +73,22 @@ Route::group(['prefix' => 'admin/'], function () {
  *  to show data use dump($variable) (will show data and continue run program)
  *  or dd($variable) (will show data end end the program).
  */
+use App\Models\CoAuthor;
+use App\Models\Author;
 Route::get('/test_import', function () {
+    $first_author_id = 65038471460;
+    $second_author_id = 7006831047;
     // Your code here
+//    $a = CoAuthor::where([
+//        'first_author_id' => $first_author_id,
+//        'second_author_id' => $second_author_id,
+//    ])
+//        ->orWhere([
+//            'first_author_id' => $second_author_id,
+//            'second_author_id' => $first_author_id,
+//        ])->first();
+//    dd($a);
+    Author::orderBy('id')->limit(50)->chunk(10, function ($authors) {
+        dump($authors);
+    });
 });
