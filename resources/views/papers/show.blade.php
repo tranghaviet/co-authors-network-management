@@ -11,7 +11,7 @@
             <div class="box-body">
                 <div class="row" style="padding-left: 20px">
                     @include('papers.show_fields')
-                    <a href="{!! route('papers.index') !!}" class="btn btn-default">Back</a>
+                    <a href="{!! route($routeType . 'papers.index') !!}" class="btn btn-default">Back</a>
                 </div>
             </div>
         </div>
