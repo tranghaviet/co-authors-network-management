@@ -196,8 +196,9 @@ class AuthorController extends AppBaseController
             $execution = "select authors.*, universities.name , match(authors.given_name, authors.surname) against ('{$query}') as s1,
                 match(universities.name) against ('{$query}') as s2 
                 from authors inner join universities on authors.university_id = universities.id
+                where match(authors.given_name, authors.surname) against ('{$query}')
+                or match(universities.name) against ('{$query}')
                 order by (s1 + s2 ) desc limit {$perPage} offset {$offset}";
-
             $authors = DB::select($execution);
 
             session(['author_search_' . $query => $authors]);
@@ -213,8 +214,8 @@ class AuthorController extends AppBaseController
         }
 
         $itemsForCurrentPage = array_slice($authors, $offset, $perPage, true);
-        $result = new LengthAwarePaginator($authors, 50, $perPage, $currentPage);
-        $result->setPath('http://localhost:8000/authors/search?q=' . $query);
+        $result = new LengthAwarePaginator($authors, 100000, $perPage, $currentPage);
+        $result->setPath('/authors/search?q=' . $query);
         $paginator = $result->render();
 
         return view('authors.index')->with([
