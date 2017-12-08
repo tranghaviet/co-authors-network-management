@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UpdateCandidateRequest;
-use App\Repositories\CandidateRepository;
-use Illuminate\Http\Request;
 use Flash;
-use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 use App\Models\Candidate;
+use Illuminate\Http\Request;
+use App\Http\Requests\SearchRequest;
+use App\Repositories\CandidateRepository;
+use App\Http\Requests\UpdateCandidateRequest;
+use Prettus\Repository\Criteria\RequestCriteria;
 
 class CandidateController extends AppBaseController
 {
@@ -158,7 +159,7 @@ class CandidateController extends AppBaseController
         return redirect(route('candidates.index'));
     }
 
-    public function search(Request $request)
+    public function search(SearchRequest $request)
     {
         $input = $request->all();
 

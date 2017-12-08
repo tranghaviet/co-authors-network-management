@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Flash;
 use Response;
 use Illuminate\Http\Request;
+use App\Http\Requests\SearchRequest;
 use App\Repositories\CoAuthorRepository;
 use App\Http\Requests\UpdateCoAuthorRequest;
 use Prettus\Repository\Criteria\RequestCriteria;
@@ -165,10 +166,8 @@ class CoAuthorController extends AppBaseController
         return redirect(route('coAuthors.index'));
     }
 
-    public function search(Request $request)
+    public function search(SearchRequest $request)
     {
-        $coAuthors = $this->coAuthorRepository->search($request->q)->paginate(config('constants.DEFAULT_PAGINATION', 15));
-
         return view('co_authors.index', compact('coAuthors'));
     }
 }

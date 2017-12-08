@@ -7,6 +7,7 @@ use Response;
 use App\Models\Author;
 use App\Models\AuthorPaper;
 use Illuminate\Http\Request;
+use App\Http\Requests\SearchRequest;
 use App\Repositories\AuthorPaperRepository;
 use App\Http\Requests\UpdateAuthorPaperRequest;
 use Prettus\Repository\Criteria\RequestCriteria;
@@ -154,17 +155,8 @@ class AuthorPaperController extends AppBaseController
         return redirect(route('authorPapers.index'));
     }
 
-    public function search(Request $request)
+    public function search(SearchRequest $request)
     {
-        if ($request->type == 'author') {
-            $author = Author::search($request->q)->get(['id', 'given_name', 'surname']);
-//            $authorIds = Author::search($request->q)->get(['id']);
-//            dd($authorIds);
-//                ->plunk('id')->toArray();
-//            $searchResult = AuthorPaper::whereIn('author_id', $authorIds)
-//                ->with(['author', 'paper'])->get();
-        } else {
-//            $paper =
-        }
+
     }
 }

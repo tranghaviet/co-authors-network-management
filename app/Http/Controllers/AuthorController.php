@@ -7,6 +7,7 @@ use Flash;
 use Response;
 use App\Models\Author;
 use Illuminate\Http\Request;
+use App\Http\Requests\SearchRequest;
 use App\Repositories\AuthorRepository;
 use App\Http\Requests\UpdateAuthorRequest;
 use Prettus\Repository\Criteria\RequestCriteria;
@@ -21,7 +22,7 @@ class AuthorController extends AppBaseController
 
     public function __construct(AuthorRepository $authorRepo, Request $request)
     {
-        $this->routeType = $request->is('admin/*') ? '':'user.';
+        $this->routeType = $request->is('admin/*') ? '' : 'user.';
         $this->authorRepository = $authorRepo;
     }
 
@@ -174,60 +175,56 @@ class AuthorController extends AppBaseController
         return redirect(route('authors.index'));
     }
 
-    public function search(Request $request)
+    public function search(SearchRequest $request)
     {
         $query = trim($request->q);
 
-        if (empty($query)) {
-            Flash::error('Enter a keyword.');
-            return redirect()->back();
-        }
-
         $currentPage = intval($request->page);
 
-        if (! is_numeric($currentPage)) {
+        if (empty($currentPage)) {
+            $currentPage = 1;
+        }
+
+        if (!is_numeric($currentPage) || $currentPage < 1) {
             Flash::error('Invalid page.');
         }
-        
+
         $perPage = config('constants.DEFAULT_PAGINATION');
-        $offset = $perPage * $currentPage;
+        $offset = $perPage * ($currentPage - 1);
 
         dump($offset);
         dump($perPage);
-//
-//        if (! $request->session()->has('author_search_' . $query)) {
-//            $authors = Author::search($request->q)->get();
-//            session(['author_search_' . $query => $authors]);
-//        } else {
-//            $authors = $request->session()->get('author_search_' . $query);
-//        }
 
-//        $authors = $this->authorRepository->search($request->q)->get();
-
-        $execution = "select authors.*, universities.name , match(authors.given_name, authors.surname) against ('{$query}') as s1,
+        if (!$request->session()->has('author_search_' . $query)) {
+            $execution = "select authors.*, universities.name , match(authors.given_name, authors.surname) against ('{$query}') as s1,
                 match(universities.name) against ('{$query}') as s2 
                 from authors inner join universities on authors.university_id = universities.id
                 order by (s1 + s2 ) desc limit {$perPage} offset {$offset}";
 
-        $authors = DB::select($execution);
-        $authors = json_decode(json_encode($authors), true);
+            $authors = DB::select($execution);
 
-        for ($i=0; $i < count($authors); $i++) { 
+            session(['author_search_' . $query => $authors]);
+        } else {
+            $authors = $request->session()->get('author_search_' . $query);
+        }
+
+        $authors = json_decode(json_encode($authors), true);
+        dump($authors);
+
+        for ($i = 0; $i < count($authors); $i++) {
             $authors[$i]['university'] = [];
             $authors[$i]['university']['name'] = $authors[$i]['name'];
         }
 
-        // dump(json_decode(json_encode($authors), true));
-        dump($authors);
+        $itemsForCurrentPage = array_slice($authors, $offset, $perPage, true);
+        $result = new LengthAwarePaginator($itemsForCurrentPage, count($authors), $perPage, $currentPage);
+        dd($result);
+        $result = $result->toArray();
 
-        $paginator = new LengthAwarePaginator($authors, count($authors), $perPage, $currentPage);
-        dump($paginator);
-        dump($paginator->render(view('vendor/pagination/bootstrap-4')));
-
-       dd();
+        dd();
 
         return view('authors.index')->with([
-            'authors' => json_decode(json_encode($authors), true),
+            'authors' => $authors,
             'routeType' => $this->routeType,
         ]);
     }

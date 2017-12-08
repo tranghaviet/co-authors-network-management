@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Flash;
 use Response;
 use Illuminate\Http\Request;
+use App\Http\Requests\SearchRequest;
 use App\Repositories\PaperRepository;
 use App\Http\Requests\UpdatePaperRequest;
 use Prettus\Repository\Criteria\RequestCriteria;
@@ -164,7 +165,7 @@ class PaperController extends AppBaseController
         return redirect(route('papers.index'));
     }
 
-    public function search(Request $request)
+    public function search(SearchRequest $request)
     {
         $query = trim($request->q);
 

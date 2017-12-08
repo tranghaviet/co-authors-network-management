@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UpdateUniversityRequest;
-use App\Repositories\UniversityRepository;
-use Illuminate\Http\Request;
 use Flash;
-use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 use App\Models\University;
+use Illuminate\Http\Request;
+use App\Http\Requests\SearchRequest;
+use App\Repositories\UniversityRepository;
+use App\Http\Requests\UpdateUniversityRequest;
+use Prettus\Repository\Criteria\RequestCriteria;
 
 class UniversityController extends AppBaseController
 {
@@ -159,7 +160,7 @@ class UniversityController extends AppBaseController
         return redirect(route('universities.index'));
     }
 
-    public function search(Request $request)
+    public function search(SearchRequest $request)
     {
         $universities = $this->universityRepository->search($request->q)
             ->paginate(config('constants.DEFAULT_PAGINATION', 15));
