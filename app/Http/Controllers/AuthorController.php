@@ -39,7 +39,6 @@ class AuthorController extends AppBaseController
         $authors = $this->authorRepository->with('university')
             ->paginate(config('constants.DEFAULT_PAGINATION'));
         $paginator = $authors->render();
-        dump($authors);
         $authors = $authors->toArray()['data'];
         extract(get_object_vars($this));
 
@@ -217,7 +216,7 @@ class AuthorController extends AppBaseController
         $result = new LengthAwarePaginator($authors, 100000, $perPage, $currentPage);
         $result->setPath('/authors/search?q=' . $query);
         $paginator = $result->render();
-
+        
         return view('authors.index')->with([
             'authors' => $authors,
             'routeType' => $this->routeType,

@@ -29,7 +29,7 @@ class CreateFullTextIndexOnAuthor extends Command
     public function handle()
     {
 //        $query1 = 'SET GLOBAL innodb_optimize_fulltext_only=1;';
-        $query2 = 'DROP INDEX IF EXISTS `authors_ft_name` ON AUTHORS;';
+        $query2 = 'DROP INDEX IF EXISTS `authors_ft_name` ON authors;';
 //        $query3 = 'DROP INDEX IF EXISTS `universities_ft_name` ON universities;';
         $query3 = 'DROP INDEX IF EXISTS `universities_ft_name` ON universities;';
         $query4 = 'CREATE FULLTEXT INDEX authors_ft_name ON `authors` (`surname`, `given_name`);';
