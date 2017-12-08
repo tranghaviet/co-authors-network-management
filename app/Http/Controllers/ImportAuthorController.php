@@ -36,21 +36,19 @@ class ImportAuthorController extends Controller
 				$limit = 500;	
 				$n = $data->count();
 				$i = 0;
-				$directory='/c/xampp7/htdocs/co-authors-network-management';
-		        $process = new Process('php /c/xampp7/htdocs/co-authors-network-management/artisan foo:name');
-				// $process = new Process('cdartisan import:authors {--offset=0} bvvcc{limit=500}');
+		        $process = new Process('php ../../../artisan foo:name');
 				$process->start();
-				// while(true) {
-				// 	$offset = $i * $limit;
-				// 	$l = $n - $offset < $limit ? $n - $offset : $limit;
-				// 	if ($offset >= $n) {
-				// 		break;
-				// 	}
-				// 	$process = new Process('php ../../../artisan import:authors {--offset='. strval($offset) .'}'. '{limit='. strval($l) .'}');
-    //   				$process->start();
-    //   				dump('start import authors with limit '.strval($l).' and offset '. strval($offset) .'.');
-    //   				$i++;
-				// }
+				while(true) {
+					$offset = $i * $limit;
+					$l = $n - $offset < $limit ? $n - $offset : $limit;
+					if ($offset >= $n) {
+						break;
+					}
+					$process = new Process('php ../../../artisan import:authors {--offset='. strval($offset) .'}'. '{limit='. strval($l) .'}');
+      				$process->start();
+      				dump('start import authors with limit '.strval($l).' and offset '. strval($offset) .'.');
+      				$i++;
+				}
 
 				// foreach ($data as $key => $value)
 				// {
