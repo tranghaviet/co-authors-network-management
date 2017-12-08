@@ -13,11 +13,6 @@
                 {!! Form::submit('Search', ['class' => 'btn btn-primary btn-block']) !!}
             </div>
             {!! Form::close() !!}
-            @auth
-            <div class="col-sm-1 pull-right">
-                <a class="btn btn-primary btn-block" style="margin-right: 35px;margin-bottom: 5px" href="{!! route('papers.create') !!}">New</a>
-            </div>
-            @endAuth
         </section>
     </div>
 

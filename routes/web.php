@@ -44,7 +44,7 @@ Route::get('universities/{id}', 'UniversityController@show')->name('user.univers
 
 Route::group(['prefix' => 'admin/', 'middleware' => 'auth'], function () {
     Route::get('authors/search', 'AuthorController@search')->name('authors.search');
-    Route::get('authorPapers/search', 'AuthorPaperController@search')->name('authoPaper.search');
+    Route::get('authorPapers/search', 'AuthorPaperController@search')->name('authorPaper.search');
     Route::get('papers/search', 'PaperController@search')->name('papers.search');
     Route::get('coAuthors/search', 'CoAuthorController@search')->name('coAuthors.search');
     Route::get('candidates/search', 'CandidateController@search')->name('candidates.search');

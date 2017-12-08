@@ -17,8 +17,11 @@ class AuthorPaperController extends AppBaseController
     /** @var  AuthorPaperRepository */
     private $authorPaperRepository;
 
-    public function __construct(AuthorPaperRepository $authorPaperRepo)
+    private $routeType;
+
+    public function __construct(AuthorPaperRepository $authorPaperRepo, Request $request)
     {
+        $this->routeType = $request->is('admin/*') ? '' : 'user.';
         $this->authorPaperRepository = $authorPaperRepo;
     }
 
@@ -35,7 +38,10 @@ class AuthorPaperController extends AppBaseController
             ->paginate(config('constants.DEFAULT_PAGINATION'));
 
         return view('author_papers.index')
-            ->with('authorPapers', $authorPapers);
+            ->with([
+                'authorPapers' => $authorPapers,
+                'routeType' => $this->routeType,
+            ]);
     }
 
     /**

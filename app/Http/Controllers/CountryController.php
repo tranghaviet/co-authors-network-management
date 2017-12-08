@@ -20,21 +20,18 @@ class CountryController extends AppBaseController
     }
 
     /**
-     * Store a newly created Country in storage.
+     * Display a listing of the Country.
      *
      * @param Request $request
-     *
      * @return Response
      */
-    public function store(Request $request)
+    public function index(Request $request)
     {
-        $input = $request->all();
+        $this->countryRepository->pushCriteria(new RequestCriteria($request));
+        $countries = $this->countryRepository->paginate(30);
 
-        $country = $this->countryRepository->create($input);
-
-        Flash::success('Country saved successfully.');
-
-        return redirect(route('countries.index'));
+        return view('countries.index')
+            ->with('countries', $countries);
     }
 
     /**

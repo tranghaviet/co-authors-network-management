@@ -16,8 +16,11 @@ class CandidateController extends AppBaseController
     /** @var  CandidateRepository */
     private $candidateRepository;
 
-    public function __construct(CandidateRepository $candidateRepo)
+    private $routeType;
+
+    public function __construct(CandidateRepository $candidateRepo, Request $request)
     {
+        $this->routeType = $request->is('admin/*') ? '' : 'user.';
         $this->candidateRepository = $candidateRepo;
     }
 
@@ -39,6 +42,7 @@ class CandidateController extends AppBaseController
             ->with([
                 'candidates' => $candidates,
                 'isPaginated' => true,
+                'routeType' => $this->routeType,
             ]);
     }
 

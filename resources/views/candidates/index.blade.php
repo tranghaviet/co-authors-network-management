@@ -21,14 +21,6 @@
                 'placeholder' => 'No. of Joint Papers']) !!}
             </div>
             <div class="form-group col-sm-3">
-                {!! Form::number('no_of_joint_subjects', null, ['class' => 'form-control',
-                'placeholder' => 'No. of Joint Subjects']) !!}
-            </div>
-            <div class="form-group col-sm-3">
-                {!! Form::number('no_of_joint_keywords', null, ['class' => 'form-control',
-                'placeholder' => 'No. of Joint Keywords']) !!}
-            </div>
-            <div class="form-group col-sm-3">
                 {!! Form::number('score_1', null, ['class' => 'form-control',
                 'placeholder' => 'Score 1']) !!}
             </div>
@@ -55,7 +47,7 @@
         <div class="clearfix"></div>
         <div class="box box-primary">
             <div class="box-body">
-                    @if($candidates->isEmpty())
+                    @if(! isset($candidates) || $candidates->isEmpty())
                         <h1>Empty</h1>
                     @else
                         @include('candidates.table')
