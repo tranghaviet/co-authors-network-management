@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Flash;
 use Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\SearchRequest;
 use App\Repositories\PaperRepository;
 use App\Http\Requests\UpdatePaperRequest;
@@ -141,13 +142,64 @@ class PaperController extends AppBaseController
     {
         $query = trim($request->q);
 
-        if (empty($query)) {
-            Flash::error('Enter a keyword.');
-            return redirect()->back();
+        $currentPage = intval($request->page);
+
+        if (empty($currentPage)) {
+            $currentPage = 1;
         }
 
-        $papers = $this->paperRepository->search($query)->paginate(15);
+        if (!is_numeric($currentPage) || $currentPage < 1) {
+            Flash::error('Invalid page.');
+            return view('papers.index')->with([
+                'routeType' => $this->routeType,
+            ]);
+        }
 
-        return view('papers.index', compact('papers'));
+        $perPage = config('constants.DEFAULT_PAGINATION');
+        $offset = $perPage * ($currentPage - 1);
+
+        if (!$request->session()->has('paper_search_' . $query . '_' . strval($currentPage))) {
+            $execution = "select *, match(paper.title) against ('{$query}') as s1 from papers
+                          where 
+                            match(paper.title) against ('{$query}')
+                            or papers.id = '{$query}'
+                            or papers.issn = '{$query}'
+                          order by s1 desc desc limit {$perPage} offset {$offset};";
+
+            $papers = DB::select($execution);
+
+            session(['author_search_' . $query => $papers]);
+        } else {
+            $papers = $request->session()->get('paper_search_' . $query);
+        }
+
+        if (count($papers) == 0) {
+            return view('papers.index')->with([
+                'routeType' => $this->routeType,
+            ]);
+        }
+
+        $papers = json_decode(json_encode($papers), true);
+
+        // TODO: Hoang apply logic same as AuthorController
+        $endpoint = $_SERVER['SERVER_ADDR'] . $_SERVER['SERVER_PORT'] == "8000" ? ':8000' : null;
+        $url = $endpoint . $this->routeType . route('authors.search') . '?q=' . $query . '?page=';
+//        $paginator = $result->render();
+
+        if (count($papers) > 15) {
+            $nextPage = $url . ($currentPage + 1);
+        }
+
+        if ($currentPage > 1) {
+            $previousPage = $url . ($currentPage - 1);
+        }
+
+        return view('papers.index')->with([
+            'papers' => $papers,
+            'routeType' => $this->routeType,
+            'nextPage' => $nextPage,
+            'prevousPage' => $previousPage,
+        ]);
+
     }
 }
