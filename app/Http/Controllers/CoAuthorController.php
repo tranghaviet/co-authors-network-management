@@ -43,7 +43,6 @@ class CoAuthorController extends AppBaseController
         $paginator = $coAuthors->render();
 
         $coAuthors = $coAuthors->toArray()['data'];
-        dd($coAuthors);
 
         return view('co_authors.index', array_merge(compact('coAuthors', 'paginator'), ['routeType' => $this->routeType]));
     }

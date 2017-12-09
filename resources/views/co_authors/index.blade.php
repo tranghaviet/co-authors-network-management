@@ -6,9 +6,18 @@
             <h1 class="col-sm-2 pull-left">Co-authors</h1>
             {!! Form::open(['route' => [$routeType . 'coAuthors.search'], 'method' =>
             'get']) !!}
-            <div class="form-group col-sm-8">
+            <div class="form-group col-sm-3">
                 {!! Form::text('q', null, ['class' => 'form-control',
                 'placeholder' => 'Type Author name']) !!}
+            </div>
+            <div class="form-group col-sm-3">
+                {!! Form::number('no_of_mutual_authors', null, ['class' =>
+                'form-control',
+                'placeholder' => 'No. of Mutual authors']) !!}
+            </div>
+            <div class="form-group col-sm-3">
+                {!! Form::number('no_of_joint_papers', null, ['class' => 'form-control',
+                'placeholder' => 'No. of Joint Papers']) !!}
             </div>
             <div class="form-group col-sm-1">
                 {!! Form::submit('Search', ['class' => 'btn btn-primary btn-block']) !!}
