@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Flash;
 use Response;
 use Illuminate\Http\Request;
+use App\Helpers\SearchHelper;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\SearchRequest;
 use App\Repositories\PaperRepository;
@@ -140,6 +141,8 @@ class PaperController extends AppBaseController
 
     public function search(SearchRequest $request)
     {
+//        return SearchHelper::searchPaper($request, $this->routeType);
+
         $query = trim($request->q);
 
         $currentPage = intval($request->page);

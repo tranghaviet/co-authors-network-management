@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use DB;
 use Flash;
 use Response;
-use App\Models\Author;
 use Illuminate\Http\Request;
+use App\Helpers\SearchHelper;
 use App\Http\Requests\SearchRequest;
 use App\Repositories\AuthorRepository;
 use App\Http\Requests\UpdateAuthorRequest;
@@ -148,6 +148,8 @@ class AuthorController extends AppBaseController
 
     public function search(SearchRequest $request)
     {
+//        return SearchHelper::searchAuthorWithUniversity($request, $this->routeType);
+
         $query = trim($request->q);
 
         $currentPage = intval($request->page);
@@ -207,9 +209,6 @@ class AuthorController extends AppBaseController
             $authors[$i]['university'] = [];
             $authors[$i]['university']['name'] = $authors[$i]['name'];
         }
-
-//        $result = new LengthAwarePaginator($authors, 50, $perPage, $currentPage);
-        $endpoint = $_SERVER['HTTP_HOST'];
 
         return view('authors.index')->with([
             'authors' => $authors,

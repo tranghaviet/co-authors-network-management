@@ -21,7 +21,7 @@
 </head>
 
 <body class="skin-blue sidebar-mini">
-@if (! Auth::guest() && ! Route::is('admin/*'))
+@if (\App\Helpers\Utility::displayForAdmin())
     <div class="wrapper">
         <!-- Main Header -->
         <header class="main-header" data-turbolinks-permenent>
@@ -86,7 +86,6 @@
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
-                    <li><a href="/">Home</a></li>
                     <li>{!! Html::link(route('user.authors.index'), 'Author') !!}</li>
                     <li>{!! Html::link(route('user.papers.index'), 'Paper') !!}</li>
                     <li>{!! Html::link(route('user.author-paper.index'), 'Author Paper') !!}</li>
@@ -107,8 +106,7 @@
             </div>
         </div>
     </div>
-    @endif
-
+@endif
     <!-- jQuery 3.1.1 -->
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Flash;
 use Response;
+use App\Models\CoAuthor;
 use Illuminate\Http\Request;
+use App\Helpers\SearchHelper;
 use App\Http\Requests\SearchRequest;
 use App\Repositories\CoAuthorRepository;
 use App\Http\Requests\UpdateCoAuthorRequest;
@@ -41,6 +43,7 @@ class CoAuthorController extends AppBaseController
         $paginator = $coAuthors->render();
 
         $coAuthors = $coAuthors->toArray()['data'];
+        dd($coAuthors);
 
         return view('co_authors.index', array_merge(compact('coAuthors', 'paginator'), ['routeType' => $this->routeType]));
     }
@@ -164,6 +167,77 @@ class CoAuthorController extends AppBaseController
 
     public function search(SearchRequest $request)
     {
-        return view('co_authors.index', compact('coAuthors'));
+        $query = trim($request->q);
+
+        $currentPage = intval($request->page);
+
+        if (empty($currentPage)) {
+            $currentPage = 1;
+        }
+
+
+        if (!is_numeric($currentPage) || $currentPage < 1) {
+            Flash::error('Invalid page.');
+            return view('co_authors.index')->with([
+                'routeType' => $this->routeType,
+            ]);
+        }
+
+        $perPage = config('constants.DEFAULT_PAGINATION');
+        $offset = $perPage * ($currentPage - 1);
+
+        $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);
+
+        # Pagination
+        $url = route($this->routeType.'authors.search') . '?q=' . $query . '&page=';
+        $previousPage = $url . 1;
+        $nextPage = $url . ($currentPage + 1);
+
+        if ($currentPage > 1) {
+            $previousPage = $url . ($currentPage - 1);
+        }
+
+        # If empty result
+        if (count($authors) == 0) {
+            return view('authors.index')->with([
+                'authors' => $authors,
+                'routeType' => $this->routeType,
+                'nextPage' => $nextPage,
+                'previousPage' => $previousPage,
+            ]);
+        }
+
+        # View
+        $authors = json_decode(json_encode($authors), true);
+
+        for ($i = 0; $i < count($authors); $i++) {
+            $authors[$i]['university'] = [];
+
+            $authors[$i]['university']['name'] = $authors[$i]['name'];
+
+            $authors[$authors[$i]['id']] = $authors[$i];
+
+            unset($authors[$i]);
+        }
+
+        $authorIds = array_keys($authors);
+
+        $coAuthors = CoAuthor::whereIn('first_author_id', $authorIds)
+            ->orWhereIn('second_author_id', $authorIds)->get()->toArray();
+
+        for ($i = 0; $i < count($coAuthors); $i++) {
+            $coAuthors[$i]['first_author'] = [];
+
+            $coAuthors[$i]['first_author']['id'] = $authors['id'];
+            $coAuthors[$i]['first_author']['given_name'] = $authors['given_name'];
+            $coAuthors[$i]['first_author']['surname'] = $authors['surname'];
+        }
+
+        return view('authors.index')->with([
+            'authors' => $authors,
+            'routeType' => $this->routeType,
+            'nextPage' => $nextPage,
+            'previousPage' => $previousPage,
+        ]);
     }
 }
