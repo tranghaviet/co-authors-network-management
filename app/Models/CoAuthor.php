@@ -33,7 +33,7 @@ class CoAuthor extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'float',
+        'id' => 'string',
         'first_author_id' => 'float',
         'second_author_id' => 'float',
         'no_of_mutual_authors' => 'integer',

@@ -20,8 +20,10 @@ class TestProcessController extends Controller
         // $process->setTimeout(3600);
         // $process->setPty(true);
         // dd('dadada');
-		Artisan::queue('import:authors');
-		Artisan::queue('import:authors');
+        // Artisan::call('co-author:sync');
+        dump('Sync coauthor OK');
+		Artisan::call('candidate:sync');
+		dump('OK');
 
         // $process->run(function ($type, $buffer) {
         //     echo $buffer;

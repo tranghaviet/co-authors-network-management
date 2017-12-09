@@ -10,8 +10,11 @@ use App\Http\Requests;
 use ImportPaper;
 use App\Models\Paper;
 use App\Models\Keyword;
+use Cache;
 use App\Models\KeywordPaper;
 use App\Models\AuthorSubject;
+use Symfony\Component\Process\Process as Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class ImportPaperController extends Controller
 {
@@ -24,32 +27,34 @@ class ImportPaperController extends Controller
 	public function upload_papers(Request $request){
 		
 		if(Input::hasFile('file')){
+
 			$path = Input::file('file')->getRealPath();
 			$data = Excel::load($path, function($reader) {
-			})->get();
-			// $data->toArray();
-			if(!empty($data) && $data->count()){
+			})->get()->toArray();
+			$n = count($data);
+			if(!empty($data) && $n)
+			{
+				dump('Put papers data to cache');
+				Cache::put('paper_lines', $data, 20);
 
-				foreach ($data as $key => $value) {
-
-					if(!empty($value->id)){
-
-						// thêm bài báo
-						ImportPaper::insert_papers($value->id,$value->title,$value->coverdate,$value->abstract,$value->url,$value->issn);
-						
-						// Tách nhóm từ khóa thành nhiều từ khóa 
-						$keywords = preg_split('/,\s*/', trim($value->keywords), -1, PREG_SPLIT_NO_EMPTY);
-						
-						// với mỗi từ khóa thêm vào cùng với bài báo: keyword-paper
-						foreach ($keywords as $keyword)
-						{
-							ImportPaper::handle_keywords($value->id, $keyword);
-						}
-						
+				$limit = 250;	
+				$i = 0;
+				while(true) {
+					$offset = $i * $limit;
+					$l = $n - $offset < $limit ? $n - $offset : $limit;
+					if ($offset >= $n) {
+						break;
 					}
+					dump('start import papers with limit '.strval($l).' and offset '. strval($offset) .'.');
+					$process = new Process('php ../artisan import:papers --offset='. strval($offset) .' '. '--limit='. strval($l) .'');
+      				$process->start();
+      				
+      				$i++;
 				}
-				
+				dump('all has started ');
+
 			}
 		}
+
 	}
 }

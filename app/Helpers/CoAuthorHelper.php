@@ -37,19 +37,25 @@ class CoAuthorHelper
      */
     public static function collaborators($authorId, $columns = ['*'])
     {
-        $coAuthors = self::coAuthors($authorId, ['first_author_id', 'second_author_id',]);
+        $option = ['no_of_mutual_authors', 'no_of_joint_papers'];
+        $coAuthors = self::coAuthors($authorId, array_merge(['id', 'first_author_id', 'second_author_id'], $option));
 
-        $collaboratorIds = [];
+        $coAuthors = $coAuthors->toArray();
+        // dd($coAuthors);
 
-        foreach ($coAuthors as $coAuthor) {
-            if ($coAuthor->first_author_id == $authorId) {
-                array_push($collaboratorIds, $coAuthor->second_author_id);
+        if (count($coAuthors) == 0) {
+            return [];
+        }
+
+        for ($i=0; $i < count($coAuthors); $i++) {
+            if ($coAuthors[$i]['first_author_id'] == $authorId) {
+                $coAuthors[$i]['author_id'] = $coAuthors[$i]['second_author_id'];
             } else {
-                array_push($collaboratorIds, $coAuthor->first_author_id);
+                $coAuthors[$i]['author_id'] = $coAuthors[$i]['first_author_id'];
             }
         }
 
-        return Author::whereIn('id', $collaboratorIds)->get($columns);
+        return $coAuthors;
     }
 
     /**

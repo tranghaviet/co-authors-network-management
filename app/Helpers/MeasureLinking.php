@@ -25,8 +25,10 @@ class MeasureLinking
 
         foreach ($firstCoAuthors as $firstCoAuthor) {
             foreach ($secondCoAuthors as $secondCoauthor) {
-                if ($firstCoAuthor->id == $secondCoauthor->id) {
-                    $result += $firstCoAuthor->no_of_joint_papers + $secondCoauthor->no_of_joint_papers;
+                if ($firstCoAuthor['author_id'] == $secondCoauthor['author_id']) {
+                    // dump($firstCoAuthor);
+                    // dump($secondCoauthor);
+                    $result += $firstCoAuthor['no_of_joint_papers'] + $secondCoauthor['no_of_joint_papers'];
                     break;
                 }
             }
@@ -49,9 +51,9 @@ class MeasureLinking
 
         foreach ($firstCoAuthors as $firstCoauthor) {
             foreach ($secondCoAuthors as $secondCoauthor) {
-                if ($firstCoauthor->id == $secondCoauthor->id) {
-                    array_push($jointAuthorIds, $firstCoauthor->id);
-                    $result += $firstCoauthor->no_of_joint_papers + $secondCoauthor->no_of_joint_papers;
+                if ($firstCoauthor['author_id'] == $secondCoauthor['author_id']) {
+                    array_push($jointAuthorIds, $firstCoauthor['author_id']);
+                    $result += $firstCoauthor['no_of_joint_papers'] + $secondCoauthor['no_of_joint_papers'];
                     break;
                 }
             }
@@ -65,7 +67,7 @@ class MeasureLinking
 
         foreach ($jointAuthorIds as $authorId) {
             foreach (CoAuthor::coAuthorWithoutInfo($authorId, DEFAULT_COLUMNS) as $coAuthor) {
-                $allJointPapers += $coAuthor->no_of_joint_papers;
+                $allJointPapers += $coAuthor['no_of_joint_papers'];
             }
         }
 
