@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Eloquent as Model;
-use Sofa\Eloquence\Eloquence;
 
 /**
  * Class University.
@@ -15,10 +14,6 @@ use Sofa\Eloquence\Eloquence;
  */
 class University extends Model
 {
-    use Eloquence;
-
-    protected $searchableColumns = ['name'];
-
     /**
      * The attributes that should be casted to native types.
      *
@@ -38,19 +33,6 @@ class University extends Model
         'name',
         'city_id',
     ];
-
-    /**
-     * Get the indexable data array for the model. (TNTSearch).
-     *
-     * @return array
-     */
-    public function toSearchableArray()
-    {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-        ];
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

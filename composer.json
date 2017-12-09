@@ -14,8 +14,6 @@
         "prettus/l5-repository": "^2.6",
         "laravel/scout": "^3.0",
         "laravelcollective/html": "^5.4.0",
-        "sofa/eloquence": "^5.4",
-        "sofa/eloquence-base": "^5.5",
         "teamtnt/laravel-scout-tntsearch-driver": "^3.0",
         "teamtnt/tntsearch": "1.0.*",
         "watson/rememberable": "^2.0"

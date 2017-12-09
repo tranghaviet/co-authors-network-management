@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Sofa\Eloquence\Eloquence;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -18,10 +17,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Paper extends Model
 {
-    use Eloquence;
-
-    protected $searchableColumns = ['title'];
-
     public $table = 'papers';
 
     public $timestamps = false;

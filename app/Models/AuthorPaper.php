@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
@@ -15,8 +14,6 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  */
 class AuthorPaper extends Pivot
 {
-    use Searchable;
-
     /**
      * The attributes that should be casted to native types.
      *

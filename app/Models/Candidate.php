@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Eloquent as Model;
-use Laravel\Scout\Searchable;
 
 /**
  * Class Candidate.
@@ -18,8 +17,6 @@ use Laravel\Scout\Searchable;
  */
 class Candidate extends Model
 {
-    use Searchable;
-
     protected $primaryKey = 'co_author_id';
 
     public $table = 'candidates';
