@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Flash;
 use Response;
 use App\Models\CoAuthor;
+use App\Models\Author;
+use DB;
 use Illuminate\Http\Request;
 use App\Helpers\SearchHelper;
 use App\Http\Requests\SearchRequest;
@@ -167,6 +169,20 @@ class CoAuthorController extends AppBaseController
     public function search(SearchRequest $request)
     {
         $query = trim($request->q);
+        
+        $jointPapers = intval($request->no_of_joint_papers);
+        if (!$jointPapers || is_nan($jointPapers)) {
+            $jointPapers = 0;
+        }
+
+        $jointAuthors = intval($request->no_of_mutual_authors);
+        if (!$jointAuthors || is_nan($jointAuthors)) {
+            $jointAuthors = 0;
+        }
+
+        // dump($jointAuthors);
+        // dd($jointPapers);
+
 
         $currentPage = intval($request->page);
 
@@ -188,7 +204,7 @@ class CoAuthorController extends AppBaseController
         $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);
 
         # Pagination
-        $url = route($this->routeType.'co_authors.search') . '?q=' . $query . '&page=';
+        $url = route($this->routeType.'coAuthors.search') . '?q=' . $query . '&page=';
         $previousPage = $url . 1;
         $nextPage = $url . ($currentPage + 1);
 
@@ -210,24 +226,57 @@ class CoAuthorController extends AppBaseController
 
         for ($i = 0; $i < count($authors); $i++) {
             $authors[$i]['university'] = [];
-
             $authors[$i]['university']['name'] = $authors[$i]['name'];
-
             $authors[$authors[$i]['id']] = $authors[$i];
 
             unset($authors[$i]);
         }
 
+        # Find authors by query
+        // dump($authors);
         $authorIds = array_keys($authors);
 
-        $coAuthors = CoAuthor::whereIn('first_author_id', $authorIds)
-            ->orWhereIn('second_author_id', $authorIds)->get()->toArray();
+        # Find coauthors by first author id
+        $coAuthors1 = CoAuthor::whereIn('first_author_id', $authorIds)
+            ->where('no_of_joint_papers', '>=', $jointPapers)
+            ->where('no_of_mutual_authors', '>=', $jointAuthors)
+            ->get()->toArray();
+        $secondAuthorIds = array_map(function($x) { return intval($x['second_author_id']); }, $coAuthors1);
+        $secondAuthors = Author::whereIn('id', $secondAuthorIds)->with('university')->get()->toArray();
+        for ($i = 0; $i < count($secondAuthors); $i++) {
+            $secondAuthors[$secondAuthors[$i]['id']] = $secondAuthors[$i];
+            unset($secondAuthors[$i]);
+        }
+        
 
-        for ($i = 0; $i < count($coAuthors); $i++) {
-            $coAuthors[$i]['first_author'] = $authors[ $coAuthors[$i]['first_author_id']];
-            $coAuthors[$i]['second_author'] = $authors[ $coAuthors[$i]['second_author_id']];
+        # Find coauthors by first author id
+        $coAuthors2 = CoAuthor::whereIn('second_author_id', $authorIds)
+            ->where('no_of_joint_papers', '>=', $jointPapers)
+            ->where('no_of_mutual_authors', '>=', $jointAuthors)
+            ->get()->toArray();
+        // dump($coAuthors2);
+        $firstAuthorIds = array_map(function($x) { return intval($x['first_author_id']); }, $coAuthors2);
+        $firstAuthors = Author::whereIn('id', $firstAuthorIds)->with('university')->get()->toArray();
+        for ($i = 0; $i < count($firstAuthors); $i++) {
+            $firstAuthors[$firstAuthors[$i]['id']] = $firstAuthors[$i];
+            unset($firstAuthors[$i]);
         }
 
+        
+        # Combine co authors
+        for ($i = 0; $i < count($coAuthors1); $i++) {
+            $coAuthors1[$i]['first_author'] = $authors[$coAuthors1[$i]['first_author_id']];
+            $coAuthors1[$i]['second_author'] = $secondAuthors[$secondAuthorIds[$i]];
+        }
+
+        for ($i = 0; $i < count($coAuthors2); $i++) {
+            $coAuthors2[$i]['first_author'] = $firstAuthors[$firstAuthorIds[$i]];
+            $coAuthors2[$i]['second_author'] = $authors[$coAuthors2[$i]['second_author_id']];
+        }
+
+        $coAuthors = array_merge($coAuthors1, $coAuthors2);
+
+        # Return view
         return view('co_authors.index')->with([
             'coAuthors' => $coAuthors,
             'routeType' => $this->routeType,

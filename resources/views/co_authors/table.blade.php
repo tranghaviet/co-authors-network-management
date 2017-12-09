@@ -15,6 +15,7 @@
     </thead>
     <tbody>
     @foreach($coAuthors as $coAuthor)
+        <!-- <tr>{!!count($coAuthor)!!}</tr> -->
         <tr>
             <td>{!! $coAuthor['id'] !!}</td>
             <td>
@@ -48,7 +49,7 @@
                 </div>
                 {!! Form::close() !!}
             </td>
-        </tr>
+        </tr> 
     @endforeach
     </tbody>
 </table>
