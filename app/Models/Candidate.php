@@ -36,33 +36,18 @@ class Candidate extends Model
      * @var array
      */
     protected $casts = [
-        'co_author_id' => 'float',
+        'co_author_id' => 'string',
         'score_1' => 'float',
         'score_2' => 'float',
         'score_3' => 'float',
     ];
 
     /**
-     * Get the indexable data array for the model. (TNTSearch).
-     *
-     * @return array
-     */
-    public function toSearchableArray()
-    {
-        $a = ['id' => $this->id];
-
-        $a['first_author'] = $this->coAuthor->firstAuthor['given_name'] . ' ' . $this->coAuthor->firstAuthor['surname'];
-        $a['second_author'] = $this->coAuthor->secondAuthor['given_name'] . ' ' . $this->coAuthor->secondAuthor['surname'];
-
-        return $a;
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\hasOne
      **/
     public function coAuthor()
     {
-//        return $this->belongsTo(\App\Models\CoAuthor::class);
-        return $this->hasOne(\App\Models\CoAuthor::class, 'id', 'co_author_id   ');
+       // return $this->belongsTo(\App\Models\CoAuthor::class, 'co_author_id', 'id');
+        return $this->hasOne(\App\Models\CoAuthor::class, 'id', 'co_author_id');
     }
 }

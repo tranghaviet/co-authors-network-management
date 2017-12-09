@@ -7,9 +7,9 @@
             <th>Email</th>
             <th>University</th>
             <th>URL</th>
-            @auth
+            @if (\App\Helpers\Utility::displayForAdmin())
                 <th colspan="3">Action</th>
-            @endAuth
+            @endif
         </tr>
     </thead>
     <tbody>
@@ -21,7 +21,7 @@
             <td>{!! $author['email'] !!}</td>
             <td><a href="{!! route($routeType . 'universities.show', [$author['university_id']]) !!}">{!! $author['university']['name'] !!}</a></td>
             <td><a href="{!! $author['url'] !!}" target="_blank">Author on Scopus</a></td>
-            @auth
+            @if (\App\Helpers\Utility::displayForAdmin())
             <td>
                 {!! Form::open(['route' => ['authors.destroy', $author['id']], 'method' => 'delete']) !!}
                 <div class='btn-group'>
@@ -30,7 +30,7 @@
                 </div>
                 {!! Form::close() !!}
             </td>
-            @endAuth
+            @endif
         </tr>
     @endforeach
     </tbody>

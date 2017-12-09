@@ -4,9 +4,9 @@
             <th>ID</th>
             <th>Name</th>
             <th>City</th>
-            @auth
+            @if (\App\Helpers\Utility::displayForAdmin())
             <th colspan="3">Action</th>
-            @endAuth
+            @endif
         </tr>
     </thead>
     <tbody>
@@ -19,7 +19,7 @@
                 </a>
             </td>
             <td>{!! $university->city['name'] !!}</td>
-            @auth
+            @if (\App\Helpers\Utility::displayForAdmin())
             <td>
                 {!! Form::open(['route' => ['universities.destroy', $university->id], 'method' => 'delete']) !!}
                 <div class='btn-group'>
@@ -28,7 +28,7 @@
                 </div>
                 {!! Form::close() !!}
             </td>
-            @endAuth
+            @endif
         </tr>
     @endforeach
     </tbody>

@@ -39,9 +39,19 @@ class CandidateController extends AppBaseController
             ->with('coAuthor.secondAuthor')
             ->paginate(config('constants.DEFAULT_PAGINATION'));
 
+        if ($candidates->count() == 0) {
+            return view('candidates.index')
+                ->with([
+                    'routeType' => $this->routeType,
+                ]);
+        }
+        $paginator = $candidates->render();
+        $candidates = $candidates->toArray()['data'];
+
         return view('candidates.index')
             ->with([
                 'candidates' => $candidates,
+                'paginator' => $paginator,
                 'routeType' => $this->routeType,
             ]);
     }
@@ -135,28 +145,27 @@ class CandidateController extends AppBaseController
         return redirect(route('candidates.index'));
     }
 
-    public function search(SearchRequest $request)
+    public function search(Request $request)
     {
-        $input = $request->all();
+        $score1 = $request->score_1;
+        $score2 = $request->score_2;
+        $score3 = $request->score_3;
 
-        $criteria = null;
-        unset($input['q']);
-
-        foreach ($input as $key => $value) {
-            if ($value != null) {
-                $criteria[$key] = $value;
-            }
+        if (is_null($score1) || is_nan($score1))  {
+            $score1 = 0;
         }
 
-        if ($criteria != null) {
-            $candidatesByOtherCriteria = Candidate::where($criteria)->get();
+        $candidates = Candidate::where('score_1', '>=', $score1)->get();
 
-            if ($candidatesByOtherCriteria->count() == 0) {
-                return view('candidates.index')->with([
-                    'routeType' => $this->routeType,
-                ]);
-            }
+        if ($candidates->count() == 0) {
+            return view('candidates.index')->with([
+                'routeType' => $this->routeType,
+            ]);
         }
+
+        $authors = SearchHelper::searchingAuthorWithUniversity($request, 1, 0, 15);
+
+        dd();
 
         $currentPage = intval($request->page);
 

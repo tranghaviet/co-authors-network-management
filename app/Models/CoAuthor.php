@@ -44,7 +44,8 @@ class CoAuthor extends Model
      **/
     public function candidate()
     {
-        return $this->hasOne(\App\Models\Candidate::class);
+        // return $this->hasOne(\App\Models\Candidate::class, 'co_author_id', 'id');
+        return $this->belongsTo(\App\Models\Candidate::class, 'id', 'co_author_id');
     }
 
     /**

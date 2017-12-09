@@ -8,9 +8,9 @@
             <th>University</th>
             <th>Mutual authors</th>
             <th>Joint papers</th>
-            @auth
+            @if (\App\Helpers\Utility::displayForAdmin())
             <th colspan="3">Action</th>
-            @endAuth
+            @endif
         </tr>
     </thead>
     <tbody>

@@ -3,9 +3,9 @@
     <tr>
         <th>Author</th>
         <th>Paper</th>
-        @auth
+        @if (\App\Helpers\Utility::displayForAdmin())
         <th colspan="3">Action</th>
-        @endAuth
+        @endif
     </tr>
     </thead>
     <tbody>
@@ -20,7 +20,7 @@
                 <a href="{!! route('papers.show', [$authorPaper->paper['id']]) !!}">
                     {{ $authorPaper->paper['title'] }}
                 </a>
-            @auth
+            @if (\App\Helpers\Utility::displayForAdmin())
             <td>
                 {!! Form::open(['route' => ['authorPapers.destroy', $authorPaper['id']], 'method' => 'delete']) !!}
                 <div class='btn-group'>
@@ -30,7 +30,7 @@
                 </div>
                 {!! Form::close() !!}
             </td>
-            @endAuth
+            @endif
         </tr>
     @endforeach
     </tbody>

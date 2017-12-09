@@ -41,7 +41,7 @@ class CoAuthorController extends AppBaseController
             ->with('firstAuthor.university')
             ->with('secondAuthor.university')
             ->paginate(config('constants.DEFAULT_PAGINATION'));
-
+dd($coAuthors);
         $paginator = $coAuthors->render();
 
         $coAuthors = $coAuthors->toArray()['data'];
@@ -166,7 +166,7 @@ class CoAuthorController extends AppBaseController
         return redirect(route('coAuthors.index'));
     }
 
-    public function search(SearchRequest $request)
+    public function search(Request $request)
     {
         $query = trim($request->q);
         
@@ -233,7 +233,6 @@ class CoAuthorController extends AppBaseController
         }
 
         # Find authors by query
-        // dump($authors);
         $authorIds = array_keys($authors);
 
         # Find coauthors by first author id

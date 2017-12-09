@@ -35,29 +35,15 @@
 
         <div class="clearfix"></div>
         <div class="box box-primary">
-            <div class="box-body">
-                @if(! isset($candidates) || count($candidates) == 0)
-                    <h1>Empty</h1>
-                @else
-                    @include('candidates.table')
-                @endif
-            </div>
-            @if(isset($paginator))
-                <div class="text-center">{{ $paginator }}</div>
+            @if(! isset($candidates) || count($candidates) == 0)
+                <h1>Empty</h1>
             @else
-                <ul class="pagination">
-                    @if(isset($previousPage))
-                        <li><a href="{{ $previousPage }}" rel="prev">« Previous</a></li>
-                    @else
-                        <li class="disabled"><span>« Previous</span></li>
-                    @endif
-
-                    @if(isset($nextPage))
-                        <li><a href="{{ $nextPage }}" rel="next">Next »</a></li>
-                    @else
-                        <li class="disabled"><span>Next »</span></li>
-                    @endif
-                </ul>
+                <div class="box-body">
+                        @include('candidates.table')
+                </div>
+                @if(isset($paginator))
+                    <div class="text-center">{{ $paginator }}</div>
+                @endif
             @endif
         </div>
     </div>

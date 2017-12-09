@@ -7,9 +7,9 @@
             {{--<th>Abstract</th>--}}
             <th>Issn</th>
             <th></th>
-            @auth
+            @if (\App\Helpers\Utility::displayForAdmin())
             <th colspan="3">Action</th>
-            @endAuth
+            @endif
         </tr>
     </thead>
     <tbody>
@@ -21,7 +21,7 @@
             {{--<td>{!! $paper->abstract !!}</td>--}}
             <td>{!! $paper['issn'] !!}</td>
             <td><a href="{!! $paper['url'] !!}" target="_blank">Paper on Science Direct</a></td>
-            @auth
+            @if (\App\Helpers\Utility::displayForAdmin())
             <td>
                 {!! Form::open(['route' => ['papers.destroy', $paper['id']], 'method' => 'delete']) !!}
                 <div class='btn-group'>
@@ -30,7 +30,7 @@
                 </div>
                 {!! Form::close() !!}
             </td>
-            @endAuth
+            @endif
         </tr>
     @endforeach
     </tbody>
