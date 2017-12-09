@@ -33,7 +33,6 @@ class ImportAuthors extends Command
         $UNKNOWN='UNKNOWN';
         $offset = $this->option('offset');
         $limit = $this->option('limit');
-        $author_lines = $this->option('authorlines');
 
         $author_lines = array_slice(Cache::get($author_lines), $offset, $limit);
        // dd($author_lines->count());

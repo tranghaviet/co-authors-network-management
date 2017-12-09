@@ -1,6 +1,0 @@
-
-In TNTSearch.php line 396:
-                                                         
-  SQLSTATE[HY000]: General error: 1 no such table: info  
-                                                         
-

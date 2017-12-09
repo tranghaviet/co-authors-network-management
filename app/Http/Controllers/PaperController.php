@@ -173,26 +173,25 @@ class PaperController extends AppBaseController
             $papers = $request->session()->get('paper_search_' . $query);
         }
 
-        if (count($papers) == 0) {
-            return view('papers.index')->with([
-                'routeType' => $this->routeType,
-            ]);
-        }
-
-        $papers = json_decode(json_encode($papers), true);
-
-        // TODO: Hoang apply logic same as AuthorController
-        $endpoint = $_SERVER['SERVER_ADDR'] . $_SERVER['SERVER_PORT'] == "8000" ? ':8000' : null;
-        $url = $endpoint . $this->routeType . route('authors.search') . '?q=' . $query . '?page=';
-//        $paginator = $result->render();
-
-        if (count($papers) > 15) {
-            $nextPage = $url . ($currentPage + 1);
-        }
+        # Pagination
+        $url = route($this->routeType.'papers.search') . '?q=' . $query . '&page=';
+        $previousPage = $url . 1;
+        $nextPage = $url . ($currentPage + 1);
 
         if ($currentPage > 1) {
             $previousPage = $url . ($currentPage - 1);
         }
+
+        if (count($papers) == 0) {
+            return view('papers.index')->with([
+                'papers' => $papers,
+                'routeType' => $this->routeType,
+                'nextPage' => $nextPage,
+                'prevousPage' => $previousPage,
+            ]);
+        }
+
+        $papers = json_decode(json_encode($papers), true);
 
         return view('papers.index')->with([
             'papers' => $papers,

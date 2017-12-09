@@ -6,9 +6,12 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Models\City;
+use App\Jobs\ImportAuthors;
 use ImportAuthor;
 use Excel;
 use Cache;
+use Log;
+use DB;
 use App\Models\Author;
 use Symfony\Component\Process\Process as Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -24,31 +27,42 @@ class ImportAuthorController extends Controller
 	{
 
 		if(Input::hasFile('file')){
+
 			$path = Input::file('file')->getRealPath();
 			$data = Excel::load($path, function($reader) {
-			})->get();
-			if(!empty($data) && $data->count())
+			})->get()->toArray();
+			$n = count($data);
+			Log::info($n);
+			if(!empty($data) && $n)
 			{
-				$author_lines='author_lines';
-				Cache::put($author_lines,$data);
+				dump('Put authors data to cache');
+				// Cache::put('author_lines', $data, 20);
+				// dump(Cache::get('author_lines'));
+				$json = DB::connection()->getPdo()->quote(json_encode($data));
+				DB::statement("DELETE FROM `cache` WHERE `key`='authors';");
+				DB::statement("INSERT INTO `cache` (`key`, `value`) VALUES ('authors', {$json});");
+
+				// $data2 = DB::select("SELECT `value` FROM `cache` WHERE `key`='authors';");
+				// dump(json_decode($data2[0]->value));
+				// dd(array_slice(json_decode($data2[0]->value), 0, 2));
 				// dd($data->count());
 
 				$limit = 500;	
-				$n = $data->count();
 				$i = 0;
-		        $process = new Process('php ../../../artisan foo:name');
-				$process->start();
 				while(true) {
 					$offset = $i * $limit;
 					$l = $n - $offset < $limit ? $n - $offset : $limit;
 					if ($offset >= $n) {
 						break;
 					}
-					$process = new Process('php ../../../artisan import:authors {--offset='. strval($offset) .'}'. '{limit='. strval($l) .'}');
-      				$process->start();
-      				dump('start import authors with limit '.strval($l).' and offset '. strval($offset) .'.');
+					dump('start import authors with limit '.strval($l).' and offset '. strval($offset) .'.');
+					$this->dispatch(new ImportAuthors($l, $offset));
+					// $process = new Process('php ../../../artisan import:authors {--offset='. strval($offset) .'}'. '{limit='. strval($l) .'}');
+     //  				$process->start();
+      				
       				$i++;
 				}
+				dump('all');
 
 				// foreach ($data as $key => $value)
 				// {
