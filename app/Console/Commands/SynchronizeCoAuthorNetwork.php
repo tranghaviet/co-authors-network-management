@@ -100,7 +100,7 @@ class SynchronizeCoAuthorNetwork extends Command
 
             DB::statement('SET FOREIGN_KEY_CHECKS=0;');
             DB::statement('TRUNCATE TABLE `co_authors`');
-           DB::statement('TRUNCATE TABLE `candidates`');
+            DB::statement('TRUNCATE TABLE `candidates`');
             DB::statement('SET GLOBAL max_allowed_packet=524288000;');
 
             $this->info('Disable foreign key check and truncate co_authors table success');
@@ -159,8 +159,8 @@ class SynchronizeCoAuthorNetwork extends Command
             }
         }
 
-        Cache::put('authors', $authors, 1440);
-        Cache::put('papers', $papers, 1440);
+        // Cache::put('authors', $authors, 1440);
+        // Cache::put('papers', $papers, 1440);
         Cache::put('records', $records, 1440);
 //        Cache::put('candidates', [], 1440);
 

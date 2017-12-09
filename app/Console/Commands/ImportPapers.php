@@ -55,7 +55,7 @@ class ImportPapers extends Command
 
                     // Import papers
                     ImportPaper::insert_papers($value['id'], $value['title'], $value['coverdate'] ,
-                            $value['abstract'], $value['url'], $value['issn']);
+                        $value['abstract'], $value['url'], $value['issn']);
                     
                     // Tách nhóm từ khóa thành nhiều từ khóa 
                     $keywords = preg_split('/,\s*/', trim($value['keywords']), -1, PREG_SPLIT_NO_EMPTY);

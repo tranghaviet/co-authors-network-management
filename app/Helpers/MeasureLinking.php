@@ -6,9 +6,9 @@ use App\Models\CoAuthor;
 use App\Helpers\CoAuthorHelper;
 
 const DEFAULT_COLUMNS = [
-    'first_author_id',
-    'second_author_id',
-    'no_of_joint_papers',
+'first_author_id',
+'second_author_id',
+'no_of_joint_papers',
 ];
 
 class MeasureLinking
@@ -173,9 +173,9 @@ class MeasureLinking
         $wca = $wcaResult * $allJointPapers;
 
         return [
-            'wcn' => $wcn,
-            'waa' => $waa,
-            'wca' => $wca,
+        'wcn' => $wcn,
+        'waa' => $waa,
+        'wca' => $wca,
         ];
     }
 }

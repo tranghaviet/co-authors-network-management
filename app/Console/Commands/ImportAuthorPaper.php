@@ -53,9 +53,9 @@ class ImportAuthorPaper extends Command
                 if(!empty($value['authorid']))
                 {
                     if(ImportAuthor_Paper::check_paper_exists($value['paperid']) && ImportAuthor_Paper::check_author_exitst($value['authorid']))
-                        {
-                            ImportAuthor_Paper::insert_link($value['authorid'], $value['paperid']);
-                        }
+                    {
+                        ImportAuthor_Paper::insert_link($value['authorid'], $value['paperid']);
+                    }
                 }
                 
             }
