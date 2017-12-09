@@ -170,14 +170,19 @@ class CoAuthorController extends AppBaseController
     {
         $query = trim($request->q);
         
-        $jointPapers = $request->no_of_joint_papers;
-        $jointPapers = !is_nan($jointPapers) ? $jointPapers : 0;
+        $jointPapers = intval($request->no_of_joint_papers);
+        if (!$jointPapers || is_nan($jointPapers)) {
+            $jointPapers = 0;
+        }
 
-        $jointAuthors = $request->no_of_mutual_authors;
-        $jointAuthors = !is_nan($jointAuthors) ? $jointAuthors : 0;
+        $jointAuthors = intval($request->no_of_mutual_authors);
+        if (!$jointAuthors || is_nan($jointAuthors)) {
+            $jointAuthors = 0;
+        }
 
-        dump($jointAuthors);
-        dump($jointPapers);
+        // dump($jointAuthors);
+        // dd($jointPapers);
+
 
         $currentPage = intval($request->page);
 
@@ -228,7 +233,7 @@ class CoAuthorController extends AppBaseController
         }
 
         # Find authors by query
-        dump($authors);
+        // dump($authors);
         $authorIds = array_keys($authors);
 
         # Find coauthors by first author id
@@ -249,7 +254,7 @@ class CoAuthorController extends AppBaseController
             ->where('no_of_joint_papers', '>=', $jointPapers)
             ->where('no_of_mutual_authors', '>=', $jointAuthors)
             ->get()->toArray();
-        dump($coAuthors2);
+        // dump($coAuthors2);
         $firstAuthorIds = array_map(function($x) { return intval($x['first_author_id']); }, $coAuthors2);
         $firstAuthors = Author::whereIn('id', $firstAuthorIds)->with('university')->get()->toArray();
         for ($i = 0; $i < count($firstAuthors); $i++) {
