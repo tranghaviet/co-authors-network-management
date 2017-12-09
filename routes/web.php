@@ -14,8 +14,15 @@
 Route::get('/', function () {
     return view('welcome');
 });
-// TODO: add prefix 'admin'
+
 Auth::routes();
+
+Route::get('register', function () {
+    abort(404);
+});
+Route::post('register', function () {
+    abort(404);
+});
 
 Route::get('/home', function () {
     return redirect(route('users.index'));
