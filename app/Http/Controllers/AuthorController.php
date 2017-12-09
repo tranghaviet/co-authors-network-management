@@ -47,34 +47,6 @@ class AuthorController extends AppBaseController
     }
 
     /**
-     * Show the form for creating a new Author.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        return view('authors.create');
-    }
-
-    /**
-     * Store a newly created Author in storage.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-        $input = $request->all();
-
-        $author = $this->authorRepository->create($input);
-
-        Flash::success('Author saved successfully.');
-
-        return redirect(route('authors.index'));
-    }
-
-    /**
      * Display the specified Author.
      *
      * @param  int $id

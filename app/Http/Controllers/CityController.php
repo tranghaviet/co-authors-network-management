@@ -37,34 +37,6 @@ class CityController extends AppBaseController
     }
 
     /**
-     * Show the form for creating a new City.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        return view('cities.create');
-    }
-
-    /**
-     * Store a newly created City in storage.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-        $input = $request->all();
-
-        $city = $this->cityRepository->create($input);
-
-        Flash::success('City saved successfully.');
-
-        return redirect(route('cities.index'));
-    }
-
-    /**
      * Display the specified City.
      *
      * @param  int $id

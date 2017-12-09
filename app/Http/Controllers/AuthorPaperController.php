@@ -17,8 +17,11 @@ class AuthorPaperController extends AppBaseController
     /** @var  AuthorPaperRepository */
     private $authorPaperRepository;
 
-    public function __construct(AuthorPaperRepository $authorPaperRepo)
+    private $routeType;
+
+    public function __construct(AuthorPaperRepository $authorPaperRepo, Request $request)
     {
+        $this->routeType = $request->is('admin/*') ? '' : 'user.';
         $this->authorPaperRepository = $authorPaperRepo;
     }
 
@@ -35,35 +38,10 @@ class AuthorPaperController extends AppBaseController
             ->paginate(config('constants.DEFAULT_PAGINATION'));
 
         return view('author_papers.index')
-            ->with('authorPapers', $authorPapers);
-    }
-
-    /**
-     * Show the form for creating a new AuthorPaper.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        return view('author_papers.create');
-    }
-
-    /**
-     * Store a newly created AuthorPaper in storage.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-        $input = $request->all();
-
-        $authorPaper = $this->authorPaperRepository->create($input);
-
-        Flash::success('Author Paper saved successfully.');
-
-        return redirect(route('authorPapers.index'));
+            ->with([
+                'authorPapers' => $authorPapers,
+                'routeType' => $this->routeType,
+            ]);
     }
 
     /**

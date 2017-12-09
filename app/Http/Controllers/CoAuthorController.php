@@ -14,9 +14,11 @@ class CoAuthorController extends AppBaseController
 {
     /** @var  CoAuthorRepository */
     private $coAuthorRepository;
+    private $routeType;
 
-    public function __construct(CoAuthorRepository $coAuthorRepo)
+    public function __construct(CoAuthorRepository $coAuthorRepo, Request $request)
     {
+        $this->routeType = $request->is('admin/*') ? '' : 'user.';
         $this->coAuthorRepository = $coAuthorRepo;
     }
 
@@ -28,25 +30,19 @@ class CoAuthorController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $arr = [1,2,3,4,5,6];
-//        $a = new \Illuminate\Pagination\Paginator($arr, 3, 2);
-        $a = new \Illuminate\Pagination\LengthAwarePaginator($arr, count($arr), 2, 2);
-        dump($a);
 
         $this->coAuthorRepository->pushCriteria(new RequestCriteria($request));
 
         $coAuthors = $this->coAuthorRepository
             ->with('firstAuthor.university')
             ->with('secondAuthor.university')
-//            ->all();
             ->paginate(config('constants.DEFAULT_PAGINATION'));
+
         $paginator = $coAuthors->render();
-        dump($coAuthors);
 
         $coAuthors = $coAuthors->toArray()['data'];
 
-//        dd($coAuthors);
-        return view('co_authors.index', compact('coAuthors', 'paginator'));
+        return view('co_authors.index', array_merge(compact('coAuthors', 'paginator'), ['routeType' => $this->routeType]));
     }
 
     /**

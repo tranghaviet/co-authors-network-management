@@ -35,34 +35,6 @@ class CountryController extends AppBaseController
     }
 
     /**
-     * Show the form for creating a new Country.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        return view('countries.create');
-    }
-
-    /**
-     * Store a newly created Country in storage.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-        $input = $request->all();
-
-        $country = $this->countryRepository->create($input);
-
-        Flash::success('Country saved successfully.');
-
-        return redirect(route('countries.index'));
-    }
-
-    /**
      * Display the specified Country.
      *
      * @param  int $id

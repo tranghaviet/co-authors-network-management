@@ -19,7 +19,7 @@ class CreateFullTextIndexOnPaper extends Command
      *
      * @var string
      */
-    protected $description = 'Re-index given_name, surname on author table and email on university table.';
+    protected $description = 'Re-index title on papers table.';
 
     /**
      * Execute the console command.

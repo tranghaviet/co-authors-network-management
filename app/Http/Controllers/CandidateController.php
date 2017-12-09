@@ -16,8 +16,11 @@ class CandidateController extends AppBaseController
     /** @var  CandidateRepository */
     private $candidateRepository;
 
-    public function __construct(CandidateRepository $candidateRepo)
+    private $routeType;
+
+    public function __construct(CandidateRepository $candidateRepo, Request $request)
     {
+        $this->routeType = $request->is('admin/*') ? '' : 'user.';
         $this->candidateRepository = $candidateRepo;
     }
 
@@ -39,35 +42,8 @@ class CandidateController extends AppBaseController
             ->with([
                 'candidates' => $candidates,
                 'isPaginated' => true,
+                'routeType' => $this->routeType,
             ]);
-    }
-
-    /**
-     * Show the form for creating a new Candidate.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        return view('candidates.create');
-    }
-
-    /**
-     * Store a newly created Candidate in storage.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-        $input = $request->all();
-
-        $candidate = $this->candidateRepository->create($input);
-
-        Flash::success('Candidate saved successfully.');
-
-        return redirect(route('candidates.index'));
     }
 
     /**

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Flash;
 use Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\SearchRequest;
 use App\Repositories\PaperRepository;
 use App\Http\Requests\UpdatePaperRequest;
@@ -40,34 +41,6 @@ class PaperController extends AppBaseController
         extract(get_object_vars($this));
 
         return view('papers.index', compact('papers', 'paginator', 'routeType'));
-    }
-
-    /**
-     * Show the form for creating a new Paper.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        return view('papers.create');
-    }
-
-    /**
-     * Store a newly created Paper in storage.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-        $input = $request->all();
-
-        $paper = $this->paperRepository->create($input);
-
-        Flash::success('Paper saved successfully.');
-
-        return redirect(route('papers.index'));
     }
 
     /**
@@ -169,13 +142,63 @@ class PaperController extends AppBaseController
     {
         $query = trim($request->q);
 
-        if (empty($query)) {
-            Flash::error('Enter a keyword.');
-            return redirect()->back();
+        $currentPage = intval($request->page);
+
+        if (empty($currentPage)) {
+            $currentPage = 1;
         }
 
-        $papers = $this->paperRepository->search($query)->paginate(15);
+        if (!is_numeric($currentPage) || $currentPage < 1) {
+            Flash::error('Invalid page.');
+            return view('papers.index')->with([
+                'routeType' => $this->routeType,
+            ]);
+        }
 
-        return view('papers.index', compact('papers'));
+        $perPage = config('constants.DEFAULT_PAGINATION');
+        $offset = $perPage * ($currentPage - 1);
+
+        if (!$request->session()->has('paper_search_' . $query . '_' . strval($currentPage))) {
+            $execution = "select *, match(paper.title) against ('{$query}') as s1 from papers
+                          where 
+                            match(paper.title) against ('{$query}')
+                            or papers.id = '{$query}'
+                            or papers.issn = '{$query}'
+                          order by s1 desc desc limit {$perPage} offset {$offset};";
+
+            $papers = DB::select($execution);
+
+            session(['author_search_' . $query => $papers]);
+        } else {
+            $papers = $request->session()->get('paper_search_' . $query);
+        }
+
+        # Pagination
+        $url = route($this->routeType.'papers.search') . '?q=' . $query . '&page=';
+        $previousPage = $url . 1;
+        $nextPage = $url . ($currentPage + 1);
+
+        if ($currentPage > 1) {
+            $previousPage = $url . ($currentPage - 1);
+        }
+
+        if (count($papers) == 0) {
+            return view('papers.index')->with([
+                'papers' => $papers,
+                'routeType' => $this->routeType,
+                'nextPage' => $nextPage,
+                'prevousPage' => $previousPage,
+            ]);
+        }
+
+        $papers = json_decode(json_encode($papers), true);
+
+        return view('papers.index')->with([
+            'papers' => $papers,
+            'routeType' => $this->routeType,
+            'nextPage' => $nextPage,
+            'prevousPage' => $previousPage,
+        ]);
+
     }
 }
