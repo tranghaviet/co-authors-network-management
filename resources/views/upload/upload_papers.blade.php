@@ -1,6 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="clearfix"></div>
+
+@include('flash::message')
+
+<div class="clearfix"></div>
+
 <form action="{{route('upload_papers')}}" method="post" enctype="multipart/form-data">
 	{{csrf_field()}}
 	<div class="form-group">

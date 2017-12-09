@@ -176,7 +176,14 @@ class AuthorController extends AppBaseController
                 where match(authors.given_name, authors.surname) against ('{$query}')
                 or match(universities.name) against ('{$query}')
                 order by (s1 + s2 ) desc limit {$perPage} offset {$offset}";
-            $authors = DB::select($execution);
+
+            try {
+                $authors = DB::select($execution);
+            } catch (\Exception $e) {
+                \Flash::error('Index in progress.. Come back later.');
+                \Artisan::call('author:re-index', ['--university' => true]);
+                return redirect()->back();                    
+            }    
 
             session(['author_search_' . $query => $authors]);
         } else {

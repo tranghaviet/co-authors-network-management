@@ -38,3 +38,15 @@
     <a href="{!! route('sync.index') !!}"><i class="fa fa-refresh"></i><span>Sync</span></a>
 </li>
 
+<li class="{{ Request::is('admin/uploadAuthors*') ? 'active' : '' }}">
+    <a href="{!! route('view_upload_authors') !!}"><i class="fa fa-upload"></i><span>Import Authors</span></a>
+</li>
+
+<li class="{{ Request::is('admin/uploadPapers*') ? 'active' : '' }}">
+    <a href="{!! route('view_upload_papers') !!}"><i class="fa fa-upload"></i><span>Import Papers</span></a>
+</li>
+
+<li class="{{ Request::is('admin/uploadAuthorPaper*') ? 'active' : '' }}">
+    <a href="{!! route('view_upload_authors_papers') !!}"><i class="fa fa-upload"></i><span>Import Author-Paper</span></a>
+</li>
+

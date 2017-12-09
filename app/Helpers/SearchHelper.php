@@ -5,10 +5,11 @@ namespace App\Helpers;
 use DB;
 use Flash;
 use App\Http\Requests\SearchRequest;
+use Illuminate\Http\Request;
 
 class SearchHelper
 {
-    public static function searchingAuthorWithUniversity(SearchRequest $request, $currentPage, $offset, $perPage = 15)
+    public static function searchingAuthorWithUniversity(Request $request, $currentPage, $offset, $perPage = 15)
     {
         $query = trim($request->q);
 
@@ -30,7 +31,7 @@ class SearchHelper
         return $authors;
     }
 
-    public static function searchingAuthor(SearchRequest $request, $currentPage, $offset, $perPage)
+    public static function searchingAuthor(Request $request, $currentPage, $offset, $perPage)
     {
         $query = trim($request->q);
 

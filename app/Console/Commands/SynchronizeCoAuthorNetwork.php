@@ -100,7 +100,7 @@ class SynchronizeCoAuthorNetwork extends Command
 
             DB::statement('SET FOREIGN_KEY_CHECKS=0;');
             DB::statement('TRUNCATE TABLE `co_authors`');
-//            DB::statement('TRUNCATE TABLE `candidates`');
+           DB::statement('TRUNCATE TABLE `candidates`');
             DB::statement('SET GLOBAL max_allowed_packet=524288000;');
 
             $this->info('Disable foreign key check and truncate co_authors table success');
@@ -130,29 +130,32 @@ class SynchronizeCoAuthorNetwork extends Command
             foreach ($paperIds as $pid) {
                 $collaborators = array_merge($collaborators, $papers[$pid]);
             }
+            $collaborators = array_unique($collaborators);
+            unset($collaborators[0]);
 
-            unset($collaborators[$authorId]);
-
+            // dump($authorId);
+            // dump($collaborators);
             foreach ($collaborators as $collaboratorId) {
+                if ($collaboratorId != $authorId) {
+                    if (isset($records[$authorId . ',' . $collaboratorId])) {
+                        continue;
+                    } else if (isset($records[$collaboratorId . ',' . $authorId])) {
+                        continue;
+                    }
 
-                if (isset($records[$authorId . ',' . $collaboratorId])) {
-                    continue;
-                } else if (isset($records[$collaboratorId . ',' . $authorId])) {
-                    continue;
+                    $collaboratorPaperIds = $authors[$collaboratorId];
+                    $noOfJointPapers = count(array_intersect($paperIds, $collaboratorPaperIds));
+
+                    $collaboratorCollaborators = [];
+
+                    foreach ($collaboratorPaperIds as $coPId) {
+                        $collaboratorCollaborators = array_merge($collaboratorCollaborators, $papers[$coPId]);
+                    }
+
+                    $noOfMutualAuthors = count(array_intersect($collaborators, $collaboratorCollaborators));
+
+                    $records[$authorId . ',' . $collaboratorId] = [$noOfJointPapers, $noOfMutualAuthors];
                 }
-
-                $collaboratorPaperIds = $authors[$collaboratorId];
-                $noOfJointPapers = count(array_intersect($paperIds, $collaboratorPaperIds));
-
-                $collaboratorCollaborators = [];
-
-                foreach ($collaboratorPaperIds as $coPId) {
-                    $collaboratorCollaborators = array_merge($collaboratorCollaborators, $papers[$coPId]);
-                }
-
-                $noOfMutualAuthors = count(array_intersect($collaborators, $collaboratorCollaborators));
-
-                $records[$authorId . ',' . $collaboratorId] = [$noOfJointPapers, $noOfMutualAuthors];
             }
         }
 
@@ -178,6 +181,8 @@ class SynchronizeCoAuthorNetwork extends Command
             $result = implode(',', array_map(function ($k) use ($records) {
                 return '(\'' . $k . '\',' . $k . ',' . implode(',', $records[$k]) . ')';
             }, array_keys($records)));
+
+            DB::statement('DELETE FROM `co_authors` where 1;');
 
             $result = 'INSERT INTO `co_authors` (`id`, `first_author_id`, `second_author_id`, `no_of_mutual_authors`, `no_of_joint_papers`) VALUES ' . $result . ';';
 

@@ -11,6 +11,8 @@ use ImportAuthor;
 use Excel;
 use Cache;
 use Log;
+use Flash;
+use Artisan;
 use DB;
 use App\Models\Author;
 use Symfony\Component\Process\Process as Process;
@@ -33,9 +35,10 @@ class ImportAuthorController extends Controller
 			})->get()->toArray();
 			$n = count($data);
 			Log::info($n);
+
 			if(!empty($data) && $n)
 			{
-				dump('Put authors data to cache');
+				// dump('Put authors data to cache');
 				Cache::put('author_lines', $data, 20);
 
 				$limit = 500;	
@@ -46,15 +49,17 @@ class ImportAuthorController extends Controller
 					if ($offset >= $n) {
 						break;
 					}
-					dump('start import authors with limit '.strval($l).' and offset '. strval($offset) .'.');
+					// dump('start import authors with limit '.strval($l).' and offset '. strval($offset) .'.');
 					// $this->dispatch(new ImportAuthors($l, $offset));
 					$process = new Process('php ../artisan import:authors --offset='. strval($offset) .' '. '--limit='. strval($l) .'');
       				$process->start();
       				
       				$i++;
 				}
-				dump('all');
+			
+				Flash::info('In processing. Please wait');
 
+				return redirect()->back();
 			}
 		}
 	}

@@ -52,6 +52,10 @@ Route::get('universities', 'UniversityController@index')->name('user.universitie
 Route::get('universities/{id}', 'UniversityController@show')->name('user.universities.show');
 
 Route::group(['prefix' => 'admin/', 'middleware' => 'auth'], function () {
+    Route::get('/', function () {
+        return redirect(route('users.index'));
+    });
+
     Route::get('authors/search', 'AuthorController@search')->name('authors.search');
     Route::get('authorPapers/search', 'AuthorPaperController@search')->name('authorPaper.search');
     Route::get('papers/search', 'PaperController@search')->name('papers.search');
@@ -78,7 +82,20 @@ Route::group(['prefix' => 'admin/', 'middleware' => 'auth'], function () {
     Route::resource('countries', 'CountryController');
 
     Route::get('sync', 'SyncController@index')->name('sync.index');
-    Route::post('sync', 'SyncController@active')->name('sync.active');
+    Route::post('sync_coAuthors', 'SyncController@coAuthors')->name('sync.coAuthors');
+    Route::post('sync_candidates', 'SyncController@candidates')->name('sync.candidates');
+
+
+    Route::get('/uploadPapers',['as'=>'view_upload_papers','uses'=>'ImportPaperController@view_upload_papers']);
+    Route::post('/uploadPapers',['as'=>'upload_papers','uses'=>'ImportPaperController@upload_papers']);
+
+    // route upload authors
+    Route::get('/uploadAuthors',['as'=>'view_upload_authors','uses'=>'ImportAuthorController@view_upload_authors']);
+    Route::post('/uploadAuthors',['as'=>'upload_authors','uses'=>'ImportAuthorController@upload_authors']);
+
+    //route upload authors_papers
+    Route::get('/uploadAuthorPaper', ['as'=>'view_upload_authors_papers','uses'=>'ImportAuthor_PaperController@view_upload_authors_papers']);
+    Route::post('/uploadAuthorPaper',['as'=>'upload_authors_papers','uses'=>'ImportAuthor_PaperController@upload_authors_papers']);
 });
 
 /*
@@ -106,16 +123,5 @@ Route::get('/test_import', function () {
         dump($authors);
     });
 });
-
-Route::get('/admin/uploadPapers',['as'=>'view_upload_papers','uses'=>'ImportPaperController@view_upload_papers']);
-Route::post('/admin/uploadPapers',['as'=>'upload_papers','uses'=>'ImportPaperController@upload_papers']);
-
-// route upload authors
-Route::get('/admin/uploadAuthors',['as'=>'view_upload_authors','uses'=>'ImportAuthorController@view_upload_authors']);
-Route::post('/admin/uploadAuthors',['as'=>'upload_authors','uses'=>'ImportAuthorController@upload_authors']);
-
-//route upload authors_papers
-Route::get('/admin/uploadAuthorPaper', ['as'=>'view_upload_authors_papers','uses'=>'ImportAuthor_PaperController@view_upload_authors_papers']);
-Route::post('/admin/uploadAuthorPaper',['as'=>'upload_authors_papers','uses'=>'ImportAuthor_PaperController@upload_authors_papers']);
 
 Route::get('/test',['as'=>'test','uses'=>'TestProcessController@testprocess']);

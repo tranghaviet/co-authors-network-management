@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Cache;
 use ImportAuthor;
+use Artisan;
 use Log;
 
 class ImportAuthors extends Command
@@ -84,5 +85,7 @@ class ImportAuthors extends Command
                 ImportAuthor::handle_subjects( $id, $value['subjects']);
             }
         }
+
+        Artisan::call('author:re-index', ['--university' => true]);
     }
 }

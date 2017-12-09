@@ -168,8 +168,14 @@ class PaperController extends AppBaseController
                             or papers.id = '{$query}'
                             or papers.issn = '{$query}'
                           order by s1 desc limit {$perPage} offset {$offset};";
-
-            $papers = DB::select($execution);
+            try {
+                $papers = DB::select($execution);
+            } catch (\Exception $e) {
+                \Flash::error('Index in progress.. Come back later.');
+                \Artisan::call('paper:re-index');
+                return redirect()->back();                    
+            }                      
+            
 
             session(['author_search_' . $query => $papers]);
         } else {

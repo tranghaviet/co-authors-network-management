@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <section class="content-header row">
             <h1 class="col-sm-2 pull-left">Candidates</h1>
-            {!! Form::open(['route' => [$routeType . 'coAuthors.search'], 'method' => 'get']) !!}
+            {!! Form::open(['route' => [$routeType . 'candidates.search'], 'method' => 'get']) !!}
                 <div class="form-group col-sm-2">
                     {!! Form::text('q', null, ['class' => 'form-control',
                     'placeholder' => 'Type Author name']) !!}
@@ -47,9 +47,6 @@
                             <th>Score 1</th>
                             <th>Score 2</th>
                             <th>Score 3</th>
-                            @auth
-                            <th colspan="3">Action</th>
-                            @endAuth
                         </tr>
                     </thead>
                     <tbody>
@@ -57,29 +54,18 @@
                         <tr>
                             <td>
                             
-                                <a href="{!! route('authors.show', [$candidate['firstAuthor']['id']]) !!}">
-                                    {!! $candidate['firstAuthor']['given_name'].' '.$candidate['firstAuthor']['surname'] !!}
+                                <a href="{!! route('authors.show', [$candidate['first_author']['id']]) !!}">
+                                    {!! $candidate['first_author']['given_name'].' '.$candidate['first_author']['surname'] !!}
                                 </a>
                             </td>
                             <td>
-                                <a href="{!! route('authors.show', [$candidate['secondAuthor']['id']]) !!}">
-                                    {!! $candidate['secondAuthor']['given_name'].' '.$candidate['secondAuthor']['surname'] !!}
+                                <a href="{!! route('authors.show', [$candidate['second_author']['id']]) !!}">
+                                    {!! $candidate['second_author']['given_name'].' '.$candidate['second_author']['surname'] !!}
                                 </a>
                             </td>
                             <td>{!! $candidate['score_1'] !!}</td>
                             <td>{!! $candidate['score_2'] !!}</td>
                             <td>{!! $candidate['score_3'] !!}</td>
-                            @auth
-                            <td>
-                                {!! Form::open(['route' => ['candidates.destroy', $candidate['id']], 'method' => 'delete']) !!}
-                                <div class='btn-group'>
-                                    <a href="{!! route('candidates.show', [$candidate['id']]) !!}" class='btn btn-default btn-xs'><i class="fa fa-eye"></i></a>
-                                    <a href="{!! route('candidates.edit', [$candidate['id']]) !!}" class='btn btn-default btn-xs'><i class="fa fa-edit"></i></a>
-                                    {!! Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}
-                                </div>
-                                {!! Form::close() !!}
-                            </td>
-                            @endAuth
                         </tr>
                     @endforeach
                     </tbody>

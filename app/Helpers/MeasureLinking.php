@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\CoAuthor;
+use App\Helpers\CoAuthorHelper;
 
 const DEFAULT_COLUMNS = [
     'first_author_id',
@@ -66,7 +67,7 @@ class MeasureLinking
         $allJointPapers = 0;
 
         foreach ($jointAuthorIds as $authorId) {
-            foreach (CoAuthor::coAuthorWithoutInfo($authorId, DEFAULT_COLUMNS) as $coAuthor) {
+            foreach (CoAuthorHelper::coAuthorWithoutInfo($authorId, DEFAULT_COLUMNS) as $coAuthor) {
                 $allJointPapers += $coAuthor['no_of_joint_papers'];
             }
         }
@@ -120,13 +121,61 @@ class MeasureLinking
         $allJointPapers = 0;
 
         foreach ($firstCoAuthors as $firstCoauthor) {
-            $result += $firstCoauthor->no_of_joint_papers;
+            $result += $firstCoauthor['no_of_joint_papers'];
         }
 
         foreach ($secondCoAuthors as $secondCoauthor) {
-            $allJointPapers += $secondCoauthor->no_of_joint_papers;
+            $allJointPapers += $secondCoauthor['no_of_joint_papers'];
         }
 
         return $result * $allJointPapers;
+    }
+
+    public static function wcn_waa_wca($firstCoAuthors, $secondCoAuthors) {
+        $result = 0;
+        $wcaResult = 0;
+        $jointAuthorIds = [];
+
+        # wcn
+        foreach ($firstCoAuthors as $firstCoauthor) {
+            $wcaResult += $firstCoauthor['no_of_joint_papers'];
+            foreach ($secondCoAuthors as $secondCoauthor) {
+                if ($firstCoauthor['author_id'] == $secondCoauthor['author_id']) {
+                    array_push($jointAuthorIds, $firstCoauthor['author_id']);
+                    $result += $firstCoauthor['no_of_joint_papers'] + $secondCoauthor['no_of_joint_papers'];
+                    break;
+                }
+            }
+        }
+
+        $wcn = $result / 2;
+
+        # waa
+        if (count($jointAuthorIds) == 0) {
+            $waa = 0;
+        }
+
+        $allJointPapers = 0;
+
+        foreach ($jointAuthorIds as $authorId) {
+            foreach (CoAuthorHelper::coAuthorWithoutInfo($authorId, DEFAULT_COLUMNS) as $coAuthor) {
+                $allJointPapers += $coAuthor['no_of_joint_papers'];
+            }
+        }
+
+        $waa = $result / (2 * log10($allJointPapers));
+
+        # wca
+        $allJointPapers = 0;
+        foreach ($secondCoAuthors as $secondCoauthor) {
+            $allJointPapers += $secondCoauthor['no_of_joint_papers'];
+        }
+        $wca = $wcaResult * $allJointPapers;
+
+        return [
+            'wcn' => $wcn,
+            'waa' => $waa,
+            'wca' => $wca,
+        ];
     }
 }

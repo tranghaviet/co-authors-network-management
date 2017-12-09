@@ -9,6 +9,7 @@ use Excel;
 use Cache;
 use Log;
 use DB;
+use Flash;
 use App\Http\Requests;
 use ImportAuthor_Paper;
 use App\Models\Paper;
@@ -39,7 +40,7 @@ class ImportAuthor_PaperController extends Controller
 			$n = count($data);
 			if(!empty($data) && $n)
 			{
-				dump('Put author paper data to cache');
+				// dump('Put author paper data to cache');
 				Cache::put('author_paper_lines', $data, 200);
 
 				$limit = 500;	
@@ -50,13 +51,16 @@ class ImportAuthor_PaperController extends Controller
 					if ($offset >= $n) {
 						break;
 					}
-					dump('start import author paper with limit '.strval($l).' and offset '. strval($offset) .'.');
+					// dump('start import author paper with limit '.strval($l).' and offset '. strval($offset) .'.');
 					$process = new Process('php ../artisan import:author_paper --offset='. strval($offset) .' '. '--limit='. strval($l) .'');
       				$process->start();
       				
       				$i++;
 				}
-				dump('all has started ');
+							
+				Flash::info('In processing. Please wait');
+
+				return redirect()->back();
 			}
 		}
 	}

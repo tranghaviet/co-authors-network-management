@@ -1,13 +1,5 @@
 # Co-authors network management
 
-[![co-authors network management](https://img.shields.io/badge/Status-Awesome-brightgreen.svg)](https://github.com/tranghaviet/co-authors-network-management)
-[![StyleCI](https://styleci.io/repos/106026282/shield?branch=master)](https://styleci.io/repos/106026282)
-[![Build Status](https://www.travis-ci.org/tranghaviet/co-authors-network-management.svg?branch=master)](https://www.travis-ci.org/tranghaviet/co-authors-network-management)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/tranghaviet/co-authors-network-management/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/tranghaviet/co-authors-network-management/?branch=master)
-[![Build Status](https://scrutinizer-ci.com/g/tranghaviet/co-authors-network-management/badges/build.png?b=master)](https://scrutinizer-ci.com/g/tranghaviet/co-authors-network-management/build-status/master)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d0ac126c068248e29a0e25edd684b5f4)](https://www.codacy.com/app/tranghaviet/co-authors-network-management?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=tranghaviet/co-authors-network-management&amp;utm_campaign=Badge_Grade)
-[![HitCount](http://hits.dwyl.io/tranghaviet/co-authors-network-management.svg)](http://hits.dwyl.io/tranghaviet/co-authors-network-management)
-
 ## Hướng dẫn cài đặt
 Hướng dẫn này dành cho máy tính chạy hệ điều hành Ubuntu (hoặc các nền tảng Linux khác tương tự Ubuntu).
 Nếu bạn muốn cài đặt trên windows thì có thể tham khảo các hướng dẫn trên mạng để đáp
@@ -114,6 +106,9 @@ php artisan migrate --seed
 ```
 memory_limit=-1
 post_max_size=0
+upload_max_filesize = 200M
+max_execution_time = 300000
+max_input_time = 600000
 ```
 Khởi động chương trình:
 ```
@@ -123,3 +118,5 @@ Truy cập vào địa chỉ http://127.0.0.1:8000 để sử dụng.
 
 Login vào admin bằng email **admin@example.com** và password là **password**
 tại địa chỉ `/login`
+
+p.s. Nếu trong quá trình cài đặt có gì khó khăn, hoặc không cài đặt được, liên hệ: Hà Viết Tráng (viettrangha@gmail.com).

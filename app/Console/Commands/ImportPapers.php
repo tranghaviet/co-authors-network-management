@@ -7,6 +7,7 @@ use ImportPaper;
 use Exception;
 use Log;
 use Cache;
+use Artisan;
 
 class ImportPapers extends Command
 {
@@ -67,7 +68,8 @@ class ImportPapers extends Command
                     
                 }
             }
-
+            
+            Artisan::call('paper:re-index');
         } catch (Exception $e) {
             Log::info($e->getMessage());
         }

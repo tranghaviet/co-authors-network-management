@@ -41,7 +41,7 @@ class CoAuthorController extends AppBaseController
             ->with('firstAuthor.university')
             ->with('secondAuthor.university')
             ->paginate(config('constants.DEFAULT_PAGINATION'));
-dd($coAuthors);
+// dd($coAuthors);
         $paginator = $coAuthors->render();
 
         $coAuthors = $coAuthors->toArray()['data'];
@@ -201,7 +201,13 @@ dd($coAuthors);
         $perPage = config('constants.DEFAULT_PAGINATION');
         $offset = $perPage * ($currentPage - 1);
 
-        $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);
+        try {
+            $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);
+        } catch (\Exception $e) {
+            \Flash::error('Index in progress.. Come back later.');
+            \Artisan::call('author:re-index', ['--university' => true]);
+            return redirect()->back();                    
+        }  
 
         # Pagination
         $url = route($this->routeType.'coAuthors.search') . '?q=' . $query . '&page=';
