@@ -179,6 +179,9 @@ return [
         Laravel\Scout\ScoutServiceProvider::class,
         // TNT search driver
         TeamTNT\Scout\TNTSearchScoutServiceProvider::class,
+        Barryvdh\Cors\ServiceProvider::class,
+        
+
 
         /*
          * Application Service Providers...
