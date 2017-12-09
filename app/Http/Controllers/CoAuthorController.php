@@ -189,7 +189,7 @@ class CoAuthorController extends AppBaseController
         $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);
 
         # Pagination
-        $url = route($this->routeType.'authors.search') . '?q=' . $query . '&page=';
+        $url = route($this->routeType.'co_authors.search') . '?q=' . $query . '&page=';
         $previousPage = $url . 1;
         $nextPage = $url . ($currentPage + 1);
 
@@ -199,8 +199,7 @@ class CoAuthorController extends AppBaseController
 
         # If empty result
         if (count($authors) == 0) {
-            return view('authors.index')->with([
-                'authors' => $authors,
+            return view('co_authors.index')->with([
                 'routeType' => $this->routeType,
                 'nextPage' => $nextPage,
                 'previousPage' => $previousPage,
@@ -226,15 +225,12 @@ class CoAuthorController extends AppBaseController
             ->orWhereIn('second_author_id', $authorIds)->get()->toArray();
 
         for ($i = 0; $i < count($coAuthors); $i++) {
-            $coAuthors[$i]['first_author'] = [];
-
-            $coAuthors[$i]['first_author']['id'] = $authors['id'];
-            $coAuthors[$i]['first_author']['given_name'] = $authors['given_name'];
-            $coAuthors[$i]['first_author']['surname'] = $authors['surname'];
+            $coAuthors[$i]['first_author'] = $authors[ $coAuthors[$i]['first_author_id']];
+            $coAuthors[$i]['second_author'] = $authors[ $coAuthors[$i]['second_author_id']];
         }
 
-        return view('authors.index')->with([
-            'authors' => $authors,
+        return view('co_authors.index')->with([
+            'coAuthors' => $coAuthors,
             'routeType' => $this->routeType,
             'nextPage' => $nextPage,
             'previousPage' => $previousPage,

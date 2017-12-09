@@ -24,15 +24,15 @@
 
         <div class="clearfix"></div>
         <div class="box box-primary">
-        @if(isset($coAuthors))
+        @if(! isset($coAuthors) || count($coAuthors) == 0)
+            <h1>Empty</h1>
+        @else
             <div class="box-body">
                     @include('co_authors.table')
             </div>
             @if(isset($paginator))
                 <div class="text-center">{{ $paginator }}</div>
             @endif
-        @else
-            <h1>Empty</h1>
         @endif
         </div>
     </div>
