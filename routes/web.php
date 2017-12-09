@@ -88,8 +88,6 @@ Route::group(['prefix' => 'admin/', 'middleware' => 'auth'], function () {
  *  to show data use dump($variable) (will show data and continue run program)
  *  or dd($variable) (will show data end end the program).
  */
-use App\Models\CoAuthor;
-use App\Models\Author;
 Route::get('/test_import', function () {
     dd($_SERVER['HTTP_HOST']);
     $first_author_id = 65038471460;

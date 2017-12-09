@@ -6,6 +6,7 @@ use Flash;
 use Response;
 use App\Models\Candidate;
 use Illuminate\Http\Request;
+use App\Helpers\SearchHelper;
 use App\Http\Requests\SearchRequest;
 use App\Repositories\CandidateRepository;
 use App\Http\Requests\UpdateCandidateRequest;
@@ -41,7 +42,6 @@ class CandidateController extends AppBaseController
         return view('candidates.index')
             ->with([
                 'candidates' => $candidates,
-                'isPaginated' => true,
                 'routeType' => $this->routeType,
             ]);
     }
@@ -139,8 +139,6 @@ class CandidateController extends AppBaseController
     {
         $input = $request->all();
 
-        $candidatesByName = $this->candidateRepository->search($request->q)->get();
-
         $criteria = null;
         unset($input['q']);
 
@@ -150,23 +148,53 @@ class CandidateController extends AppBaseController
             }
         }
 
+        if ($criteria != null) {
+            $candidatesByOtherCriteria = Candidate::where($criteria)->get();
+
+            if ($candidatesByOtherCriteria->count() == 0) {
+                return view('candidates.index')->with([
+                    'routeType' => $this->routeType,
+                ]);
+            }
+        }
+
+        $currentPage = intval($request->page);
+
+        if (empty($currentPage)) {
+            $currentPage = 1;
+        }
+
+        if (!is_numeric($currentPage) || $currentPage < 1) {
+            Flash::error('Invalid page.');
+            return view('co_authors.index')->with([
+                'routeType' => $this->routeType,
+            ]);
+        }
+
+        $perPage = config('constants.DEFAULT_PAGINATION');
+        $offset = $perPage * ($currentPage - 1);
+
+        if (isset($input['q'])) {
+            $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);
+        }
+
         $candidatesByOtherCriteria = null;
 
         // if user search on at least one criteria
         if ($criteria != null) {
             $candidatesByOtherCriteria = Candidate::where($criteria)->get();
 
-            if (! $candidatesByName->isEmpty()) {
-                $candidateIdsByName = $candidatesByName->map(function ($candidate) {
-                    return $candidate['id'];
-                });
-
-                $candidatesByOtherCriteria = $candidatesByOtherCriteria->map(function ($candidate) use ($candidateIdsByName) {
-                    if (in_array($candidate['id'], $candidateIdsByName->toArray())) {
-                        return $candidate;
-                    }
-                });
-            }
+//            if (! $candidatesByName->isEmpty()) {
+//                $candidateIdsByName = $candidatesByName->map(function ($candidate) {
+//                    return $candidate['id'];
+//                });
+//
+//                $candidatesByOtherCriteria = $candidatesByOtherCriteria->map(function ($candidate) use ($candidateIdsByName) {
+//                    if (in_array($candidate['id'], $candidateIdsByName->toArray())) {
+//                        return $candidate;
+//                    }
+//                });
+//            }
 
             return view('candidates.index')->with([
                 'candidates' => $candidatesByOtherCriteria,
