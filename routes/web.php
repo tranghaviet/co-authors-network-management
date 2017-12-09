@@ -17,7 +17,9 @@ Route::get('/', function () {
 // TODO: add prefix 'admin'
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', function () {
+    return redirect(route('users.index'));
+})->name('home');
 
 // TODO: return different view for admin and user, do it in controller.
 Route::get('authors/search', 'AuthorController@search')->name('user.authors.search');
