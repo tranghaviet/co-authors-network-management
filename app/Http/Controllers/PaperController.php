@@ -159,12 +159,12 @@ class PaperController extends AppBaseController
         $offset = $perPage * ($currentPage - 1);
 
         if (!$request->session()->has('paper_search_' . $query . '_' . strval($currentPage))) {
-            $execution = "select *, match(paper.title) against ('{$query}') as s1 from papers
+            $execution = "select *, match(papers.title) against ('{$query}') as s1 from papers
                           where 
-                            match(paper.title) against ('{$query}')
+                            match(papers.title) against ('{$query}')
                             or papers.id = '{$query}'
                             or papers.issn = '{$query}'
-                          order by s1 desc desc limit {$perPage} offset {$offset};";
+                          order by s1 desc limit {$perPage} offset {$offset};";
 
             $papers = DB::select($execution);
 
@@ -187,7 +187,7 @@ class PaperController extends AppBaseController
                 'papers' => $papers,
                 'routeType' => $this->routeType,
                 'nextPage' => $nextPage,
-                'prevousPage' => $previousPage,
+                'previousPage' => $previousPage,
             ]);
         }
 
@@ -197,7 +197,7 @@ class PaperController extends AppBaseController
             'papers' => $papers,
             'routeType' => $this->routeType,
             'nextPage' => $nextPage,
-            'prevousPage' => $previousPage,
+            'previousPage' => $previousPage,
         ]);
 
     }
