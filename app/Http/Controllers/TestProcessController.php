@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Facades\Response;
 use InfyOm\Generator\Utils\ResponseUtil;
+use Artisan;
 use Symfony\Component\Process\Process as Process;
 
 class TestProcessController extends Controller
@@ -14,11 +15,13 @@ class TestProcessController extends Controller
 		// $p3 = new Process('php artisan co-author:sync');
 		// $process1->start();
 		// var_dump("expression");
-		$directory='C:\xampp7\htdocs\co-authors-network-management';
-		$process = new Process('cd '.$directory.' && php artisan foo:name');
+		// $directory='C:\xampp7\htdocs\co-authors-network-management';
+		// $process = new Process('cd '.$directory.' && php artisan foo:name');
         // $process->setTimeout(3600);
         // $process->setPty(true);
-        dd('dadada');
+        // dd('dadada');
+		Artisan::queue('import:authors');
+		Artisan::queue('import:authors');
 
         // $process->run(function ($type, $buffer) {
         //     echo $buffer;

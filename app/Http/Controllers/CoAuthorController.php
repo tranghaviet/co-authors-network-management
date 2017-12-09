@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Flash;
 use Response;
 use App\Models\CoAuthor;
+use App\Models\Author;
+use DB;
 use Illuminate\Http\Request;
 use App\Helpers\SearchHelper;
 use App\Http\Requests\SearchRequest;
@@ -43,7 +45,6 @@ class CoAuthorController extends AppBaseController
         $paginator = $coAuthors->render();
 
         $coAuthors = $coAuthors->toArray()['data'];
-        dd($coAuthors);
 
         return view('co_authors.index', array_merge(compact('coAuthors', 'paginator'), ['routeType' => $this->routeType]));
     }
@@ -189,7 +190,7 @@ class CoAuthorController extends AppBaseController
         $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);
 
         # Pagination
-        $url = route($this->routeType.'co_authors.search') . '?q=' . $query . '&page=';
+        $url = route($this->routeType.'coAuthors.search') . '?q=' . $query . '&page=';
         $previousPage = $url . 1;
         $nextPage = $url . ($currentPage + 1);
 
@@ -218,17 +219,43 @@ class CoAuthorController extends AppBaseController
 
             unset($authors[$i]);
         }
-
+        dump($authors);
         $authorIds = array_keys($authors);
+        // $authorIds = array_map(function($x) { return intval($x['id']); }, $authors);
+        // $coAuthors = CoAuthor::whereIn('first_author_id', $authorIds)
+        //     ->orWhereIn('second_author_id', $authorIds)->get()->toArray();
+        $coAuthors1 = CoAuthor::whereIn('first_author_id', $authorIds)
+            ->get()->toArray();
+        dump($coAuthors1);
+        // $coAuthorIds = array_map(function($x) { return intval($x['id']); }, $coAuthors);
+        $secondAuthorIds = array_map(function($x) { return intval($x['second_author_id']); }, $coAuthors1);
+        // dd($secondAuthorIds);
+        $secondAuthors = Author::whereIn('id', $secondAuthorIds)->with('university')->get()->toArray();
+        // dd($secondAuthors);
 
-        $coAuthors = CoAuthor::whereIn('first_author_id', $authorIds)
-            ->orWhereIn('second_author_id', $authorIds)->get()->toArray();
+        $coAuthors2 = CoAuthor::whereIn('second_author_id', $authorIds)
+            ->get()->toArray();
+        dump($coAuthors2);
+        // $coAuthorIds = array_map(function($x) { return intval($x['id']); }, $coAuthors);
+        $firstAuthorIds = array_map(function($x) { return intval($x['first_author_id']); }, $coAuthors2);
+        // dd($secondAuthorIds);
+        $firstAuthors = Author::whereIn('id', $firstAuthorIds)->with('university')->get()->toArray();
+        // dd($firstAuthors);
 
-        for ($i = 0; $i < count($coAuthors); $i++) {
-            $coAuthors[$i]['first_author'] = $authors[ $coAuthors[$i]['first_author_id']];
-            $coAuthors[$i]['second_author'] = $authors[ $coAuthors[$i]['second_author_id']];
+        
+        // dd($coAuthorIds);
+        for ($i = 0; $i < count($secondAuthors); $i++) {
+            $coAuthors1[$i]['first_author'] = $authors[$coAuthors1[$i]['first_author_id']];
+            $coAuthors1[$i]['second_author'] = $secondAuthors[$i];
         }
 
+        for ($i = 0; $i < count($firstAuthors); $i++) {
+            $coAuthors2[$i]['first_author'] = $firstAuthors[$i];
+            $coAuthors2[$i]['second_author'] = $authors[$coAuthors2[$i]['second_author_id']];
+        }
+
+        $coAuthors = array_merge($coAuthors1, $coAuthors2);
+        // dd($coAuthors);
         return view('co_authors.index')->with([
             'coAuthors' => $coAuthors,
             'routeType' => $this->routeType,
