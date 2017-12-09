@@ -82,6 +82,7 @@ Route::group(['prefix' => 'admin/', 'middleware' => 'auth'], function () {
 use App\Models\CoAuthor;
 use App\Models\Author;
 Route::get('/test_import', function () {
+    dd($_SERVER['HTTP_HOST']);
     $first_author_id = 65038471460;
     $second_author_id = 7006831047;
     // Your code here

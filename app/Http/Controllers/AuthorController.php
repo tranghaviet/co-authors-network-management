@@ -184,9 +184,12 @@ class AuthorController extends AppBaseController
             $currentPage = 1;
         }
 
+
         if (!is_numeric($currentPage) || $currentPage < 1) {
             Flash::error('Invalid page.');
-            return view('authors.index');
+            return view('authors.index')->with([
+                'routeType' => $this->routeType,
+            ]);
         }
 
         $perPage = config('constants.DEFAULT_PAGINATION');
@@ -206,34 +209,35 @@ class AuthorController extends AppBaseController
             $authors = $request->session()->get('author_search_' . $query);
         }
 
-        if (count($authors) == 0) {
-            return view('authors.index');
+
+        # Pagination
+        $url = route($this->routeType.'authors.search') . '?q=' . $query . '&page=';
+        $previousPage = $url . 1;
+        $nextPage = $url . ($currentPage + 1);
+
+        if ($currentPage > 1) {
+            $previousPage = $url . ($currentPage - 1);
         }
 
-        $authors = json_decode(json_encode($authors), true);
+        # If empty result
+        if (count($authors) == 0) {
+            return view('authors.index')->with([
+                'authors' => $authors,
+                'routeType' => $this->routeType,
+                'nextPage' => $nextPage,
+                'previousPage' => $previousPage,
+            ]);
+        }
 
+        # View
+        $authors = json_decode(json_encode($authors), true);
         for ($i = 0; $i < count($authors); $i++) {
             $authors[$i]['university'] = [];
             $authors[$i]['university']['name'] = $authors[$i]['name'];
         }
 
-
 //        $result = new LengthAwarePaginator($authors, 50, $perPage, $currentPage);
-        // $endpoint = $_SERVER['SERVER_ADDR'] . $_SERVER['SERVER_PORT'] == "8000" ? ':8000' : null;
-        $url = $this->routeType . route('authors.search') . '?q=' . $query . '?page=';
-//        $paginator = $result->render();
-
-        $nextPage = 1;
-        $previousPage = 1;
-        if (count($authors) > 15) {
-            $nextPage = $url . ($currentPage + 1);
-            $previousPage = ($currentPage - 1) > 0 ? $url . ($currentPage - 1) : 0;
-        }
-
-        if ($currentPage > 1) {
-            $nextPage = $url.($currentPage + 1);
-            $previousPage = $url . ($currentPage - 1);
-        }
+        $endpoint = $_SERVER['HTTP_HOST'];
 
         return view('authors.index')->with([
             'authors' => $authors,

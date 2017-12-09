@@ -29,7 +29,7 @@
         <div class="clearfix"></div>
         <div class="box box-primary">
             <div class="box-body">
-                @if(isset($authors) && count($authors) == 0)
+                @if(! isset($authors) || count($authors) == 0)
                     <h1>Empty</h1>
                 @else
                     @include('authors.table')
