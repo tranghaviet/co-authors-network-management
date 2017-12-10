@@ -268,6 +268,8 @@ class CandidateController extends AppBaseController
             return $x;
         }, $coAuthors);
 
+        $coAuthors = array_slice($coAuthors, 0, 20);
+
         usort($coAuthors, function($a, $b) {
             return $b['score_1'] - $a['score_1'];
         });

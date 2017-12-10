@@ -3,12 +3,13 @@
 namespace App\Helpers;
 
 use App\Models\CoAuthor;
+use Cache;
 use App\Helpers\CoAuthorHelper;
 
 const DEFAULT_COLUMNS = [
-'first_author_id',
-'second_author_id',
-'no_of_joint_papers',
+    'first_author_id',
+    'second_author_id',
+    'no_of_joint_papers',
 ];
 
 class MeasureLinking
@@ -131,12 +132,17 @@ class MeasureLinking
         return $result * $allJointPapers;
     }
 
-    public static function wcn_waa_wca($firstCoAuthors, $secondCoAuthors) {
+    public static function wcn_waa_wca($firstCoAuthors, $secondCoAuthors, &$coAuthorsMap) {
         $result = 0;
         $wcaResult = 0;
         $jointAuthorIds = [];
 
         # wcn
+        
+        // \Log::info($firstCoAuthors);
+        // \Log::info($secondCoAuthors);
+        // dd();
+
         foreach ($firstCoAuthors as $firstCoauthor) {
             $wcaResult += $firstCoauthor['no_of_joint_papers'];
             foreach ($secondCoAuthors as $secondCoauthor) {
@@ -148,7 +154,7 @@ class MeasureLinking
             }
         }
 
-        $wcn = $result / 2;
+        $wcn = $result / 2.0;
 
         # waa
         if (count($jointAuthorIds) == 0) {
@@ -158,12 +164,12 @@ class MeasureLinking
         $allJointPapers = 0;
 
         foreach ($jointAuthorIds as $authorId) {
-            foreach (CoAuthorHelper::coAuthorWithoutInfo($authorId, DEFAULT_COLUMNS) as $coAuthor) {
+            foreach ($coAuthorsMap[$authorId] as $coAuthor) {
                 $allJointPapers += $coAuthor['no_of_joint_papers'];
             }
         }
 
-        $waa = $result / (2 * log10($allJointPapers));
+        $waa = $result / (2.0 * log10($allJointPapers));
 
         # wca
         $allJointPapers = 0;
