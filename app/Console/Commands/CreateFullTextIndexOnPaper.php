@@ -3,7 +3,10 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
+// use Illuminate\Support\Facades\DB;
+use Log;
+use Exception;
+use DB;
 
 class CreateFullTextIndexOnPaper extends Command
 {
@@ -28,13 +31,32 @@ class CreateFullTextIndexOnPaper extends Command
      */
     public function handle()
     {
-        $query2 = 'SET GLOBAL innodb_optimize_fulltext_only=1;';
-        $query1 = 'ALTER TABLE `papers` DROP INDEX IF EXISTS `paper_search`;';
-        $query3 = 'ALTER TABLE `papers` ADD FULLTEXT `paper_search` (`title`);';
+        // Add job info to databases
+        try {
+            \DB::statement('INSERT INTO importjobs VALUES ('.getmypid().", 'paper_index')");
+        } catch (Exception $e) {
+            Log::info($e->getMessage());
+        }
 
-        DB::statement($query1);
-        DB::statement($query2);
-        DB::statement($query3);
-        $this->info('Success');
+        try {
+            $query2 = 'SET GLOBAL innodb_optimize_fulltext_only=1;';
+            $query1 = 'ALTER TABLE `papers` DROP INDEX IF EXISTS `paper_search`;';
+            $query3 = 'ALTER TABLE `papers` ADD FULLTEXT `paper_search` (`title`);';
+
+            DB::statement($query1);
+            DB::statement($query2);
+            DB::statement($query3);
+            $this->info('Success');
+        } catch (Exception $e) {
+            Log::info($e->getMessage());
+        }
+
+        
+        // Remove job info from databases
+        try {
+            \DB::statement("DELETE FROM importjobs WHERE pid = ".getmypid()." AND type='paper_index'");
+        } catch (Exception $e) {
+            Log::info($e->getMessage());
+        }
     }
 }

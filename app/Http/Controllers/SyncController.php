@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Flash;
+use DB;
 use Artisan;
 use Symfony\Component\Process\Process as Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -16,19 +17,37 @@ class SyncController extends AppBaseController
 
     public function coAuthors()
     {
-        // Artisan::call('co-author:sync', ['--begin' => true]);
-        $process = new Process('php ../artisan co-author:sync --begin');
-        $process->start();
-        Flash::info('In progress..');
 
-        return redirect()->back();
+        # Check if any importing job exists
+        $importJobs = DB::select("SELECT * FROM importjobs");
+
+        if (count($importJobs) > 0) {
+            Flash::warning('Some import in progress, come back later');
+            return redirect()->back();
+        } else {
+            // Artisan::call('co-author:sync', ['--begin' => true]);
+            $process = new Process('php ../artisan co-author:sync --begin');
+            $process->start();
+            Flash::info('In progress..');
+
+            return redirect()->back();
+        }
+        
     }
 
     public function candidates() {
-        $process = new Process('php ../artisan candidate:sync');
-        $process->start();
-        Flash::info('In progress..');
+        # Check if any importing job exists
+        $importJobs = DB::select("SELECT * FROM importjobs");
 
-        return redirect()->back();
+        if (count($importJobs) > 0) {
+            Flash::warning('Some import in progress, come back later');
+            return redirect()->back();
+        } else {
+            $process = new Process('php ../artisan candidate:sync');
+            $process->start();
+            Flash::info('In progress..');
+
+            return redirect()->back();
+        }
     }
 }

@@ -11,6 +11,9 @@ use App\Http\Requests\SearchRequest;
 use App\Repositories\PaperRepository;
 use App\Http\Requests\UpdatePaperRequest;
 use Prettus\Repository\Criteria\RequestCriteria;
+use Symfony\Component\Process\Process as Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+
 
 class PaperController extends AppBaseController
 {
@@ -171,8 +174,10 @@ class PaperController extends AppBaseController
             try {
                 $papers = DB::select($execution);
             } catch (\Exception $e) {
-                \Flash::error('Index in progress.. Come back later.');
-                \Artisan::call('paper:re-index');
+                \Flash::warning('Index in progress.. Come back later.');
+                // \Artisan::call('paper:re-index');
+                $process = new Process('php ../artisan paper:re-index');
+
                 return redirect()->back();                    
             }                      
             

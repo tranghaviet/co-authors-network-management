@@ -149,18 +149,18 @@ class CandidateController extends AppBaseController
 
     public function search(Request $request)
     {
-        $score1 = $request->score_1;
-        $score2 = $request->score_2;
-        $score3 = $request->score_3;
+        $score1 = intval($request->score_1);
+        $score2 = intval($request->score_2);
+        $score3 = intval($request->score_3);
         $query = trim($request->q);
 
         if (is_null($score1) || is_nan($score1))  {
             $score1 = 0;
         }
         if (is_null($score2) || is_nan($score2))  {
-            $score1 = 0;
+            $score2 = 0;
         }if (is_null($score3) || is_nan($score3))  {
-            $score1 = 0;
+            $score3 = 0;
         }
 
         $currentPage = intval($request->page);

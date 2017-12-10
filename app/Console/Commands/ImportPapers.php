@@ -48,6 +48,13 @@ class ImportPapers extends Command
         $offset = $this->option('offset');
         $limit = $this->option('limit');
 
+        // Add job info to databases
+        try {
+            \DB::statement('INSERT INTO importjobs VALUES ('.getmypid().", 'paper')");
+        } catch (Exception $e) {
+            Log::info($e->getMessage());
+        }
+
         $paper_lines = array_slice(Cache::get('paper_lines'), $offset, $limit);
 
         try {
@@ -67,8 +74,19 @@ class ImportPapers extends Command
                     {
                         ImportPaper::handle_keywords($value['id'], $keyword);
                     }
-                    
                 }
+            }
+
+            // Remove job info from databases
+            try {
+                \DB::statement("DELETE FROM importjobs WHERE pid = ".getmypid()." AND type='paper'");
+                $c = count(\DB::select("SELECT * FROM importjobs WHERE type='paper'"));
+                if ($c == 0) {
+                // All job done
+                Cache::pull('paper_lines');
+            }
+            } catch (Exception $e) {
+                Log::info($e->getMessage());
             }
             
             // Artisan::call('paper:re-index');

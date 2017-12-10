@@ -39,31 +39,46 @@ class ImportAuthor_PaperController extends Controller
 			})->get()->toArray();
 			$n = count($data);
 
-			if(!empty($data) && $n)
-			{
-				// dump('Put author paper data to cache');
-				Cache::put('author_paper_lines', $data, 200);
+			# Check if any importing job exists
+			$importJobs = DB::select("SELECT * FROM importjobs");
 
-				$numProcesses = 15.0;
-				$limit = intval(ceil($n / $numProcesses));	
-				$i = 0;
-				while($i < $numProcesses) {
-					$offset = $i * $limit;
-					$l = $n - $offset < $limit ? $n - $offset : $limit;
-					if ($offset >= $n) {
-						break;
-					}
-					// dump('start import author paper with limit '.strval($l).' and offset '. strval($offset) .'.');
-					$process = new Process('php ../artisan import:author_paper --offset='. strval($offset) .' '. '--limit='. strval($l) .'');
-      				$process->start();
-      				
-      				$i++;
-				}
-							
-				Flash::info('In processing. Please wait');
-
+			if (count($importJobs) > 0) {
+				Flash::warning('Import in progress, come back later');
 				return redirect()->back();
+			} else {
+				if(!empty($data) && $n)
+				{
+					// dump('Put author paper data to cache');
+					Cache::put('author_paper_lines', $data, 200);
+
+					$numProcesses = 15.0;
+					$limit = intval(ceil($n / $numProcesses));	
+					$i = 0;
+					while($i < $numProcesses) {
+						$offset = $i * $limit;
+						$l = $n - $offset < $limit ? $n - $offset : $limit;
+						if ($offset >= $n) {
+							break;
+						}
+						// dump('start import author paper with limit '.strval($l).' and offset '. strval($offset) .'.');
+						$process = new Process('php ../artisan import:author_paper --offset='. strval($offset) .' '. '--limit='. strval($l) .'');
+	      				$process->start();
+	      				
+	      				$i++;
+					}
+								
+					Flash::info('In processing. Please wait');
+
+					return redirect()->back();
+				} else {
+					Flash::info('Done');
+					return redirect()->back();
+				}
 			}
+			
+		} else {
+			Flash::error('Nothing to import');
+			return redirect()->back();
 		}
 	}
 }

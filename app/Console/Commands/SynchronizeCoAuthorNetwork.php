@@ -51,6 +51,15 @@ class SynchronizeCoAuthorNetwork extends Command
 
 //        dd();
         \Log::info('Sync coauthor process '.getmypid());
+
+
+        // Add job info to databases
+        try {
+            \DB::statement('INSERT INTO importjobs VALUES ('.getmypid().", 'sync_coauthor')");
+        } catch (Exception $e) {
+            Log::info($e->getMessage());
+        }
+
         try {
             if ($this->option('begin')) {
                 Cache::flush();
@@ -178,25 +187,24 @@ class SynchronizeCoAuthorNetwork extends Command
                 $insertTime = microtime(true);
                 $records = Cache::get('records');
 
-                if (count($records) == 0) {
-                    return;
+                if (count($records) > 0) {
+                    // save records to DB
+                    $result = implode(',', array_map(function ($k) use ($records) {
+                        return '(\'' . $k . '\',' . $k . ',' . implode(',', $records[$k]) . ')';
+                    }, array_keys($records)));
+
+
+                    DB::statement('DELETE FROM `co_authors` where 1;');
+
+                    $result = 'INSERT INTO `co_authors` (`id`, `first_author_id`, `second_author_id`, `no_of_mutual_authors`, `no_of_joint_papers`) VALUES ' . $result . ';';
+
+                    DB::statement($result);
+        //            unset all variables in Tempo
+        //            DB::statement('SET GLOBAL max_allowed_packet=1048576;');
+
+                    $this->info('Insert time: ' . (string) (microtime(true) - $insertTime));
                 }
                 
-                // save records to DB
-                $result = implode(',', array_map(function ($k) use ($records) {
-                    return '(\'' . $k . '\',' . $k . ',' . implode(',', $records[$k]) . ')';
-                }, array_keys($records)));
-
-
-                DB::statement('DELETE FROM `co_authors` where 1;');
-
-                $result = 'INSERT INTO `co_authors` (`id`, `first_author_id`, `second_author_id`, `no_of_mutual_authors`, `no_of_joint_papers`) VALUES ' . $result . ';';
-
-                DB::statement($result);
-    //            unset all variables in Tempo
-    //            DB::statement('SET GLOBAL max_allowed_packet=1048576;');
-
-                $this->info('Insert time: ' . (string) (microtime(true) - $insertTime));
             }
 
     //
@@ -298,6 +306,20 @@ class SynchronizeCoAuthorNetwork extends Command
             \Log::info('Sync coauthor done');
         } catch (\Exception $e) {
             \Log::debug($e->getMessage());
+        }
+
+        // Remove job info from databases
+        try {
+            \DB::statement("DELETE FROM importjobs WHERE pid = ".getmypid()." AND type='sync_coauthor'");
+            if ($c == 0) {
+                // All job done
+                Cache::pull('status');
+                Cache::pull('papers');
+                Cache::pull('authors');
+                Cache::pull('records');
+            }
+        } catch (Exception $e) {
+            Log::info($e->getMessage());
         }
     }
 }
