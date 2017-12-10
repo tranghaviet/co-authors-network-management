@@ -12,12 +12,13 @@
     @foreach($authorPapers as $authorPaper)
         <tr>
             <td>
-                <a href="{!! route('authors.show', [$authorPaper->author['id']]) !!}">
+                <a href="{!! route($routeType . 'authors.show',
+                [$authorPaper->author['id']]) !!}">
                     {{ $authorPaper->author['given_name'] .' '. $authorPaper->author['surname'] }}
                 </a>
             </td>
             <td>
-                <a href="{!! route('papers.show', [$authorPaper->paper['id']]) !!}">
+                <a href="{!! route($routeType . 'papers.show', [$authorPaper->paper['id']]) !!}">
                     {{ $authorPaper->paper['title'] }}
                 </a>
             @if (\App\Helpers\Utility::displayForAdmin())
