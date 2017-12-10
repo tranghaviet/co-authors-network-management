@@ -34,41 +34,39 @@ class SynchronizeCandidate extends Command
      */
     public function handle()
     {
-
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        DB::statement('TRUNCATE TABLE `candidates`');
         try {
-            DB::statement('ALTER TABLE candidates DROP FOREIGN KEY candidates_co_author_id_foreign;');
-        } catch (\Exception $e) {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+            DB::statement('TRUNCATE TABLE `candidates`');
+            try {
+                DB::statement('ALTER TABLE candidates DROP FOREIGN KEY candidates_co_author_id_foreign;');
+            } catch (\Exception $e) {
+                \Log::debug($e->getMessage());
+            }
+
+
+            CoAuthor::chunk(500, function ($coAuthors) {
+                $candidates = [];
+
+                foreach ($coAuthors as $coAuthor) {
+                    $firstCoAuthors = CoAuthorHelper::collaborators($coAuthor['first_author_id'], ['id']);
+                    $secondCoAuthors = CoAuthorHelper::collaborators($coAuthor['second_author_id'], ['id']);
+
+                    $scores = MeasureLinking::wcn_waa_wca($firstCoAuthors, $secondCoAuthors);
+
+                    array_push($candidates, [
+                        'co_author_id' => $coAuthor->id,
+                        'score_1' => $scores['wcn'],
+                        'score_2' => $scores['waa'],
+                        'score_3' => $scores['wca'],
+                    ]);
+                }
+                Candidate::insert($candidates);
+            });
+            DB::statement('ALTER TABLE `candidates` ADD constraint  candidates_co_author_id_foreign 
+                FOREIGN KEY  (co_author_id) REFERENCES co_authors(id);');
+        } catch (Exception $e) {
             \Log::debug($e->getMessage());
         }
-
-
-        CoAuthor::chunk(1000, function ($coAuthors) {
-            $candidates = [];
-
-            foreach ($coAuthors as $coAuthor) {
-                $firstCoAuthors = CoAuthorHelper::collaborators($coAuthor['first_author_id'], ['id']);
-                $secondCoAuthors = CoAuthorHelper::collaborators($coAuthor['second_author_id'], ['id']);
-
-
-        //                 $wcn = MeasureLinking::wcn($firstCoAuthors, $secondCoAuthors);
-        //                 $waa = MeasureLinking::waa($firstCoAuthors, $secondCoAuthors);
-        //                 $wjc = MeasureLinking::wjc($firstCoAuthors, $secondCoAuthors);
-        //                 $wca = MeasureLinking::wca($firstCoAuthors, $secondCoAuthors);
-
-                $scores = MeasureLinking::wcn_waa_wca($firstCoAuthors, $secondCoAuthors);
-
-                array_push($candidates, [
-                    'co_author_id' => $coAuthor->id,
-                    'score_1' => $scores['wcn'],
-                    'score_2' => $scores['waa'],
-                    'score_3' => $scores['wca'],
-                    ]);
-            }
-            Candidate::insert($candidates);
-        });
-        DB::statement('ALTER TABLE `candidates` ADD constraint  candidates_co_author_id_foreign 
-            FOREIGN KEY  (co_author_id) REFERENCES co_authors(id);');
+        
     }
 }

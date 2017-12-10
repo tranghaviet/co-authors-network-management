@@ -36,9 +36,10 @@ class ImportPaperController extends Controller
 				// dump('Put papers data to cache');
 				Cache::put('paper_lines', $data, 20);
 
-				$limit = 250;	
+				$numProcesses = 15.0;
+				$limit = intval(ceil($n / $numProcesses));	
 				$i = 0;
-				while(true) {
+				while($i < $numProcesses) {
 					$offset = $i * $limit;
 					$l = $n - $offset < $limit ? $n - $offset : $limit;
 					if ($offset >= $n) {

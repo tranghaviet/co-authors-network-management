@@ -7,6 +7,8 @@ use ImportPaper;
 use Exception;
 use Log;
 use Cache;
+use Symfony\Component\Process\Process as Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 use Artisan;
 
 class ImportPapers extends Command
@@ -69,7 +71,10 @@ class ImportPapers extends Command
                 }
             }
             
-            Artisan::call('paper:re-index');
+            // Artisan::call('paper:re-index');
+            $process = new Process('php ../artisan paper:re-index');
+            $process->start();
+            
         } catch (Exception $e) {
             Log::info($e->getMessage());
         }

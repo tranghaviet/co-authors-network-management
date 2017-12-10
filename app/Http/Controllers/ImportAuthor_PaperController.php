@@ -38,14 +38,16 @@ class ImportAuthor_PaperController extends Controller
 			$data = Excel::load($path, function($reader) {
 			})->get()->toArray();
 			$n = count($data);
+
 			if(!empty($data) && $n)
 			{
 				// dump('Put author paper data to cache');
 				Cache::put('author_paper_lines', $data, 200);
 
-				$limit = 500;	
+				$numProcesses = 15.0;
+				$limit = intval(ceil($n / $numProcesses));	
 				$i = 0;
-				while(true) {
+				while($i < $numProcesses) {
 					$offset = $i * $limit;
 					$l = $n - $offset < $limit ? $n - $offset : $limit;
 					if ($offset >= $n) {

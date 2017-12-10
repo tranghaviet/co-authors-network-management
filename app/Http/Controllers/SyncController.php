@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Flash;
 use Artisan;
+use Symfony\Component\Process\Process as Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class SyncController extends AppBaseController
 {
@@ -14,21 +16,18 @@ class SyncController extends AppBaseController
 
     public function coAuthors()
     {
-        Artisan::call('co-author:sync', ['--begin' => true]);
-        Flash::success('Done Co-authors sync.');
+        // Artisan::call('co-author:sync', ['--begin' => true]);
+        $process = new Process('php ../artisan co-author:sync --begin');
+        $process->start();
+        Flash::info('In progress..');
 
         return redirect()->back();
     }
 
     public function candidates() {
-        try {
-            Artisan::call('candidate:sync');
-        } catch (\Exception $e) {
-            \Log::info($e->getMessage());
-            return  redirect('/');
-        }
-   
-        Flash::success('Done Candidates sync.');
+        $process = new Process('php ../artisan candidate:sync');
+        $process->start();
+        Flash::info('In progress..');
 
         return redirect()->back();
     }
