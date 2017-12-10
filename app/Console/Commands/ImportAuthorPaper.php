@@ -45,6 +45,14 @@ class ImportAuthorPaper extends Command
         $offset = $this->option('offset');
         $limit = $this->option('limit');
 
+        // Add job info to databases
+        try {
+            \DB::statement('INSERT INTO importjobs VALUES ('.getmypid().", 'author_paper')");
+        } catch (Exception $e) {
+            Log::info($e->getMessage());
+        }
+        
+        // Import
         $author_paper_lines = array_slice(Cache::get('author_paper_lines'), $offset, $limit);
 
         try {
@@ -61,6 +69,18 @@ class ImportAuthorPaper extends Command
             }
         } catch (Exception $e) {
             Log::info('Author paper-----------'.$e->getMessage());
+        }
+
+        // Remove job info from databases
+        try {
+            \DB::statement("DELETE FROM importjobs WHERE pid = ".getmypid()." AND type='author_paper'");
+            $c = count(\DB::select("SELECT * FROM importjobs WHERE type='author_paper'"));
+            if ($c == 0) {
+                // All job done
+                Cache::pull('author_paper_lines');
+            }
+        } catch (Exception $e) {
+            Log::info($e->getMessage());
         }
     }
 }

@@ -39,6 +39,13 @@ class ImportAuthors extends Command
         $offset = $this->option('offset');
         $limit = $this->option('limit');
 
+        // Add job info to databases
+        try {
+            \DB::statement('INSERT INTO importjobs VALUES ('.getmypid().", 'author')");
+        } catch (Exception $e) {
+            Log::info($e->getMessage());
+        }
+
         $author_lines = array_slice(Cache::get('author_lines'), $offset, $limit);
         
         foreach ($author_lines as $key => $value)
@@ -86,6 +93,18 @@ class ImportAuthors extends Command
                 ImportAuthor::insert_authors( $id, $surname, $given_name, $email, $url, $university_id);
                 ImportAuthor::handle_subjects( $id, $value['subjects']);
             }
+        }
+
+        // Remove job info from databases
+        try {
+            \DB::statement("DELETE FROM importjobs WHERE pid = ".getmypid()." AND type='author'");
+            $c = count(\DB::select("SELECT * FROM importjobs WHERE type='author'"));
+            if ($c == 0) {
+                // All job done
+                Cache::pull('author_lines');
+            }
+        } catch (Exception $e) {
+            Log::info($e->getMessage());
         }
 
         // Artisan::call('author:re-index', ['--university' => true]);

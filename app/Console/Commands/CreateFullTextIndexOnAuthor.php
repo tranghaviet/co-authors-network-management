@@ -3,7 +3,10 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
+// use Illuminate\Support\Facades\DB;
+use Log;
+use Exception;
+use DB;
 
 class CreateFullTextIndexOnAuthor extends Command
 {
@@ -28,23 +31,44 @@ class CreateFullTextIndexOnAuthor extends Command
      */
     public function handle()
     {
-//        $query1 = 'SET GLOBAL innodb_optimize_fulltext_only=1;';
-        $query2 = 'DROP INDEX IF EXISTS `authors_ft_name` ON authors;';
-//        $query3 = 'DROP INDEX IF EXISTS `universities_ft_name` ON universities;';
-        $query3 = 'DROP INDEX IF EXISTS `universities_ft_name` ON universities;';
-        $query4 = 'CREATE FULLTEXT INDEX authors_ft_name ON `authors` (`surname`, `given_name`);';
-//        $query5 = 'CREATE FULLTEXT INDEX universities_ft_name ON `universities` (`name`);';
-        $query5 = 'ALTER TABLE `universities` ADD FULLTEXT `universities_ft_name` (`name`);';
 
-//        DB::statement($query1);
-        DB::statement($query2);
-        DB::statement($query4);
-
-        if ($this->option('university')) {
-            DB::statement($query3);
-            DB::statement($query5);
+        // Add job info to databases
+        try {
+            \DB::statement('INSERT INTO importjobs VALUES ('.getmypid().", 'author_index')");
+        } catch (Exception $e) {
+            Log::info($e->getMessage());
         }
 
-        $this->info('Success');
+
+        try {
+            //        $query1 = 'SET GLOBAL innodb_optimize_fulltext_only=1;';
+            $query2 = 'DROP INDEX IF EXISTS `authors_ft_name` ON authors;';
+    //        $query3 = 'DROP INDEX IF EXISTS `universities_ft_name` ON universities;';
+            $query3 = 'DROP INDEX IF EXISTS `universities_ft_name` ON universities;';
+            $query4 = 'CREATE FULLTEXT INDEX authors_ft_name ON `authors` (`surname`, `given_name`);';
+    //        $query5 = 'CREATE FULLTEXT INDEX universities_ft_name ON `universities` (`name`);';
+            $query5 = 'ALTER TABLE `universities` ADD FULLTEXT `universities_ft_name` (`name`);';
+
+    //        DB::statement($query1);
+            DB::statement($query2);
+            DB::statement($query4);
+
+            if ($this->option('university')) {
+                DB::statement($query3);
+                DB::statement($query5);
+            }
+
+            $this->info('Success');
+        } catch (\Exception $e) {
+            Log::info($e->getMessage());
+        }
+
+
+        // Remove job info from databases
+        try {
+            \DB::statement("DELETE FROM importjobs WHERE pid = ".getmypid()." AND type='paper_index'");
+        } catch (Exception $e) {
+            Log::info($e->getMessage());
+        }
     }
 }
