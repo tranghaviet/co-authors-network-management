@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Log;
 use Cache;
 use Exception;
 use App\Models\Author;
@@ -311,6 +312,7 @@ class SynchronizeCoAuthorNetwork extends Command
         // Remove job info from databases
         try {
             \DB::statement("DELETE FROM importjobs WHERE pid = ".getmypid()." AND type='sync_coauthor'");
+            $c = count(\DB::select("SELECT * FROM importjobs WHERE type='sync_coauthor'"));
             if ($c == 0) {
                 // All job done
                 Cache::pull('status');
@@ -319,7 +321,7 @@ class SynchronizeCoAuthorNetwork extends Command
                 Cache::pull('records');
             }
         } catch (Exception $e) {
-            Log::info($e->getMessage());
+            \Log::info($e->getMessage());
         }
     }
 }

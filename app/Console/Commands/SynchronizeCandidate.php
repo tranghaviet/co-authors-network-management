@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Exception;
+use Log;
 use App\Models\CoAuthor;
 use App\Models\Candidate;
 use Illuminate\Console\Command;
@@ -72,8 +73,6 @@ class SynchronizeCandidate extends Command
             DB::statement('ALTER TABLE `candidates` ADD constraint  candidates_co_author_id_foreign 
                 FOREIGN KEY  (co_author_id) REFERENCES co_authors(id);');
 
-            
-
         } catch (Exception $e) {
             \Log::debug($e->getMessage());
         }
@@ -81,10 +80,9 @@ class SynchronizeCandidate extends Command
         // Remove job info from databases
         try {
             \DB::statement("DELETE FROM importjobs WHERE pid = ".getmypid()." AND type='sync_candidate'");
-                    
-            
+
         } catch (Exception $e) {
-            Log::info($e->getMessage());
+            \Log::info($e->getMessage());
         }
     }
 }
