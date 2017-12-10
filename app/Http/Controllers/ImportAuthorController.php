@@ -41,9 +41,10 @@ class ImportAuthorController extends Controller
 				// dump('Put authors data to cache');
 				Cache::put('author_lines', $data, 20);
 
-				$limit = 500;	
+				$numProcesses = 15.0;
+				$limit = intval(ceil($n / $numProcesses));	
 				$i = 0;
-				while(true) {
+				while($i < $numProcesses) {
 					$offset = $i * $limit;
 					$l = $n - $offset < $limit ? $n - $offset : $limit;
 					if ($offset >= $n) {

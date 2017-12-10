@@ -7,6 +7,8 @@ use Cache;
 use ImportAuthor;
 use Artisan;
 use Log;
+use Symfony\Component\Process\Process as Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class ImportAuthors extends Command
 {
@@ -86,6 +88,8 @@ class ImportAuthors extends Command
             }
         }
 
-        Artisan::call('author:re-index', ['--university' => true]);
+        // Artisan::call('author:re-index', ['--university' => true]);
+        $process = new Process('php ../artisan author:re-index --university');
+        $process->start();  
     }
 }
