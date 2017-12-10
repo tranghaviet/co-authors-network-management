@@ -19,7 +19,7 @@
         <tr>
             <td>{!! $coAuthor['id'] !!}</td>
             <td>
-                <a href="{!! route('authors.show', [$coAuthor['first_author_id']]) !!}">
+                <a href="{!! route($routeType . 'authors.show', [$coAuthor['first_author_id']]) !!}">
                     {!! $coAuthor['first_author']['given_name'].' '.$coAuthor['first_author']['surname'] !!}
                 </a>
             </td>
@@ -27,7 +27,7 @@
                 {!! $coAuthor['first_author']['university']['name'] !!}
             </td>
             <td>
-                <a href="{!! route('authors.show', [$coAuthor['second_author_id']]) !!}">
+                <a href="{!! route($routeType . 'authors.show', [$coAuthor['second_author_id']]) !!}">
                     {!! $coAuthor['second_author']['given_name'].' '.$coAuthor['second_author']['surname'] !!}
                 </a>
             </td>
