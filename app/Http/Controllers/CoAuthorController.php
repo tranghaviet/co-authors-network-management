@@ -13,6 +13,8 @@ use App\Http\Requests\SearchRequest;
 use App\Repositories\CoAuthorRepository;
 use App\Http\Requests\UpdateCoAuthorRequest;
 use Prettus\Repository\Criteria\RequestCriteria;
+use Symfony\Component\Process\Process as Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class CoAuthorController extends AppBaseController
 {
@@ -205,7 +207,9 @@ class CoAuthorController extends AppBaseController
             $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);
         } catch (\Exception $e) {
             \Flash::error('Index in progress.. Come back later.');
-            \Artisan::call('author:re-index', ['--university' => true]);
+            // \Artisan::call('author:re-index', ['--university' => true]);
+            $process = new Process('php ../artisan author:re-index --university');
+            $process->start();
             return redirect()->back();                    
         }  
 

@@ -11,6 +11,8 @@ use App\Http\Requests\SearchRequest;
 use App\Repositories\AuthorRepository;
 use App\Http\Requests\UpdateAuthorRequest;
 use Prettus\Repository\Criteria\RequestCriteria;
+use Symfony\Component\Process\Process as Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class AuthorController extends AppBaseController
 {
@@ -181,7 +183,9 @@ class AuthorController extends AppBaseController
                 $authors = DB::select($execution);
             } catch (\Exception $e) {
                 \Flash::error('Index in progress.. Come back later.');
-                \Artisan::call('author:re-index', ['--university' => true]);
+                // \Artisan::call('author:re-index', ['--university' => true]);
+                $process = new Process('php ../artisan author:re-index --university');
+                $process->start();
                 return redirect()->back();                    
             }    
 
