@@ -56,8 +56,8 @@ class SynchronizeCandidate extends Command
                 $candidates = [];
 
                 foreach ($coAuthors as $coAuthor) {
-                    $firstCoAuthors = CoAuthorHelper::collaborators($coAuthor['first_author_id'], ['id']);
-                    $secondCoAuthors = CoAuthorHelper::collaborators($coAuthor['second_author_id'], ['id']);
+                    $firstCoAuthors = CoAuthorHelper::collaborators($coAuthor['first_author_id']);
+                    $secondCoAuthors = CoAuthorHelper::collaborators($coAuthor['second_author_id']);
 
                     $scores = MeasureLinking::wcn_waa_wca($firstCoAuthors, $secondCoAuthors);
 

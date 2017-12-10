@@ -2,8 +2,9 @@
 
 namespace App\Helpers;
 
-use App\Models\Author;
-use App\Models\CoAuthor; 
+use App\Models\CoAuthor;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class CoAuthorHelper
 {
@@ -33,29 +34,34 @@ class CoAuthorHelper
      *
      * @param float $authorId author id
      * @param array $columns fields to get
-     * @return \Illuminate\Support\Collection|static
+     * @return array
      */
-    public static function collaborators($authorId, $columns = ['*'])
+    public static function collaborators($authorId)
     {
-        $option = ['no_of_mutual_authors', 'no_of_joint_papers'];
-        $coAuthors = self::coAuthors($authorId, array_merge(['id', 'first_author_id', 'second_author_id'], $option));
+        if (Cache::has('co_authors_table')) {
+            $coAuthors = json_decode(json_encode(DB::select('SELECT * FROM co_authors'), TRUE));
+            Cache::put('co_authors_table', $coAuthors);
+        } else {
+            $coAuthors = Cache::get('co_authors_table');
+        }
 
-        $coAuthors = $coAuthors->toArray();
-        // dd($coAuthors);
+        $collaborators = [];
 
-        if (count($coAuthors) == 0) {
+        foreach ($coAuthors as $k => $coAuthor) {
+            if ($authorId == $coAuthor['first_author_id'] && $coAuthor['no_of_joint_papers'] > 0) {
+                $coAuthor['author_id'] = $coAuthor['first_author_id'];
+                array_push($collaborators, $coAuthor);
+            } elseif ($authorId == $coAuthor['second_author_id'] && $coAuthor['no_of_joint_papers'] > 0) {
+                $coAuthor['author_id'] = $coAuthor['second_author_id'];
+                array_push($collaborators, $coAuthor);
+            }
+        }
+        
+        if (count($collaborators) == 0) {
             return [];
         }
 
-        for ($i=0; $i < count($coAuthors); $i++) {
-            if ($coAuthors[$i]['first_author_id'] == $authorId) {
-                $coAuthors[$i]['author_id'] = $coAuthors[$i]['second_author_id'];
-            } else {
-                $coAuthors[$i]['author_id'] = $coAuthors[$i]['first_author_id'];
-            }
-        }
-
-        return $coAuthors;
+        return $collaborators;
     }
 
     /**
