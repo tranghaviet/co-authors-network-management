@@ -16,12 +16,12 @@
         <tr>
             <td>
 
-                <a href="{!! route('authors.show', [$candidate['co_author']['first_author']['id']]) !!}">
+                <a href="{!! route($routeType . 'authors.show', [$candidate['co_author']['first_author']['id']]) !!}">
                     {!! $candidate['co_author']['first_author']['given_name'].' '.$candidate['co_author']['first_author']['surname'] !!}
                 </a>
             </td>
             <td>
-                <a href="{!! route('authors.show', [$candidate['co_author']['second_author']['id']]) !!}">
+                <a href="{!! route($routeType . 'authors.show', [$candidate['co_author']['second_author']['id']]) !!}">
                     {!! $candidate['co_author']['second_author']['given_name'].' '.$candidate['co_author']['second_author']['surname'] !!}
                 </a>
             </td>

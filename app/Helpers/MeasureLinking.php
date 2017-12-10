@@ -173,9 +173,9 @@ class MeasureLinking
         $wca = $wcaResult * $allJointPapers;
 
         return [
-        'wcn' => $wcn,
-        'waa' => $waa,
-        'wca' => $wca,
+            'wcn' => $wcn,
+            'waa' => $waa,
+            'wca' => $wca,
         ];
     }
 }
