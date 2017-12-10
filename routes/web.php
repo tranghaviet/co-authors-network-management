@@ -98,30 +98,4 @@ Route::group(['prefix' => 'admin/', 'middleware' => 'auth'], function () {
     Route::post('/uploadAuthorPaper',['as'=>'upload_authors_papers','uses'=>'ImportAuthor_PaperController@upload_authors_papers']);
 });
 
-/*
- *  Write test import logic in here, for example:
- *  $papers = fgetcsv(...);
- *  handle_keywords($papers[0]['id], $papers[0]['keywords'];
- *  to show data use dump($variable) (will show data and continue run program)
- *  or dd($variable) (will show data end end the program).
- */
-Route::get('/test_import', function () {
-    dd($_SERVER['HTTP_HOST']);
-    $first_author_id = 65038471460;
-    $second_author_id = 7006831047;
-    // Your code here
-//    $a = CoAuthor::where([
-//        'first_author_id' => $first_author_id,
-//        'second_author_id' => $second_author_id,
-//    ])
-//        ->orWhere([
-//            'first_author_id' => $second_author_id,
-//            'second_author_id' => $first_author_id,
-//        ])->first();
-//    dd($a);
-    Author::orderBy('id')->limit(50)->chunk(10, function ($authors) {
-        dump($authors);
-    });
-});
-
 Route::get('/test',['as'=>'test','uses'=>'TestProcessController@testprocess']);

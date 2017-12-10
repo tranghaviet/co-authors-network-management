@@ -21,6 +21,7 @@ class CoAuthor extends Model
     public $timestamps = false;
 
     public $fillable = [
+        'id',
         'first_author_id',
         'second_author_id',
         'no_of_mutual_authors',
