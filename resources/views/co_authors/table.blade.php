@@ -9,7 +9,7 @@
             <th>Mutual authors</th>
             <th>Joint papers</th>
             @if (\App\Helpers\Utility::displayForAdmin())
-            <th colspan="3">Action</th>
+                <th colspan="3">Action</th>
             @endif
         </tr>
     </thead>
@@ -40,6 +40,7 @@
             <td>
                 {{ $coAuthor['no_of_joint_papers'] }}
             </td>
+            @if (\App\Helpers\Utility::displayForAdmin())
             <td>
                 {!! Form::open(['route' => ['coAuthors.destroy', $coAuthor['id']], 'method' => 'delete']) !!}
                 <div class='btn-group'>
@@ -49,6 +50,7 @@
                 </div>
                 {!! Form::close() !!}
             </td>
+            @endif
         </tr> 
     @endforeach
     </tbody>
