@@ -4,17 +4,14 @@ namespace App\Http\Controllers;
 
 use Flash;
 use Response;
-use App\Models\Candidate;
 use Illuminate\Http\Request;
 use App\Helpers\SearchHelper;
-use App\Http\Requests\SearchRequest;
 use App\Repositories\CandidateRepository;
 use App\Models\CoAuthor;
 use App\Models\Author;
 use App\Http\Requests\UpdateCandidateRequest;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Symfony\Component\Process\Process as Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class CandidateController extends AppBaseController
 {
@@ -185,13 +182,17 @@ class CandidateController extends AppBaseController
         try {
             $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);
         } catch (\Exception $e) {
-            \Flash::error('Index in progress.. Come back later.');
-            // \Artisan::call('author:re-index', ['--university' => true]);
-            $process = new Process('php ../artisan author:re-index --university');
-            $process->start();
-            return redirect()->back();                    
-        }  
-
+            try {
+                \Artisan::call('author:re-index', ['--university' => true]);
+                $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);
+            } catch (\Exception $e) {
+                \Log::debug('author:re-index fail', $e->getTrace());
+                \Flash::error('Index in progress...try after few seconds');
+                $process = new Process('php ../artisan author:re-index --university');
+                $process->start();
+                return redirect()->back();
+            }
+        }
 
         # Pagination
         $url = route($this->routeType.'candidates.search') . '?q=' . $query . '&page=';

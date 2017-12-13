@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use DB;
 use Flash;
 use Response;
 use Illuminate\Http\Request;
+use App\Helpers\SearchHelper;
 use App\Http\Requests\SearchRequest;
 use App\Repositories\AuthorRepository;
 use App\Http\Requests\UpdateAuthorRequest;
@@ -30,6 +30,7 @@ class AuthorController extends AppBaseController
      *
      * @param Request $request
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function index(Request $request)
     {
@@ -69,7 +70,6 @@ class AuthorController extends AppBaseController
         $subjects = implode(', ', $subjects->toArray());
 
         $papers = $author->papers()->get(['id', 'title']);
-        // TODO: find $coAuthor, $topCandidates
         $collaborators = $author->collaborators($papers, ['id', 'given_name', 'surname']);
 
         extract(get_object_vars($this));
@@ -151,16 +151,12 @@ class AuthorController extends AppBaseController
 
     public function search(SearchRequest $request)
     {
-//        return SearchHelper::searchAuthorWithUniversity($request, $this->routeType);
-
         $query = trim($request->q);
-
         $currentPage = intval($request->page);
 
         if (empty($currentPage)) {
             $currentPage = 1;
         }
-
 
         if (!is_numeric($currentPage) || $currentPage < 1) {
             Flash::error('Invalid page.');
@@ -172,31 +168,24 @@ class AuthorController extends AppBaseController
         $perPage = config('constants.DEFAULT_PAGINATION');
         $offset = $perPage * ($currentPage - 1);
 
-        if (!$request->session()->has('author_search_' . $query . '_' . strval($currentPage))) {
-            $execution = "select authors.*, universities.name , match(authors.given_name, authors.surname) against ('{$query}') as s1,
-                match(universities.name) against ('{$query}') as s2 
-                from authors inner join universities on authors.university_id = universities.id
-                where match(authors.given_name, authors.surname) against ('{$query}')
-                or match(universities.name) against ('{$query}')
-                order by (s1 + s2 ) desc limit {$perPage} offset {$offset}";
-
+        try {
+            $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);
+        } catch (\Exception $e) {
             try {
-                $authors = DB::select($execution);
+                \Artisan::call('author:re-index', ['--university' => TRUE]);
+                $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);
             } catch (\Exception $e) {
-                \Flash::error('Index in progress.. Come back later.');
-                // \Artisan::call('author:re-index', ['--university' => true]);
+                \Flash::error('Index in progress...try after few seconds');
+                \Log::debug('author:re-index fail', $e->getTrace());
+
                 $process = new Process('php ../artisan author:re-index --university');
                 $process->start();
 
-                return redirect()->back();                    
-            }    
-
-            session(['author_search_' . $query => $authors]);
-        } else {
-            $authors = $request->session()->get('author_search_' . $query);
+                return redirect()->back();
+            }
         }
 
-        $authors = json_decode(json_encode($authors), true);
+        $authors = json_decode(json_encode($authors), TRUE);
         $totalResults = count($authors);
 
         for ($i = 0; $i < $totalResults; $i++) {

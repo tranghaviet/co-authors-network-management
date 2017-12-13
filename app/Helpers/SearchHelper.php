@@ -3,8 +3,6 @@
 namespace App\Helpers;
 
 use DB;
-use Flash;
-use App\Http\Requests\SearchRequest;
 use Illuminate\Http\Request;
 
 class SearchHelper
@@ -23,9 +21,9 @@ class SearchHelper
 
             $authors = DB::select($execution);
 
-            session(['author_search_with_university_' . $query => $authors]);
+            session(['author_search_with_university_' . $query . '_' . strval($currentPage) => $authors]);
         } else {
-            $authors = $request->session()->get('author_search_with_university_' . $query);
+            $authors = $request->session()->get('author_search_with_university_' . $query . '_' . strval($currentPage));
         }
 
         return $authors;
@@ -37,14 +35,14 @@ class SearchHelper
 
         if (!$request->session()->has('author_search_' . $query . '_' . strval($currentPage))) {
             $execution = "select authors.* , match(authors.given_name, authors.surname) against ('{$query}') as s1,
-                from authors
-                where match(authors.given_name, authors.surname) against ('{$query}')
-                order by s1 desc limit {$perPage} offset {$offset}";
+                            from authors
+                            where match(authors.given_name, authors.surname) against ('{$query}')
+                            order by s1 desc limit {$perPage} offset {$offset}";
             $authors = DB::select($execution);
 
-            session(['author_search_' . $query => $authors]);
+            session(['author_search_' . $query . '_' . strval($currentPage) => $authors]);
         } else {
-            $authors = $request->session()->get('author_search_' . $query);
+            $authors = $request->session()->get('author_search_' . $query . '_' . strval($currentPage));
         }
 
         return $authors;

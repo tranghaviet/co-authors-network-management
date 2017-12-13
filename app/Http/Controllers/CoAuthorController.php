@@ -182,16 +182,11 @@ class CoAuthorController extends AppBaseController
             $jointAuthors = 0;
         }
 
-        // dump($jointAuthors);
-        // dd($jointPapers);
-
-
         $currentPage = intval($request->page);
 
         if (empty($currentPage)) {
             $currentPage = 1;
         }
-
 
         if (!is_numeric($currentPage) || $currentPage < 1) {
             Flash::error('Invalid page.');
@@ -206,11 +201,16 @@ class CoAuthorController extends AppBaseController
         try {
             $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);
         } catch (\Exception $e) {
-            \Flash::error('Index in progress.. Come back later.');
-            // \Artisan::call('author:re-index', ['--university' => true]);
-            $process = new Process('php ../artisan author:re-index --university');
-            $process->start();
-            return redirect()->back();                    
+            try {
+                \Artisan::call('author:re-index', ['--university' => true]);
+                $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);
+            } catch (\Exception $e) {
+                \Log::debug('author:re-index fail', $e->getTrace());
+                \Flash::error('Index in progress...try after few seconds');
+                $process = new Process('php ../artisan author:re-index --university');
+                $process->start();
+                return redirect()->back();
+            }
         }  
 
         # Pagination
@@ -256,7 +256,6 @@ class CoAuthorController extends AppBaseController
             $secondAuthors[$secondAuthors[$i]['id']] = $secondAuthors[$i];
             unset($secondAuthors[$i]);
         }
-        
 
         # Find coauthors by first author id
         $coAuthors2 = CoAuthor::whereIn('second_author_id', $authorIds)
@@ -271,7 +270,6 @@ class CoAuthorController extends AppBaseController
             unset($firstAuthors[$i]);
         }
 
-        
         # Combine co authors
         for ($i = 0; $i < count($coAuthors1); $i++) {
             $coAuthors1[$i]['first_author'] = $authors[$coAuthors1[$i]['first_author_id']];

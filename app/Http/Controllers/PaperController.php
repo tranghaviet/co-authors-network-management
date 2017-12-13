@@ -167,7 +167,7 @@ class PaperController extends AppBaseController
         $perPage = config('constants.DEFAULT_PAGINATION');
         $offset = $perPage * ($currentPage - 1);
 
-        if (!$request->session()->has('paper_search_' . $query . '_' . strval($currentPage))) {
+        if (! $request->session()->has('paper_search_' . $query . '_' . strval($currentPage))) {
             $execution = "select *, match(papers.title) against ('{$query}') as s1
                           from papers
                           where 
@@ -179,19 +179,22 @@ class PaperController extends AppBaseController
             try {
                 $papers = DB::select($execution);
             } catch (\Exception $e) {
-                \Flash::warning('Index in progress.. Come back later.');
-                // \Artisan::call('paper:re-index');
-                $process = new Process('php ../artisan paper:re-index');
+                try {
+                    \Artisan::call('paper:re-index');
+                    $papers = DB::select($execution);
+                } catch (\Exception $e) {
+                    \Log::debug('paper:re-index fail', $e->getTrace());
+                    \Flash::warning('Index in progress...try after few seconds');
+                    $process = new Process('php ../artisan paper:re-index');
+                    $process->start();
 
-                $process->start();
+                    return redirect()->back();
+                }
+            }
 
-                return redirect()->back();                    
-            }                      
-            
-
-            session(['author_search_' . $query => $papers]);
+            session(['author_search_' . $query . '_' . strval($currentPage) => $papers]);
         } else {
-            $papers = $request->session()->get('paper_search_' . $query);
+            $papers = $request->session()->get('paper_search_' . $query . '_' . strval($currentPage));
         }
 
         $totalResults = count($papers);
