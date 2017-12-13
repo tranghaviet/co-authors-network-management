@@ -44,7 +44,7 @@ class ImportAuthor_PaperController extends Controller
 			$importJobs = DB::select("SELECT * FROM importjobs");
 
 			if (count($importJobs) > 0) {
-				Flash::warning('Import in progress, come back later');
+				Flash::warning('Có một chức năng nhập dữ liệu đang được thực hiện, bạn vui lòng quay lại sau ít phút');
 				return redirect()->back();
 			} else {
 				if(!empty($data) && $n)
