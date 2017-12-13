@@ -110,19 +110,7 @@ class ImportAuthors extends Command
         } catch (Exception $e) {
             Log::info($e->getMessage());
         }
-
-        // Remove job info from databases
-        try {
-            \DB::statement("DELETE FROM importjobs WHERE pid = ".getmypid()." AND type='author'");
-            $c = count(\DB::select("SELECT * FROM importjobs WHERE type='author'"));
-            if ($c == 0) {
-                // All job done
-                Cache::pull('author_lines');
-            }
-        } catch (Exception $e) {
-            Log::info($e->getMessage());
-        }
-
+        
         // Artisan::call('author:re-index', ['--university' => true]);
         $process = new Process('php ../artisan author:re-index --university');
         $process->start();  

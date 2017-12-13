@@ -23,7 +23,7 @@ class SyncController extends AppBaseController
         $importJobs = DB::select("SELECT * FROM importjobs");
 
         if (count($importJobs) > 0) {
-            Flash::warning('Some import in progress, come back later');
+            Flash::warning('Có một chức năng nhập dữ liệu đang được thực hiện, bạn vui lòng quay lại sau ít phút');
             return redirect()->back();
         } else {
             // Artisan::call('co-author:sync', ['--begin' => true]);
@@ -42,7 +42,7 @@ class SyncController extends AppBaseController
         $importJobs = DB::select("SELECT * FROM importjobs");
 
         if (count($importJobs) > 0) {
-            Flash::warning('Some import in progress, come back later');
+            Flash::warning('Có một chức năng nhập dữ liệu đang được thực hiện, bạn vui lòng quay lại sau ít phút');
             return redirect()->back();
         } else {
             $process = new Process('php ../artisan candidate:sync');

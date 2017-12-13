@@ -41,20 +41,32 @@ class CreateFullTextIndexOnAuthor extends Command
 
 
         try {
+
             //        $query1 = 'SET GLOBAL innodb_optimize_fulltext_only=1;';
-            $query2 = 'DROP INDEX IF EXISTS `authors_ft_name` ON authors;';
+            $query2 = 'DROP INDEX  `authors_ft_name` ON authors;';
     //        $query3 = 'DROP INDEX IF EXISTS `universities_ft_name` ON universities;';
-            $query3 = 'DROP INDEX IF EXISTS `universities_ft_name` ON universities;';
+            $query3 = 'DROP INDEX  `universities_ft_name` ON universities;';
+
             $query4 = 'CREATE FULLTEXT INDEX authors_ft_name ON `authors` (`surname`, `given_name`);';
     //        $query5 = 'CREATE FULLTEXT INDEX universities_ft_name ON `universities` (`name`);';
             $query5 = 'ALTER TABLE `universities` ADD FULLTEXT `universities_ft_name` (`name`);';
 
-    //        DB::statement($query1);
-            DB::statement($query2);
+            try {
+                DB::statement($query2);
+            } catch (\Exception $e) {
+                \Log::info($e->getMessage());
+            }
             DB::statement($query4);
 
+
+    //        DB::statement($query1);
+            
             if ($this->option('university')) {
-                DB::statement($query3);
+                try {
+                    DB::statement($query3);
+                } catch (\Exception $e) {
+                    \Log::info($e->getMessage());
+                }
                 DB::statement($query5);
             }
 
@@ -66,7 +78,7 @@ class CreateFullTextIndexOnAuthor extends Command
 
         // Remove job info from databases
         try {
-            \DB::statement("DELETE FROM importjobs WHERE pid = ".getmypid()." AND type='paper_index'");
+            \DB::statement("DELETE FROM importjobs WHERE pid = ".getmypid()." AND type='author_index'");
         } catch (Exception $e) {
             Log::info($e->getMessage());
         }
