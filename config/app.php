@@ -103,9 +103,9 @@ return [
     |
     */
 
-    'key' => env('APP_KEY'),
+    // 'key' => env('APP_KEY'),
 
-    'cipher' => 'AES-256-CBC',
+    // 'cipher' => 'AES-256-CBC',
 
     /*
     |--------------------------------------------------------------------------
@@ -251,5 +251,9 @@ return [
         'ImportAuthor' => App\Helpers\Envato\ImportAuthorData::class,
         'ImportAuthor_Paper' => App\Helpers\Envato\ImportAuthor_PaperData::class,
     ],
+
+    // 'httponly' => true,
+
+    'secure' => false,
 
 ];
