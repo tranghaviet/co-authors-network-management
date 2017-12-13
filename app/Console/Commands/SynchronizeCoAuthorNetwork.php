@@ -33,9 +33,22 @@ class SynchronizeCoAuthorNetwork extends Command
      */
     public function handle()
     {
-//        dd();
-        Log::info('Sync coauthor process '.getmypid());
+        // $authors = &TemporaryVariables::$authors;
+        // $papers = &TemporaryVariables::$papers;
+        // $records = &TemporaryVariables::$records;
+        // $candidates = &TemporaryVariables::$candidates;
+        // $status = &TemporaryVariables::$status;
 
+        // if (! Cache::has('authors')) {
+        //    dump('cache has gone.');
+        //    Cache::put('authors', 232, 56);
+        // } else {
+        //    $this->ask('cache ok.');
+        // }
+
+        // dd();
+
+        \Log::info('Sync coauthor process '.getmypid());
 
         // Add job info to databases
         try {
@@ -45,19 +58,15 @@ class SynchronizeCoAuthorNetwork extends Command
         }
 
         try {
-            if ($this->option('begin')) {
-                Cache::flush();
-                $this->info('cache cleared');
-                Cache::put('status', [], 1440);
-            }
 
             $offset = $this->option('offset');
 
-            $status = Cache::get('status');
-            $status[$offset] = false;
-            Cache::put('status', $status, 1440);
+            // $status = Cache::get('status');
+            // $status[$offset] = false;
+            // Cache::put('status', $status, 1440);
 
-    //        if (!isset(TemporaryVariables::$authors)) {
+            // if (!isset(TemporaryVariables::$authors)) {
+
             if (! Cache::has('authors')) {
                 $authorPapers = DB::select('SELECT * FROM `author_paper`');
 
@@ -83,14 +92,14 @@ class SynchronizeCoAuthorNetwork extends Command
                 Cache::put('authors', $authors, 1440);
                 Cache::put('papers', $papers, 1440);
                 Cache::put('records', [], 1440);
-    //            Cache::put('candidates', [], 1440);
+                // Cache::put('candidates', [], 1440);
 
                 $this->info(count($authors));
                 $this->info(count($papers));
 
                 unset($authors, $papers);
 
-    //            $this->confirm('Continue?');
+                // $this->confirm('Continue?');
 
                 DB::statement('SET FOREIGN_KEY_CHECKS=0;');
                 DB::statement('TRUNCATE TABLE `co_authors`');
@@ -103,16 +112,20 @@ class SynchronizeCoAuthorNetwork extends Command
             $authors = Cache::get('authors');
             $papers = Cache::get('papers');
             $records = Cache::get('records');
-    //        $candidates = Cache::get('candidates');
-    //        Cache::forget('authors');
-    //        Cache::forget('papers');
-    //        Cache::forget('records');
+
+            // $candidates = Cache::get('candidates');
+            // Cache::forget('authors');
+            // Cache::forget('papers');
+            // Cache::forget('records');
 
             $start = microtime(true);
 
-    //        foreach (array_slice(array_keys($authors), $offset, 105558 - $offset > 5000 ? 5000 : 100558 - $offset) as $authorId) {
-            foreach (array_slice(array_keys($authors), $offset, 10000) as $authorId) {
-    //        foreach (array_keys($authors) as $authorId) {
+            // foreach (array_slice(array_keys($authors), $offset, 105558 - $offset > 5000 ? 5000 : 100558 - $offset) as $authorId) {
+
+            // foreach (array_slice(array_keys($authors), $offset, 10000) as $authorId) {
+            
+            foreach (array_keys($authors) as $authorId) {
+            
                 $paperIds = $authors[$authorId]; // papers that author wrote
 
                 if (count($paperIds) == 0) {
@@ -155,8 +168,10 @@ class SynchronizeCoAuthorNetwork extends Command
 
             // Cache::put('authors', $authors, 1440);
             // Cache::put('papers', $papers, 1440);
+
             Cache::put('records', $records, 1440);
-    //        Cache::put('candidates', [], 1440);
+          
+            // Cache::put('candidates', [], 1440);
 
             unset($authors, $papers, $records);
 
