@@ -5,14 +5,12 @@ namespace App\Http\Controllers;
 use Flash;
 use Response;
 use Illuminate\Http\Request;
-use App\Helpers\SearchHelper;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\SearchRequest;
 use App\Repositories\PaperRepository;
 use App\Http\Requests\UpdatePaperRequest;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Symfony\Component\Process\Process as Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 
 
 class PaperController extends AppBaseController
@@ -193,15 +191,22 @@ class PaperController extends AppBaseController
         }
 
         # Pagination
+        $totalResults = count($papers);
         $url = route($this->routeType.'papers.search') . '?q=' . $query . '&page=';
-        $previousPage = $url . 1;
-        $nextPage = $url . ($currentPage + 1);
 
         if ($currentPage > 1) {
             $previousPage = $url . ($currentPage - 1);
+        } else {
+            $previousPage = $url . 1;
         }
 
-        if (count($papers) == 0) {
+        if ($totalResults > $perPage) {
+            $nextPage = $url . ($currentPage + 1);
+        } else {
+            $nextPage = $url . $currentPage;
+        }
+
+        if ($totalResults == 0) {
             return view('papers.index')->with([
                 'papers' => $papers,
                 'routeType' => $this->routeType,
