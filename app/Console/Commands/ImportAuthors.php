@@ -46,7 +46,6 @@ class ImportAuthors extends Command
             Log::info($e->getMessage());
         }
 
-        
         $author_lines = array_slice(Cache::get('author_lines'), $offset, $limit);
         
         foreach ($author_lines as $key => $value)
@@ -111,7 +110,7 @@ class ImportAuthors extends Command
         } catch (Exception $e) {
             Log::info($e->getMessage());
         }
-
+        
         // Artisan::call('author:re-index', ['--university' => true]);
         $process = new Process('php ../artisan author:re-index --university');
         $process->start();  

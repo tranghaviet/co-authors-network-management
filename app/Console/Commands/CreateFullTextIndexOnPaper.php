@@ -40,10 +40,15 @@ class CreateFullTextIndexOnPaper extends Command
 
         try {
             $query2 = 'SET GLOBAL innodb_optimize_fulltext_only=1;';
-            $query1 = 'ALTER TABLE `papers` DROP INDEX IF EXISTS `paper_search`;';
+            $query1 = 'ALTER TABLE `papers` DROP INDEX  `paper_search`;';
             $query3 = 'ALTER TABLE `papers` ADD FULLTEXT `paper_search` (`title`);';
 
-            DB::statement($query1);
+            try {
+                DB::statement($query1);
+            } catch (\Exception $e) {
+                \Log::info('Drop index error');
+            }
+            
             DB::statement($query2);
             DB::statement($query3);
             $this->info('Success');

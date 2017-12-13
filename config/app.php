@@ -175,13 +175,9 @@ return [
         Laracasts\Flash\FlashServiceProvider::class,
         \InfyOm\Generator\InfyOmGeneratorServiceProvider::class,
         \InfyOm\AdminLTETemplates\AdminLTETemplatesServiceProvider::class,
-        // Laravel scout
-        Laravel\Scout\ScoutServiceProvider::class,
-        // TNT search driver
-        TeamTNT\Scout\TNTSearchScoutServiceProvider::class,
         Barryvdh\Cors\ServiceProvider::class,
-        
-
+        // Maatwebsite\Excel\ExcelServiceProvider::class,
+        App\Providers\EnvatoServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -191,9 +187,6 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        // Maatwebsite\Excel\ExcelServiceProvider::class,
-        App\Providers\EnvatoServiceProvider::class,
-
     ],
 
     /*

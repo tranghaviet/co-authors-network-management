@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class SynchronizeCoAuthorNetwork extends Command
 {
-
     /**
      * The name and signature of the console command.
      *
@@ -33,35 +32,21 @@ class SynchronizeCoAuthorNetwork extends Command
      */
     public function handle()
     {
-        \Log::info('Sync coauthor process '.getmypid());
+        \Log::info('Sync coauthor process ' . getmypid());
 
         // Add job info to databases
         try {
-            DB::statement('INSERT INTO importjobs VALUES ('.getmypid().", 'sync_coauthor')");
+            DB::statement('INSERT INTO importjobs VALUES (' . getmypid() . ", 'sync_coauthor')");
         } catch (Exception $e) {
             Log::info($e->getMessage());
         }
 
         try {
-            //if ($this->option('begin')) {
-            //    Cache::flush();
-            //    $this->info('cache cleared');
-            //    Cache::put('status', [], 1440);
-            //}
-            //
-            //$offset = $this->option('offset');
-            //$status = Cache::get('status');
-            //$status[$offset] = false;
-            //Cache::put('status', $status, 1440);
-
-            //if (! Cache::has('authors')) {
-
             $authorPapers = DB::select('SELECT * FROM `author_paper`');
 
             $authors = [];
             $papers = [];
             $records = [];
-
 
             foreach ($authorPapers as $authorPaper) {
                 if (isset($authors[$authorPaper->author_id])) {
@@ -77,36 +62,14 @@ class SynchronizeCoAuthorNetwork extends Command
                 }
             }
 
-                //unset($authorPapers);
-
-                //Cache::put('authors', $authors, 1440);
-                //Cache::put('papers', $papers, 1440);
-                //Cache::put('records', [], 1440);
-
-                //$this->info(count($authors));
-                //$this->info(count($papers));
-
-                //unset($authors, $papers);
-
             DB::statement('SET FOREIGN_KEY_CHECKS=0;');
             DB::statement('TRUNCATE TABLE `co_authors`');
             DB::statement('TRUNCATE TABLE `candidates`');
             DB::statement('SET GLOBAL max_allowed_packet=524288000;');
 
             $this->info('Disable foreign key check and truncate co_authors table success');
-            //}
 
-            //$authors = Cache::get('authors');
-            //$papers = Cache::get('papers');
-            //$records = Cache::get('records');
-
-            // Cache::forget('authors');
-            // Cache::forget('papers');
-            // Cache::forget('records');
-
-            $start = microtime(true);
-
-            //foreach (array_slice(array_keys($authors), $offset, 10000) as $authorId) {
+            $start = microtime(TRUE);
 
             foreach (array_keys($authors) as $authorId) {
                 $paperIds = $authors[$authorId]; // papers that author wrote
@@ -123,15 +86,14 @@ class SynchronizeCoAuthorNetwork extends Command
                 $collaborators = array_unique($collaborators);
                 unset($collaborators[0]);
 
-                // dump($authorId);
-                // dump($collaborators);
-
                 foreach ($collaborators as $collaboratorId) {
                     if ($collaboratorId != $authorId) {
                         if (isset($records[$authorId . ',' . $collaboratorId])) {
                             continue;
-                        } else if (isset($records[$collaboratorId . ',' . $authorId])) {
-                            continue;
+                        } else {
+                            if (isset($records[$collaboratorId . ',' . $authorId])) {
+                                continue;
+                            }
                         }
 
                         $collaboratorPaperIds = $authors[$collaboratorId];
@@ -145,31 +107,17 @@ class SynchronizeCoAuthorNetwork extends Command
 
                         $noOfMutualAuthors = count(array_intersect($collaborators, $collaboratorCollaborators));
 
-                        $records[$authorId . ',' . $collaboratorId] = [$noOfJointPapers, $noOfMutualAuthors];
+                        $records[$authorId . ',' . $collaboratorId] = [
+                            $noOfJointPapers,
+                            $noOfMutualAuthors,
+                        ];
                     }
                 }
             }
 
-            // Cache::put('authors', $authors, 1440);
-            // Cache::put('papers', $papers, 1440);
+            $this->info('Process time: ' . (string) (microtime(TRUE) - $start));
 
-            // Cache::put('records', $records, 1440);
-            // Cache::put('candidates', [], 1440);
-
-            //unset($authors, $papers, $records);
-
-            //$status[$offset] = true;
-            //Cache::put('status', $status, 1440);
-
-            $this->info('Process time: ' . (string) (microtime(true) - $start));
-
-            // check if all processes completed
-            // if (!in_array(false, array_values(TemporaryVariables::$status))) {
-            // if (! in_array(false, array_values(Cache::get('status')))) {
-            
-            $insertTime = microtime(true);
-
-            //$records = Cache::get('records');
+            $insertTime = microtime(TRUE);
 
             if (count($records) > 0) {
                 // save records to DB
@@ -177,20 +125,19 @@ class SynchronizeCoAuthorNetwork extends Command
                     return '(\'' . $k . '\',' . $k . ',' . implode(',', $records[$k]) . ')';
                 }, array_keys($records)));
 
-
                 DB::statement('DELETE FROM `co_authors` where 1;');
 
                 $result = 'INSERT INTO `co_authors` (`id`, `first_author_id`, `second_author_id`, `no_of_mutual_authors`, `no_of_joint_papers`) VALUES ' . $result . ';';
 
                 DB::statement($result);
-                    
+
                 // unset all variables in Tempo
                 // DB::statement('SET GLOBAL max_allowed_packet=1048576;');\
 
-                $this->info('Insert time: ' . (string) (microtime(true) - $insertTime));
-                Log::info('Insert time: ' . (string) (microtime(true) - $insertTime));
+                $this->info('Insert time: ' . (string) (microtime(TRUE) - $insertTime));
+                Log::info('Insert time: ' . (string) (microtime(TRUE) - $insertTime));
             }
-            
+
             Log::info('Sync coauthor done');
         } catch (\Exception $e) {
             Log::debug($e->getMessage());
@@ -198,7 +145,7 @@ class SynchronizeCoAuthorNetwork extends Command
 
         // Remove job info from databases
         try {
-            DB::statement("DELETE FROM importjobs WHERE pid = ".getmypid()." AND type='sync_coauthor'");
+            DB::statement("DELETE FROM importjobs WHERE pid = " . getmypid() . " AND type='sync_coauthor'");
         } catch (Exception $e) {
             Log::info($e->getMessage());
         }
