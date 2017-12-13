@@ -2,8 +2,6 @@
 
 ## Hướng dẫn cài đặt
 Hướng dẫn này dành cho máy tính chạy hệ điều hành Ubuntu (hoặc các nền tảng Linux khác tương tự Ubuntu).
-Nếu bạn muốn cài đặt trên windows thì có thể tham khảo các hướng dẫn trên mạng để đáp
-ứng các yêu cầu sau.
 
 Bạn có thể làm theo hướng dẫn cài đặt tại: https://www.digitalocean.com/community/tutorials/how-to-install-linux-apache-mysql-php-lamp-stack-on-ubuntu-16-04
 ### Yêu cầu
@@ -11,11 +9,10 @@ Bạn có thể làm theo hướng dẫn cài đặt tại: https://www.digitalo
 - MariaDB phiên bản lớn hơn 10.1.0 (kiểm tra bằng câu lệnh `mysql --version`)
 - Composer phiên bản lớn hơn 1.3.0 (kiểm tra bằng câu lệnh `composer --version`)
 
-Bạn có thể dùng XAMPP/LAMP để cài cả PHP, MariaDB, Apache. Nếu không dùng XAMPP/LAMP mà cài
-riêng lẻ thì có thể chạy các câu lệnh sau:
- 
-Cài PHP:
- 
+Bạn có thể dùng LAMP để cài cả PHP, MariaDB, Apache. Nếu không dùng LAMP mà cài
+riêng lẻ thì có thể chạy các câu lệnh sau để cài:
+
+Cài PHP: 
 ```
 sudo apt-get install software-properties-common
 sudo add-apt-repository ppa:ondrej/php
@@ -39,22 +36,13 @@ sudo systemctl start mysql
 # Login with root account (default if you did not setup password when install)
 mysql -u root -p
 ```
+Cài Composer
 ```
-Install composer
-$ cd
-$ php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-$ php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
-$ php composer-setup.php
-$ php -r "unlink('composer-setup.php');"
+curl -sS http://getcomposer.org/installer | php -- --filename=composer
+chmod a+x composer
+sudo mv composer /usr/local/bin/composer
 # Check
-composer -v
-```
-Trên Windows, để sử dụng lệnh php, mysql, composer, bạn cần phải thêm
-đường dẫn sau vào môi trường hệ thống:
-```
-C:\xampp\php # cho máy dùng xampp
-C:\ProgramData\ComposerSetup\bin
-C:\xampp\mysql\bin # cho máy dùng xampp
+composer -V
 ```
 Ghi chú: Cài đặt `hirak/prestissimo` để tiến hành cài đặt project nhanh hơn:
 ```
