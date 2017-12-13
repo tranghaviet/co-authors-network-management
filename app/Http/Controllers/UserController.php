@@ -44,7 +44,8 @@ class UserController extends AppBaseController
     {
         $genders = ['male' => 'Male',
             'female' => 'Female',
-            'other' => 'Other',];
+            'other' => 'Other', ];
+
         return view('users.create', compact('genders'));
     }
 
@@ -107,7 +108,7 @@ class UserController extends AppBaseController
 
         $genders = ['male' => 'Male',
             'female' => 'Female',
-            'other' => 'Other',];
+            'other' => 'Other', ];
 
         return view('users.edit', compact('user', 'genders'));
     }

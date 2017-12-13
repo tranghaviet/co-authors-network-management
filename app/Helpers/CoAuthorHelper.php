@@ -3,12 +3,9 @@
 namespace App\Helpers;
 
 use App\Models\CoAuthor;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cache;
 
 class CoAuthorHelper
 {
-
     /**
      * @param $first_author_id
      * @param $second_author_id
@@ -50,6 +47,7 @@ class CoAuthorHelper
                 array_push($collaborators, $coAuthor);
             }
         }
+
         return $collaborators;
     }
 

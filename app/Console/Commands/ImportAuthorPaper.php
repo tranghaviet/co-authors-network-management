@@ -41,7 +41,7 @@ class ImportAuthorPaper extends Command
      */
     public function handle()
     {
-        $UNKNOWN='UNKNOWN';
+        $UNKNOWN = 'UNKNOWN';
         $offset = $this->option('offset');
         $limit = $this->option('limit');
 
@@ -51,17 +51,14 @@ class ImportAuthorPaper extends Command
         } catch (Exception $e) {
             Log::info($e->getMessage());
         }
-        
+
         // Import
         $author_paper_lines = array_slice(Cache::get('author_paper_lines'), $offset, $limit);
 
         foreach ($author_paper_lines as $key => $value) {
-
             try {
-                if(!empty($value['authorid']))
-                {
-                    if(ImportAuthor_Paper::check_paper_exists($value['paperid']) && ImportAuthor_Paper::check_author_exitst($value['authorid']))
-                    {
+                if (! empty($value['authorid'])) {
+                    if (ImportAuthor_Paper::check_paper_exists($value['paperid']) && ImportAuthor_Paper::check_author_exitst($value['authorid'])) {
                         ImportAuthor_Paper::insert_link($value['authorid'], $value['paperid']);
                     }
                 }
@@ -70,11 +67,9 @@ class ImportAuthorPaper extends Command
             }
         }
 
-        
-
         // Remove job info from databases
         try {
-            \DB::statement("DELETE FROM importjobs WHERE pid = ".getmypid()." AND type='author_paper'");
+            \DB::statement('DELETE FROM importjobs WHERE pid = '.getmypid()." AND type='author_paper'");
             $c = count(\DB::select("SELECT * FROM importjobs WHERE type='author_paper'"));
             if ($c == 0) {
                 // All job done
@@ -86,7 +81,7 @@ class ImportAuthorPaper extends Command
 
         // Remove job info from databases
         try {
-            \DB::statement("DELETE FROM importjobs WHERE pid = ".getmypid()." AND type='author_paper'");
+            \DB::statement('DELETE FROM importjobs WHERE pid = '.getmypid()." AND type='author_paper'");
             $c = count(\DB::select("SELECT * FROM importjobs WHERE type='author_paper'"));
             if ($c == 0) {
                 // All job done

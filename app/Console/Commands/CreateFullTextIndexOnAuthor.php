@@ -39,16 +39,15 @@ class CreateFullTextIndexOnAuthor extends Command
             Log::info($e->getMessage());
         }
 
-
         try {
 
             //        $query1 = 'SET GLOBAL innodb_optimize_fulltext_only=1;';
             $query2 = 'DROP INDEX  `authors_ft_name` ON authors;';
-    //        $query3 = 'DROP INDEX IF EXISTS `universities_ft_name` ON universities;';
+            //        $query3 = 'DROP INDEX IF EXISTS `universities_ft_name` ON universities;';
             $query3 = 'DROP INDEX  `universities_ft_name` ON universities;';
 
             $query4 = 'CREATE FULLTEXT INDEX authors_ft_name ON `authors` (`surname`, `given_name`);';
-    //        $query5 = 'CREATE FULLTEXT INDEX universities_ft_name ON `universities` (`name`);';
+            //        $query5 = 'CREATE FULLTEXT INDEX universities_ft_name ON `universities` (`name`);';
             $query5 = 'ALTER TABLE `universities` ADD FULLTEXT `universities_ft_name` (`name`);';
 
             try {
@@ -58,9 +57,8 @@ class CreateFullTextIndexOnAuthor extends Command
             }
             DB::statement($query4);
 
+            //        DB::statement($query1);
 
-    //        DB::statement($query1);
-            
             if ($this->option('university')) {
                 try {
                     DB::statement($query3);
@@ -75,10 +73,9 @@ class CreateFullTextIndexOnAuthor extends Command
             Log::info($e->getMessage());
         }
 
-
         // Remove job info from databases
         try {
-            \DB::statement("DELETE FROM importjobs WHERE pid = ".getmypid()." AND type='author_index'");
+            \DB::statement('DELETE FROM importjobs WHERE pid = '.getmypid()." AND type='author_index'");
         } catch (Exception $e) {
             Log::info($e->getMessage());
         }

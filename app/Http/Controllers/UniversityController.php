@@ -20,7 +20,7 @@ class UniversityController extends AppBaseController
     public function __construct(UniversityRepository $universityRepo, Request $request)
     {
         $this->universityRepository = $universityRepo;
-        $this->routeType = $request->is('admin/*') ? '':'user.';
+        $this->routeType = $request->is('admin/*') ? '' : 'user.';
     }
 
     /**

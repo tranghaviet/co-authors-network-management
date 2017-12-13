@@ -48,7 +48,7 @@ class CreateFullTextIndexOnPaper extends Command
             } catch (\Exception $e) {
                 \Log::info('Drop index error');
             }
-            
+
             DB::statement($query2);
             DB::statement($query3);
             $this->info('Success');
@@ -56,10 +56,9 @@ class CreateFullTextIndexOnPaper extends Command
             Log::info($e->getMessage());
         }
 
-        
         // Remove job info from databases
         try {
-            \DB::statement("DELETE FROM importjobs WHERE pid = ".getmypid()." AND type='paper_index'");
+            \DB::statement('DELETE FROM importjobs WHERE pid = '.getmypid()." AND type='paper_index'");
         } catch (Exception $e) {
             Log::info($e->getMessage());
         }

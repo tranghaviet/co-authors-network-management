@@ -96,20 +96,20 @@ return [
      */
 
     'collectors' => [
-        'phpinfo'         => FALSE,  // Php version
+        'phpinfo'         => false,  // Php version
         'messages'        => true,  // Messages
         'time'            => true,  // Time Datalogger
         'memory'          => true,  // Memory usage
         'exceptions'      => true,  // Exception displayer
-        'log'             => FALSE,  // Logs from Monolog (merged in messages if enabled)
+        'log'             => false,  // Logs from Monolog (merged in messages if enabled)
         'db'              => true,  // Show database (PDO) queries and bindings
         'views'           => true,  // Views with their data
         'route'           => true,  // Current route information
-        'auth'            => FALSE, // Display Laravel authentication status
-        'gate'            => FALSE, // Display Laravel Gate checks
+        'auth'            => false, // Display Laravel authentication status
+        'gate'            => false, // Display Laravel Gate checks
         'session'         => true,  // Display session data
-        'symfony_request' => FALSE,  // Only one can be enabled..
-        'mail'            => FALSE,  // Catch mail messages
+        'symfony_request' => false,  // Only one can be enabled..
+        'mail'            => false,  // Catch mail messages
         'laravel'         => false, // Laravel version and environment
         'events'          => false, // All events fired
         'default_request' => false, // Regular or special Symfony request logger
@@ -129,7 +129,7 @@ return [
 
     'options' => [
         'auth' => [
-            'show_name' => FALSE,   // Also show the users name/email in the debugbar
+            'show_name' => false,   // Also show the users name/email in the debugbar
         ],
         'db' => [
             'with_params'       => true,   // Render SQL with the parameters substituted

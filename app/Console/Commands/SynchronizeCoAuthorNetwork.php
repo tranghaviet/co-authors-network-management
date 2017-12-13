@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Log;
-use Cache;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -69,7 +68,7 @@ class SynchronizeCoAuthorNetwork extends Command
 
             $this->info('Disable foreign key check and truncate co_authors table success');
 
-            $start = microtime(TRUE);
+            $start = microtime(true);
 
             foreach (array_keys($authors) as $authorId) {
                 $paperIds = $authors[$authorId]; // papers that author wrote
@@ -115,9 +114,9 @@ class SynchronizeCoAuthorNetwork extends Command
                 }
             }
 
-            $this->info('Process time: ' . (string) (microtime(TRUE) - $start));
+            $this->info('Process time: ' . (string) (microtime(true) - $start));
 
-            $insertTime = microtime(TRUE);
+            $insertTime = microtime(true);
 
             if (count($records) > 0) {
                 // save records to DB
@@ -134,8 +133,8 @@ class SynchronizeCoAuthorNetwork extends Command
                 // unset all variables in Tempo
                 // DB::statement('SET GLOBAL max_allowed_packet=1048576;');\
 
-                $this->info('Insert time: ' . (string) (microtime(TRUE) - $insertTime));
-                Log::info('Insert time: ' . (string) (microtime(TRUE) - $insertTime));
+                $this->info('Insert time: ' . (string) (microtime(true) - $insertTime));
+                Log::info('Insert time: ' . (string) (microtime(true) - $insertTime));
             }
 
             Log::info('Sync coauthor done');
@@ -145,7 +144,7 @@ class SynchronizeCoAuthorNetwork extends Command
 
         // Remove job info from databases
         try {
-            DB::statement("DELETE FROM importjobs WHERE pid = " . getmypid() . " AND type='sync_coauthor'");
+            DB::statement('DELETE FROM importjobs WHERE pid = ' . getmypid() . " AND type='sync_coauthor'");
         } catch (Exception $e) {
             Log::info($e->getMessage());
         }

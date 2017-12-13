@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\DB;
 
 class SynchronizeCandidate extends Command
 {
-
     /**
      * The name and signature of the console command.
      *
@@ -83,7 +82,7 @@ class SynchronizeCandidate extends Command
                     $candidates = [];
 
                     foreach ($coAuthorsPart as $coAuthor) {
-                        $firstCoAuthors = CoAuthorHelper::collaborators($coAuthor['first_author_id'], 
+                        $firstCoAuthors = CoAuthorHelper::collaborators($coAuthor['first_author_id'],
                                 $coAuthorsMap);
                         $secondCoAuthors = CoAuthorHelper::collaborators($coAuthor['second_author_id'],
                                 $coAuthorsMap);
@@ -102,11 +101,10 @@ class SynchronizeCandidate extends Command
                 });
             } catch (Exception $e) {
                 Log::debug($e->getMessage());
-
             } finally {
                 try {
                     // Remove job info from databases
-                    \DB::statement("DELETE FROM importjobs WHERE pid = ".getmypid()." AND type='sync_candidate'");
+                    \DB::statement('DELETE FROM importjobs WHERE pid = '.getmypid()." AND type='sync_candidate'");
                 } catch (Exception $e) {
                     \Log::debug($e->getMessage());
                 }
@@ -118,11 +116,8 @@ class SynchronizeCandidate extends Command
                 // Remove from cache
                 Cache::pull('co_authors_map');
             }
-
         } catch (Exception $e) {
             \Log::debug($e->getMessage());
         }
-
-        
     }
 }

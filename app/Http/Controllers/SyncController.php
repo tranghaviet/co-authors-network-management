@@ -6,7 +6,6 @@ use Flash;
 use DB;
 use Artisan;
 use Symfony\Component\Process\Process as Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class SyncController extends AppBaseController
 {
@@ -18,12 +17,13 @@ class SyncController extends AppBaseController
     public function coAuthors()
     {
 
-        # Check if any importing job exists
+        // Check if any importing job exists
         DB::statement('SET GLOBAL max_allowed_packet=500000000');
-        $importJobs = DB::select("SELECT * FROM importjobs");
+        $importJobs = DB::select('SELECT * FROM importjobs');
 
         if (count($importJobs) > 0) {
             Flash::warning('Có một chức năng nhập dữ liệu đang được thực hiện, bạn vui lòng quay lại sau ít phút');
+
             return redirect()->back();
         } else {
             // Artisan::call('co-author:sync', ['--begin' => true]);
@@ -33,16 +33,17 @@ class SyncController extends AppBaseController
 
             return redirect()->back();
         }
-        
     }
 
-    public function candidates() {
-        # Check if any importing job exists
+    public function candidates()
+    {
+        // Check if any importing job exists
         DB::statement('SET GLOBAL max_allowed_packet=500000000');
-        $importJobs = DB::select("SELECT * FROM importjobs");
+        $importJobs = DB::select('SELECT * FROM importjobs');
 
         if (count($importJobs) > 0) {
             Flash::warning('Có một chức năng nhập dữ liệu đang được thực hiện, bạn vui lòng quay lại sau ít phút');
+
             return redirect()->back();
         } else {
             $process = new Process('php ../artisan candidate:sync');
