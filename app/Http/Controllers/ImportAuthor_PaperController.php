@@ -40,6 +40,7 @@ class ImportAuthor_PaperController extends Controller
 			$n = count($data);
 
 			# Check if any importing job exists
+			DB::statement('SET GLOBAL max_allowed_packet=500000000');
 			$importJobs = DB::select("SELECT * FROM importjobs");
 
 			if (count($importJobs) > 0) {

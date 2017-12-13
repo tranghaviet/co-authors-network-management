@@ -6,8 +6,8 @@
             <h1 class="col-sm-1 pull-left">Papers</h1>
             {!! Form::open(['route' => [$routeType . 'papers.search'], 'method' => 'get']) !!}
             <div class="form-group col-sm-8">
-                {!! Form::text('q', null, ['class' => 'form-control',
-                'placeholder' => 'Type ID, Title, ISSN or Keywords']) !!}
+                {!! Form::text('q', null, ['class' => 'form-control', 'required' => true,
+                'placeholder' => 'Type ID, Title, ISSN', 'required' => true]) !!}
             </div>
             <div class="form-group col-sm-2">
                 {!! Form::submit('Search', ['class' => 'btn btn-primary btn-block']) !!}

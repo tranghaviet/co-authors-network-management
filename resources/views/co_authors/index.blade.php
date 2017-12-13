@@ -7,8 +7,8 @@
             {!! Form::open(['route' => [$routeType . 'coAuthors.search'], 'method' =>
             'get']) !!}
             <div class="form-group col-sm-3">
-                {!! Form::text('q', null, ['class' => 'form-control',
-                'placeholder' => 'Type Author name']) !!}
+                {!! Form::text('q', null, ['class' => 'form-control', 'required' => true,
+                'placeholder' => 'Type Author name or university']) !!}
             </div>
             <div class="form-group col-sm-3">
                 {!! Form::number('no_of_mutual_authors', null, ['class' => 'form-control', 'min' => 0,

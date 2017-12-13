@@ -74,48 +74,48 @@ class ImportAuthorData
         if (!$university_id) {
 
             if (!Author::where(['id' => $id])->exists())
-                {
-                    $author= new Author();
-                    $author->id=$id;
-                    $author->given_name=$given_name;
-                    $author->surname=$surname;
-                    $author->email=$email;
-                    $author->url=$url;
-                    $author->university_id=NULL;
-                    $author->save();
-                }
-            } else {
-                if (!Author::where(['id' => $id])->exists())
-                    {
-                        $author= new Author();
-                        $author->id=$id;
-                        $author->given_name=$given_name;
-                        $author->surname=$surname;
-                        $author->email=$email;
-                        $author->url=$url;
-                        $author->university_id=$university_id;
-                        $author->save();
-                    }
-                }
-            }
-
-            public static function handle_country($country, $UNKNOWN)
             {
-             preg_match('/^\s*$/', $country, $matches);
-
-             if (count($matches) > 0) {
-                $country = $UNKNOWN;
+                $author= new Author();
+                $author->id=$id;
+                $author->given_name=$given_name;
+                $author->surname=$surname;
+                $author->email=$email;
+                $author->url=$url;
+                $author->university_id=NULL;
+                $author->save();
             }
-            if (!Country::where(['name' => $country])->exists()) {
-            // If not exist, create one
-               $new_country = new Country;
-               $new_country->name=$country;
-               $new_country->save();
-           }else
-           {
-            $new_country = Country::where('name', '=', $country)->first();
+        } else {
+            if (!Author::where(['id' => $id])->exists())
+            {
+                $author= new Author();
+                $author->id=$id;
+                $author->given_name=$given_name;
+                $author->surname=$surname;
+                $author->email=$email;
+                $author->url=$url;
+                $author->university_id=$university_id;
+                $author->save();
+            }
         }
-        return $new_country->id;
+    }
+
+    public static function handle_country($country, $UNKNOWN)
+    {
+       preg_match('/^\s*$/', $country, $matches);
+
+       if (count($matches) > 0) {
+        $country = $UNKNOWN;
+    }
+    if (!Country::where(['name' => $country])->exists()) {
+                // If not exist, create one
+         $new_country = new Country;
+         $new_country->name=$country;
+         $new_country->save();
+     }else
+     {
+        $new_country = Country::where('name', '=', $country)->first();
+    }
+    return $new_country->id;
 
     }
 
@@ -125,83 +125,83 @@ class ImportAuthorData
         if (count($matches) > 0) {
             $city = $UNKNOWN;
         }
-        
+
 
         if(!City::where([['name','=',$city],['country_id','=',$country_id]])->exists())
-            {
-
-                $new_city=new City;
-                $new_city->name=$city;
-                $new_city->country_id=$country_id;
-                $new_city->save();
-            }
-            else
-            {
-                $new_city=City::where([['name','=',$city],['country_id','=',$country_id]])->first();
-            }
-
-            return $new_city->id;
-        }
-
-        public static function handle_university($university, $city_id, $UNKNOWN)
         {
 
-            preg_match('/^\s*$/', $university, $matches);
+            $new_city=new City;
+            $new_city->name=$city;
+            $new_city->country_id=$country_id;
+            $new_city->save();
+        }
+        else
+        {
+            $new_city=City::where([['name','=',$city],['country_id','=',$country_id]])->first();
+        }
 
-            if (count($matches) > 0) 
+        return $new_city->id;
+    }
+
+    public static function handle_university($university, $city_id, $UNKNOWN)
+    {
+
+        preg_match('/^\s*$/', $university, $matches);
+
+        if (count($matches) > 0) 
+        {
+            $university = $UNKNOWN;
+        }
+
+        if(!University::where([['name','=',$university],['city_id','=',$city_id]])->exists())
+        {
+            $new_university=new University;
+            $new_university->name=$university;
+            $new_university->city_id=$city_id;
+            $new_university->save();
+        }
+        else
+        {
+            $new_university=University::where([['name','=',$university],['city_id','=',$city_id]])->first();
+        }
+
+        return $new_university->id;
+    }
+
+    public static function handle_subjects($author_id, $subjects)
+    {
+                // $array_subject = preg_split('/,\s*/', trim($subjects), -1, PREG_SPLIT_NO_EMPTY);
+        $array_subject = preg_split('/,\s*/', strtolower($subjects), -1, PREG_SPLIT_NO_EMPTY);
+
+        foreach ($array_subject as $subject)
+        {
+            preg_match('/^\s*$/', $subject, $matches);
+            if (count($matches) > 0)
             {
-                $university = $UNKNOWN;
+                continue;
             }
 
-            if(!University::where([['name','=',$university],['city_id','=',$city_id]])->exists())
-                {
-                    $new_university=new University;
-                    $new_university->name=$university;
-                    $new_university->city_id=$city_id;
-                    $new_university->save();
-                }
-                else
-                {
-                    $new_university=University::where([['name','=',$university],['city_id','=',$city_id]])->first();
-                }
-
-                return $new_university->id;
-            }
-
-            public static function handle_subjects($author_id, $subjects)
+            if (!Subject::where(['name' => $subject])->exists())
             {
-            // $array_subject = preg_split('/,\s*/', trim($subjects), -1, PREG_SPLIT_NO_EMPTY);
-                $array_subject = preg_split('/,\s*/', strtolower($subjects), -1, PREG_SPLIT_NO_EMPTY);
-
-                foreach ($array_subject as $subject)
-                {
-                    preg_match('/^\s*$/', $subject, $matches);
-                    if (count($matches) > 0)
-                    {
-                        continue;
-                    }
-
-                    if (!Subject::where(['name' => $subject])->exists())
-                       {
-                           $new_subject = new Subject;
-                           $new_subject->name=$subject;
-                           $new_subject->save();
-                       }
-                       else
-                       {
-                        $new_subject = Subject::where('name', '=', $subject)->first();
-                    }
-                    if(!AuthorSubject::where([['author_id','=',$author_id],['subject_id','=',$new_subject->id]])->exists())
-                        {
-                         $new_AuthorSubject=new AuthorSubject;
-                         $new_AuthorSubject->author_id=$author_id;
-                         $new_AuthorSubject->subject_id=$new_subject->id;
-                         $new_AuthorSubject->save();
-                     }
-                    // $author_subject=Subject::find($new_subject->id);
-                    // $author_subject->authors()->attach($author_id);
-                 }
-
-             }
-
+             $new_subject = new Subject;
+             $new_subject->name=$subject;
+             $new_subject->save();
          }
+         else
+         {
+            $new_subject = Subject::where('name', '=', $subject)->first();
+        }
+        if(!AuthorSubject::where([['author_id','=',$author_id],['subject_id','=',$new_subject->id]])->exists())
+        {
+           $new_AuthorSubject=new AuthorSubject;
+           $new_AuthorSubject->author_id=$author_id;
+           $new_AuthorSubject->subject_id=$new_subject->id;
+           $new_AuthorSubject->save();
+       }
+                        // $author_subject=Subject::find($new_subject->id);
+                        // $author_subject->authors()->attach($author_id);
+    }
+
+    }
+
+}

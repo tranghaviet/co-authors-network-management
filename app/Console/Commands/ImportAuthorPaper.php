@@ -55,9 +55,9 @@ class ImportAuthorPaper extends Command
         // Import
         $author_paper_lines = array_slice(Cache::get('author_paper_lines'), $offset, $limit);
 
-        try {
-            foreach ($author_paper_lines as $key => $value) {
+        foreach ($author_paper_lines as $key => $value) {
 
+            try {
                 if(!empty($value['authorid']))
                 {
                     if(ImportAuthor_Paper::check_paper_exists($value['paperid']) && ImportAuthor_Paper::check_author_exitst($value['authorid']))
@@ -65,10 +65,23 @@ class ImportAuthorPaper extends Command
                         ImportAuthor_Paper::insert_link($value['authorid'], $value['paperid']);
                     }
                 }
-                
+            } catch (Exception $e) {
+                Log::info('Author paper-----------'.$e->getMessage());
+            }
+        }
+
+        
+
+        // Remove job info from databases
+        try {
+            \DB::statement("DELETE FROM importjobs WHERE pid = ".getmypid()." AND type='author_paper'");
+            $c = count(\DB::select("SELECT * FROM importjobs WHERE type='author_paper'"));
+            if ($c == 0) {
+                // All job done
+                Cache::pull('author_paper_lines');
             }
         } catch (Exception $e) {
-            Log::info('Author paper-----------'.$e->getMessage());
+            Log::info($e->getMessage());
         }
 
         // Remove job info from databases

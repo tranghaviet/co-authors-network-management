@@ -54,12 +54,12 @@
                             <tr>
                                 <td>
 
-                                    <a href="{!! route('authors.show', [$candidate['first_author']['id']]) !!}">
+                                    <a href="{!! route($routeType . 'authors.show', [$candidate['first_author']['id']]) !!}">
                                         {!! $candidate['first_author']['given_name'].' '.$candidate['first_author']['surname'] !!}
                                     </a>
                                 </td>
                                 <td>
-                                    <a href="{!! route('authors.show', [$candidate['second_author']['id']]) !!}">
+                                    <a href="{!! route($routeType . 'authors.show', [$candidate['second_author']['id']]) !!}">
                                         {!! $candidate['second_author']['given_name'].' '.$candidate['second_author']['surname'] !!}
                                     </a>
                                 </td>

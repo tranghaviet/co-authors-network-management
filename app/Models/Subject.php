@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Eloquent as Model;
-use Watson\Rememberable\Rememberable;
 
 /**
  * Class Subject.
@@ -14,15 +13,6 @@ use Watson\Rememberable\Rememberable;
  */
 class Subject extends Model
 {
-    use Rememberable;
-
-    /**
-     * Time for cache a query.
-     *
-     * @var int
-     */
-    protected $rememberFor = 30;
-
     public $table = 'subjects';
 
     public $timestamps = false;
