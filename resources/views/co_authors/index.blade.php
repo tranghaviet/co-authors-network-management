@@ -11,11 +11,11 @@
                 'placeholder' => 'Type Author name or university']) !!}
             </div>
             <div class="form-group col-sm-3">
-                {!! Form::number('no_of_mutual_authors', null, ['class' => 'form-control', 'min' => 0,
+                {!! Form::number('no_of_mutual_authors', null, ['class' => 'form-control', 'min' => 1,
                 'placeholder' => 'No. of Mutual authors']) !!}
             </div>
             <div class="form-group col-sm-3">
-                {!! Form::number('no_of_joint_papers', null, ['class' => 'form-control', 'min' => 0,
+                {!! Form::number('no_of_joint_papers', null, ['class' => 'form-control', 'min' => 1,
                 'placeholder' => 'No. of Joint Papers']) !!}
             </div>
             <div class="form-group col-sm-1">

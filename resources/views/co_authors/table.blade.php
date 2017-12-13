@@ -1,7 +1,6 @@
 <table class="table table-responsive" id="coAuthors-table">
     <thead>
         <tr>
-            <th>Id</th>
             <th>First Author</th>
             <th>University</th>
             <th>Second Author</th>
@@ -15,9 +14,7 @@
     </thead>
     <tbody>
     @foreach($coAuthors as $coAuthor)
-        <!-- <tr>{!!count($coAuthor)!!}</tr> -->
         <tr>
-            <td>{!! $coAuthor['id'] !!}</td>
             <td>
                 <a href="{!! route($routeType . 'authors.show', [$coAuthor['first_author_id']]) !!}">
                     {!! $coAuthor['first_author']['given_name'].' '.$coAuthor['first_author']['surname'] !!}

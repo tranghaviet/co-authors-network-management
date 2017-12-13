@@ -10,15 +10,15 @@
                 'placeholder' => 'Type Author name']) !!}
             </div>
             <div class="form-group col-sm-2">
-                {!! Form::number('score_1', null, ['class' => 'form-control', 'min' => 0,
+                {!! Form::number('score_1', null, ['class' => 'form-control', 'min' => 0, 'step'=>'any',
                 'placeholder' => 'Score 1']) !!}
             </div>
             <div class="form-group col-sm-2">
-                {!! Form::number('score_2', null, ['class' => 'form-control', 'min' => 0,
+                {!! Form::number('score_2', null, ['class' => 'form-control', 'min' => 0, 'step'=>'any',
                 'placeholder' => 'Score 2']) !!}
             </div>
             <div class="form-group col-sm-2">
-                {!! Form::number('score_3', null, ['class' => 'form-control', 'min' => 0,
+                {!! Form::number('score_3', null, ['class' => 'form-control', 'min' => 0, 'step'=>'any',
                 'placeholder' => 'Score 3']) !!}
             </div>
             <div class="form-group col-sm-2">

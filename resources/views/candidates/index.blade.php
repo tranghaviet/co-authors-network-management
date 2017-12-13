@@ -5,21 +5,25 @@
         <section class="content-header row">
             <h1 class="col-sm-2 pull-left">Candidates</h1>
             {!! Form::open(['route' => [$routeType . 'candidates.search'], 'method' => 'get']) !!}
-            <div class="form-group col-sm-2">
-                {!! Form::text('q', null, ['class' => 'form-control',
-                'placeholder' => 'Type Author name']) !!}
+            <div class="form-group col-sm-3">
+                {!! Form::text('q', null, ['class' => 'form-control', 'required' => true,
+                'placeholder' => 'Type Author name or University']) !!}
             </div>
-            <div class="form-group col-sm-2">
-                {!! Form::number('score_1', null, ['class' => 'form-control', 'min' => 0,
-                'placeholder' => 'Score 1']) !!}
-            </div>
-            <div class="form-group col-sm-2">
-                {!! Form::number('score_2', null, ['class' => 'form-control', 'min' => 0,
-                'placeholder' => 'Score 2']) !!}
-            </div>
-            <div class="form-group col-sm-2">
-                {!! Form::number('score_3', null, ['class' => 'form-control', 'min' => 0,
-                'placeholder' => 'Score 3']) !!}
+            <div class="col-sm-5">
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        {!! Form::number('score_1', null, ['class' => 'form-control', 'min' => 0, 'step'=>'any',
+                        'placeholder' => 'Score 1']) !!}
+                    </div>
+                    <div class="form-group col-sm-4">
+                        {!! Form::number('score_2', null, ['class' => 'form-control', 'min' => 0, 'step'=>'any',
+                        'placeholder' => 'Score 2']) !!}
+                    </div>
+                    <div class="form-group col-sm-4">
+                        {!! Form::number('score_3', null, ['class' => 'form-control', 'min' => 0, 'step'=>'any',
+                        'placeholder' => 'Score 3']) !!}
+                    </div>
+                </div>
             </div>
             <div class="form-group col-sm-2">
                 {!! Form::submit('Search', ['class' => 'btn btn-primary btn-block']) !!}
