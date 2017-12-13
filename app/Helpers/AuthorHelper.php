@@ -7,7 +7,6 @@ use App\Models\CoAuthor;
 
 class AuthorHelper
 {
-
     /**
      * @param int $authorId Id of the author
      * @return \Illuminate\Database\Eloquent\Builder|static

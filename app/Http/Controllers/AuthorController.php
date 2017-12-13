@@ -40,7 +40,6 @@ class AuthorController extends AppBaseController
             ->paginate(config('constants.DEFAULT_PAGINATION'));
         $paginator = $authors->render();
 
-
         $authors = $authors->toArray()['data'];
         extract(get_object_vars($this));
 
@@ -121,8 +120,8 @@ class AuthorController extends AppBaseController
         } catch (\Exception $e) {
             Flash::error('Some fileds not valid');
         }
-        return redirect(route('authors.index'));
 
+        return redirect(route('authors.index'));
     }
 
     /**
@@ -158,8 +157,9 @@ class AuthorController extends AppBaseController
             $currentPage = 1;
         }
 
-        if (!is_numeric($currentPage) || $currentPage < 1) {
+        if (! is_numeric($currentPage) || $currentPage < 1) {
             Flash::error('Invalid page.');
+
             return view('authors.index')->with([
                 'routeType' => $this->routeType,
             ]);
@@ -172,7 +172,7 @@ class AuthorController extends AppBaseController
             $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);
         } catch (\Exception $e) {
             try {
-                \Artisan::call('author:re-index', ['--university' => TRUE]);
+                \Artisan::call('author:re-index', ['--university' => true]);
                 $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);
             } catch (\Exception $e) {
                 \Flash::error('Index in progress...try after few seconds');
@@ -185,7 +185,7 @@ class AuthorController extends AppBaseController
             }
         }
 
-        $authors = json_decode(json_encode($authors), TRUE);
+        $authors = json_decode(json_encode($authors), true);
         $totalResults = count($authors);
 
         for ($i = 0; $i < $totalResults; $i++) {
@@ -193,13 +193,13 @@ class AuthorController extends AppBaseController
             $authors[$i]['university']['name'] = $authors[$i]['name'];
         }
 
-        # Pagination
+        // Pagination
         $data = [
             'authors' => $authors,
             'routeType' => $this->routeType,
         ];
 
-        # If empty result
+        // If empty result
         if ($totalResults == 0) {
             return view('authors.index')->with($data);
         }
@@ -211,6 +211,7 @@ class AuthorController extends AppBaseController
 
             if ($totalResults == 15) {
                 $nextPage = $url . ($currentPage + 1);
+
                 return view('authors.index')->with(array_merge($data, compact('previousPage', 'nextPage')));
             }
 

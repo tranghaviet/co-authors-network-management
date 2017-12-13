@@ -6,15 +6,12 @@ use Flash;
 use Response;
 use App\Models\CoAuthor;
 use App\Models\Author;
-use DB;
 use Illuminate\Http\Request;
 use App\Helpers\SearchHelper;
-use App\Http\Requests\SearchRequest;
 use App\Repositories\CoAuthorRepository;
 use App\Http\Requests\UpdateCoAuthorRequest;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Symfony\Component\Process\Process as Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class CoAuthorController extends AppBaseController
 {
@@ -36,7 +33,6 @@ class CoAuthorController extends AppBaseController
      */
     public function index(Request $request)
     {
-
         $this->coAuthorRepository->pushCriteria(new RequestCriteria($request));
 
         $coAuthors = $this->coAuthorRepository
@@ -171,14 +167,14 @@ class CoAuthorController extends AppBaseController
     public function search(Request $request)
     {
         $query = trim($request->q);
-        
+
         $jointPapers = intval($request->no_of_joint_papers);
-        if (!$jointPapers || is_nan($jointPapers)) {
+        if (! $jointPapers || is_nan($jointPapers)) {
             $jointPapers = 0;
         }
 
         $jointAuthors = intval($request->no_of_mutual_authors);
-        if (!$jointAuthors || is_nan($jointAuthors)) {
+        if (! $jointAuthors || is_nan($jointAuthors)) {
             $jointAuthors = 0;
         }
 
@@ -188,8 +184,9 @@ class CoAuthorController extends AppBaseController
             $currentPage = 1;
         }
 
-        if (!is_numeric($currentPage) || $currentPage < 1) {
+        if (! is_numeric($currentPage) || $currentPage < 1) {
             Flash::error('Invalid page.');
+
             return view('co_authors.index')->with([
                 'routeType' => $this->routeType,
             ]);
@@ -209,11 +206,12 @@ class CoAuthorController extends AppBaseController
                 \Flash::error('Index in progress...try after few seconds');
                 $process = new Process('php ../artisan author:re-index --university');
                 $process->start();
+
                 return redirect()->back();
             }
-        }  
+        }
 
-        # Pagination
+        // Pagination
         $url = route($this->routeType.'coAuthors.search') . '?q=' . $query . '&page=';
         $previousPage = $url . 1;
         $nextPage = $url . ($currentPage + 1);
@@ -222,7 +220,7 @@ class CoAuthorController extends AppBaseController
             $previousPage = $url . ($currentPage - 1);
         }
 
-        # If empty result
+        // If empty result
         if (count($authors) == 0) {
             return view('co_authors.index')->with([
                 'routeType' => $this->routeType,
@@ -231,7 +229,7 @@ class CoAuthorController extends AppBaseController
             ]);
         }
 
-        # View
+        // View
         $authors = json_decode(json_encode($authors), true);
 
         for ($i = 0; $i < count($authors); $i++) {
@@ -242,35 +240,39 @@ class CoAuthorController extends AppBaseController
             unset($authors[$i]);
         }
 
-        # Find authors by query
+        // Find authors by query
         $authorIds = array_keys($authors);
 
-        # Find coauthors by first author id
+        // Find coauthors by first author id
         $coAuthors1 = CoAuthor::whereIn('first_author_id', $authorIds)
             ->where('no_of_joint_papers', '>=', $jointPapers)
             ->where('no_of_mutual_authors', '>=', $jointAuthors)
             ->get()->toArray();
-        $secondAuthorIds = array_map(function($x) { return intval($x['second_author_id']); }, $coAuthors1);
+        $secondAuthorIds = array_map(function ($x) {
+            return intval($x['second_author_id']);
+        }, $coAuthors1);
         $secondAuthors = Author::whereIn('id', $secondAuthorIds)->with('university')->get()->toArray();
         for ($i = 0; $i < count($secondAuthors); $i++) {
             $secondAuthors[$secondAuthors[$i]['id']] = $secondAuthors[$i];
             unset($secondAuthors[$i]);
         }
 
-        # Find coauthors by first author id
+        // Find coauthors by first author id
         $coAuthors2 = CoAuthor::whereIn('second_author_id', $authorIds)
             ->where('no_of_joint_papers', '>=', $jointPapers)
             ->where('no_of_mutual_authors', '>=', $jointAuthors)
             ->get()->toArray();
         // dump($coAuthors2);
-        $firstAuthorIds = array_map(function($x) { return intval($x['first_author_id']); }, $coAuthors2);
+        $firstAuthorIds = array_map(function ($x) {
+            return intval($x['first_author_id']);
+        }, $coAuthors2);
         $firstAuthors = Author::whereIn('id', $firstAuthorIds)->with('university')->get()->toArray();
         for ($i = 0; $i < count($firstAuthors); $i++) {
             $firstAuthors[$firstAuthors[$i]['id']] = $firstAuthors[$i];
             unset($firstAuthors[$i]);
         }
 
-        # Combine co authors
+        // Combine co authors
         for ($i = 0; $i < count($coAuthors1); $i++) {
             $coAuthors1[$i]['first_author'] = $authors[$coAuthors1[$i]['first_author_id']];
             $coAuthors1[$i]['second_author'] = $secondAuthors[$secondAuthorIds[$i]];
@@ -283,7 +285,7 @@ class CoAuthorController extends AppBaseController
 
         $coAuthors = array_merge($coAuthors1, $coAuthors2);
 
-        # Return view
+        // Return view
         return view('co_authors.index')->with([
             'coAuthors' => $coAuthors,
             'routeType' => $this->routeType,

@@ -153,12 +153,13 @@ class CandidateController extends AppBaseController
         $score3 = intval($request->score_3);
         $query = trim($request->q);
 
-        if (is_null($score1) || is_nan($score1))  {
+        if (is_null($score1) || is_nan($score1)) {
             $score1 = 0;
         }
-        if (is_null($score2) || is_nan($score2))  {
+        if (is_null($score2) || is_nan($score2)) {
             $score2 = 0;
-        }if (is_null($score3) || is_nan($score3))  {
+        }
+        if (is_null($score3) || is_nan($score3)) {
             $score3 = 0;
         }
 
@@ -168,9 +169,9 @@ class CandidateController extends AppBaseController
             $currentPage = 1;
         }
 
-
-        if (!is_numeric($currentPage) || $currentPage < 1) {
+        if (! is_numeric($currentPage) || $currentPage < 1) {
             Flash::error('Invalid page.');
+
             return view('candidates.index')->with([
                 'routeType' => $this->routeType,
             ]);
@@ -190,11 +191,12 @@ class CandidateController extends AppBaseController
                 \Flash::error('Index in progress...try after few seconds');
                 $process = new Process('php ../artisan author:re-index --university');
                 $process->start();
+
                 return redirect()->back();
             }
         }
 
-        # Pagination
+        // Pagination
         $url = route($this->routeType.'candidates.search') . '?q=' . $query . '&page=';
         $previousPage = $url . 1;
         $nextPage = $url . ($currentPage + 1);
@@ -203,7 +205,7 @@ class CandidateController extends AppBaseController
             $previousPage = $url . ($currentPage - 1);
         }
 
-        # If empty result
+        // If empty result
         if (count($authors) == 0) {
             return view('candidates.index')->with([
                 'routeType' => $this->routeType,
@@ -212,7 +214,7 @@ class CandidateController extends AppBaseController
             ]);
         }
 
-        # View
+        // View
         $authors = json_decode(json_encode($authors), true);
 
         for ($i = 0; $i < count($authors); $i++) {
@@ -223,33 +225,35 @@ class CandidateController extends AppBaseController
             unset($authors[$i]);
         }
 
-        # Find authors by query
+        // Find authors by query
         $authorIds = array_keys($authors);
 
-        # Find coauthors by first author id
+        // Find coauthors by first author id
         $coAuthors1 = CoAuthor::whereIn('first_author_id', $authorIds)->with('candidate')
             ->get()->toArray();
-        $secondAuthorIds = array_map(function($x) { return intval($x['second_author_id']); }, $coAuthors1);
+        $secondAuthorIds = array_map(function ($x) {
+            return intval($x['second_author_id']);
+        }, $coAuthors1);
         $secondAuthors = Author::whereIn('id', $secondAuthorIds)->with('university')->get()->toArray();
         for ($i = 0; $i < count($secondAuthors); $i++) {
             $secondAuthors[$secondAuthors[$i]['id']] = $secondAuthors[$i];
             unset($secondAuthors[$i]);
         }
-        
 
-        # Find coauthors by first author id
+        // Find coauthors by first author id
         $coAuthors2 = CoAuthor::whereIn('second_author_id', $authorIds)->with('candidate')
             ->get()->toArray();
         // dump($coAuthors2);
-        $firstAuthorIds = array_map(function($x) { return intval($x['first_author_id']); }, $coAuthors2);
+        $firstAuthorIds = array_map(function ($x) {
+            return intval($x['first_author_id']);
+        }, $coAuthors2);
         $firstAuthors = Author::whereIn('id', $firstAuthorIds)->with('university')->get()->toArray();
         for ($i = 0; $i < count($firstAuthors); $i++) {
             $firstAuthors[$firstAuthors[$i]['id']] = $firstAuthors[$i];
             unset($firstAuthors[$i]);
         }
 
-        
-        # Combine co authors
+        // Combine co authors
         for ($i = 0; $i < count($coAuthors1); $i++) {
             $coAuthors1[$i]['first_author'] = $authors[$coAuthors1[$i]['first_author_id']];
             $coAuthors1[$i]['second_author'] = $secondAuthors[$secondAuthorIds[$i]];
@@ -261,34 +265,35 @@ class CandidateController extends AppBaseController
         }
 
         $coAuthors = array_merge($coAuthors1, $coAuthors2);
-        $coAuthors = array_map(function($x) { 
-            $x['score_1'] = $x['candidate']['score_1']; 
-            $x['score_2'] = $x['candidate']['score_2']; 
-            $x['score_3'] = $x['candidate']['score_3']; 
+        $coAuthors = array_map(function ($x) {
+            $x['score_1'] = $x['candidate']['score_1'];
+            $x['score_2'] = $x['candidate']['score_2'];
+            $x['score_3'] = $x['candidate']['score_3'];
             unset($x['candidate']);
+
             return $x;
         }, $coAuthors);
 
         $coAuthors = array_slice($coAuthors, 0, 30);
 
-        usort($coAuthors, function($a, $b) {
+        usort($coAuthors, function ($a, $b) {
             return $b['score_1'] - $a['score_1'];
         });
 
         $result = [];
         $count = 0;
         foreach ($coAuthors as $key => $value) {
-            if ($value['score_1'] >= $score1 && $value['score_2'] >= $score2 && 
+            if ($value['score_1'] >= $score1 && $value['score_2'] >= $score2 &&
                         $value['score_3'] >= $score3) {
                 array_push($result, $value);
-                $count ++;
+                $count++;
                 if ($count > 15) {
                     break;
                 }
             }
         }
 
-        # Return view
+        // Return view
         return view('candidates.search')->with([
             'candidates' => $result,
             'routeType' => $this->routeType,

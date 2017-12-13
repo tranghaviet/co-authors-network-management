@@ -12,7 +12,6 @@ use App\Http\Requests\UpdatePaperRequest;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Symfony\Component\Process\Process as Process;
 
-
 class PaperController extends AppBaseController
 {
     /** @var  PaperRepository */
@@ -22,7 +21,7 @@ class PaperController extends AppBaseController
 
     public function __construct(PaperRepository $paperRepo, Request $request)
     {
-        $this->routeType = $request->is('admin/*') ? '':'user.';
+        $this->routeType = $request->is('admin/*') ? '' : 'user.';
 
         $this->paperRepository = $paperRepo;
     }
@@ -145,9 +144,10 @@ class PaperController extends AppBaseController
 //        return SearchHelper::searchPaper($request, $this->routeType);
 
         $query = trim($request->q);
-        
-        if (!strlen($query)) {
+
+        if (! strlen($query)) {
             \Flash::warning('Please enter search keyword.');
+
             return redirect()->back();
         }
 
@@ -157,8 +157,9 @@ class PaperController extends AppBaseController
             $currentPage = 1;
         }
 
-        if (!is_numeric($currentPage) || $currentPage < 1) {
+        if (! is_numeric($currentPage) || $currentPage < 1) {
             Flash::error('Invalid page.');
+
             return view('papers.index')->with([
                 'routeType' => $this->routeType,
             ]);
@@ -200,13 +201,13 @@ class PaperController extends AppBaseController
         $totalResults = count($papers);
         $papers = json_decode(json_encode($papers), true);
 
-        # Pagination
+        // Pagination
         $data = [
             'papers' => $papers,
             'routeType' => $this->routeType,
         ];
 
-        # If empty result
+        // If empty result
         if ($totalResults == 0) {
             return view('papers.index')->with($data);
         }
@@ -218,6 +219,7 @@ class PaperController extends AppBaseController
 
             if ($totalResults == 15) {
                 $nextPage = $url . ($currentPage + 1);
+
                 return view('papers.index')->with(array_merge($data, compact('previousPage', 'nextPage')));
             }
 

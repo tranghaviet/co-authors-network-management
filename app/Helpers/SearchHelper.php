@@ -11,7 +11,7 @@ class SearchHelper
     {
         $query = trim($request->q);
 
-        if (!$request->session()->has('author_search_with_university_' . $query . '_' . strval($currentPage))) {
+        if (! $request->session()->has('author_search_with_university_' . $query . '_' . strval($currentPage))) {
             $execution = "select authors.*, universities.name , match(authors.given_name, authors.surname) against ('{$query}') as s1,
                 match(universities.name) against ('{$query}') as s2 
                 from authors inner join universities on authors.university_id = universities.id
@@ -33,7 +33,7 @@ class SearchHelper
     {
         $query = trim($request->q);
 
-        if (!$request->session()->has('author_search_' . $query . '_' . strval($currentPage))) {
+        if (! $request->session()->has('author_search_' . $query . '_' . strval($currentPage))) {
             $execution = "select authors.* , match(authors.given_name, authors.surname) against ('{$query}') as s1,
                             from authors
                             where match(authors.given_name, authors.surname) against ('{$query}')

@@ -135,6 +135,5 @@ class AuthorPaperController extends AppBaseController
 
     public function search(SearchRequest $request)
     {
-
     }
 }

@@ -8,7 +8,6 @@ use Exception;
 use Log;
 use Cache;
 use Symfony\Component\Process\Process as Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 use Artisan;
 
 class ImportPapers extends Command
@@ -44,7 +43,7 @@ class ImportPapers extends Command
      */
     public function handle()
     {
-        $UNKNOWN='UNKNOWN';
+        $UNKNOWN = 'UNKNOWN';
         $offset = $this->option('offset');
         $limit = $this->option('limit');
 
@@ -59,19 +58,17 @@ class ImportPapers extends Command
 
         try {
             foreach ($paper_lines as $key => $value) {
-
-                if(!empty($value['id'])){
+                if (! empty($value['id'])) {
 
                     // Import papers
-                    ImportPaper::insert_papers($value['id'], $value['title'], $value['coverdate'] ,
+                    ImportPaper::insert_papers($value['id'], $value['title'], $value['coverdate'],
                         $value['abstract'], $value['url'], $value['issn']);
-                    
-                    // Tách nhóm từ khóa thành nhiều từ khóa 
+
+                    // Tách nhóm từ khóa thành nhiều từ khóa
                     $keywords = preg_split('/,\s*/', trim($value['keywords']), -1, PREG_SPLIT_NO_EMPTY);
-                    
+
                     // với mỗi từ khóa thêm vào cùng với bài báo: keyword-paper
-                    foreach ($keywords as $keyword)
-                    {
+                    foreach ($keywords as $keyword) {
                         ImportPaper::handle_keywords($value['id'], $keyword);
                     }
                 }
@@ -82,19 +79,18 @@ class ImportPapers extends Command
 
         // Remove job info from databases
         try {
-            \DB::statement("DELETE FROM importjobs WHERE pid = ".getmypid()." AND type='paper'");
+            \DB::statement('DELETE FROM importjobs WHERE pid = '.getmypid()." AND type='paper'");
             $c = count(\DB::select("SELECT * FROM importjobs WHERE type='paper'"));
             if ($c == 0) {
                 // All job done
                 Cache::pull('paper_lines');
             }
-            
+
             // Artisan::call('paper:re-index');
             $process = new Process('php ../artisan paper:re-index');
             $process->start();
         } catch (Exception $e) {
             Log::info($e->getMessage());
         }
-        
     }
 }

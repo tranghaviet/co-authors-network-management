@@ -8,7 +8,6 @@ use ImportAuthor;
 use Artisan;
 use Log;
 use Symfony\Component\Process\Process as Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class ImportAuthors extends Command
 {
@@ -26,7 +25,6 @@ class ImportAuthors extends Command
      */
     protected $description = 'Command description';
 
-
     /**
      * Execute the console command.
      *
@@ -34,8 +32,7 @@ class ImportAuthors extends Command
      */
     public function handle()
     {
-
-        $UNKNOWN='UNKNOWN';
+        $UNKNOWN = 'UNKNOWN';
         $offset = $this->option('offset');
         $limit = $this->option('limit');
 
@@ -47,42 +44,39 @@ class ImportAuthors extends Command
         }
 
         $author_lines = array_slice(Cache::get('author_lines'), $offset, $limit);
-        
-        foreach ($author_lines as $key => $value)
-        {
+
+        foreach ($author_lines as $key => $value) {
             try {
-                if(!empty($value['id']))
-                {
+                if (! empty($value['id'])) {
                     $affiliation = preg_split('/,\s*/', $value['affiliation']);
                     $n = count($affiliation);
                     $university = array_key_exists(0, $affiliation) ? $affiliation[0] : $UNKNOWN;
                     if (array_key_exists($n - 1, $affiliation) && $n - 1 > 0) {
-                       $country = $affiliation[$n - 1];
+                        $country = $affiliation[$n - 1];
                     } else {
-                       $country = $UNKNOWN;
+                        $country = $UNKNOWN;
                     }
                     if (array_key_exists($n - 2, $affiliation) && $n - 2 > 0) {
-                       $city = $affiliation[$n - 2];
-
+                        $city = $affiliation[$n - 2];
                     } else {
-                       $city = $UNKNOWN;
+                        $city = $UNKNOWN;
                     }
 
                     $country_id = ImportAuthor::handle_country($country, $UNKNOWN);
 
-                    if (!$country_id) {
-                       continue;
+                    if (! $country_id) {
+                        continue;
                     }
                     // City
                     $city_id = ImportAuthor::handle_city($city, $country_id, $UNKNOWN);
 
-                    if (!$city_id) {
-                       continue;
+                    if (! $city_id) {
+                        continue;
                     }
                     // University
-                    $university_id =ImportAuthor:: handle_university($university, $city_id, $UNKNOWN);
-                    if (!$university_id) {
-                       continue;
+                    $university_id = ImportAuthor:: handle_university($university, $city_id, $UNKNOWN);
+                    if (! $university_id) {
+                        continue;
                     }
 
                     $id = $value['id'];
@@ -90,18 +84,17 @@ class ImportAuthors extends Command
                     $given_name = $value['givenname'];
                     $email = $value['email'];
                     $url = $value['url'];
-                    ImportAuthor::insert_authors( $id, $surname, $given_name, $email, $url, $university_id);
-                    ImportAuthor::handle_subjects( $id, $value['subjects']);
+                    ImportAuthor::insert_authors($id, $surname, $given_name, $email, $url, $university_id);
+                    ImportAuthor::handle_subjects($id, $value['subjects']);
                 }
             } catch (Exception $e) {
                 Log::info($e->getMessage());
-            }    
-            
+            }
         }
 
         // Remove job info from databases
         try {
-            \DB::statement("DELETE FROM importjobs WHERE pid = ".getmypid()." AND type='author'");
+            \DB::statement('DELETE FROM importjobs WHERE pid = '.getmypid()." AND type='author'");
             $c = count(\DB::select("SELECT * FROM importjobs WHERE type='author'"));
             if ($c == 0) {
                 // All job done
@@ -110,9 +103,9 @@ class ImportAuthors extends Command
         } catch (Exception $e) {
             Log::info($e->getMessage());
         }
-        
+
         // Artisan::call('author:re-index', ['--university' => true]);
         $process = new Process('php ../artisan author:re-index --university');
-        $process->start();  
+        $process->start();
     }
 }

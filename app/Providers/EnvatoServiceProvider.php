@@ -23,9 +23,8 @@ class EnvatoServiceProvider extends ServiceProvider
      */
     public function register()
     {
-       require_once app_path() .'/Helpers/Envato/ImportPaperData.php';
-       require_once app_path() .'/Helpers/Envato/ImportAuthorData.php';
-       require_once app_path() .'/Helpers/Envato/ImportAuthor_PaperData.php';
-
-   }
+        require_once app_path() .'/Helpers/Envato/ImportPaperData.php';
+        require_once app_path() .'/Helpers/Envato/ImportAuthorData.php';
+        require_once app_path() .'/Helpers/Envato/ImportAuthor_PaperData.php';
+    }
 }
