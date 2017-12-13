@@ -40,7 +40,7 @@ class ImportAuthorController extends Controller
 			$importJobs = DB::select("SELECT * FROM importjobs");
 
 			if (count($importJobs) > 0) {
-				Flash::warning('Có một chức năng nhập dữ liệu đang được thực hiện, bạn vui lòng quay lại sau ít phút');
+				Flash::warning('Có một tiến trình đồng bộ/ nhập dữ liệu khác đang chạy, vui lòng quay lại sau ít phút.');
 				return redirect()->back();
 				
 			} else {
@@ -67,7 +67,7 @@ class ImportAuthorController extends Controller
 	      				$i++;
 					}
 				
-					Flash::info('In processing. Please wait');
+					Flash::info('Đang xử lý yêu cầu..');
 
 					return redirect()->back();
 				} else {
