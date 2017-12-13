@@ -147,6 +147,11 @@ class PaperController extends AppBaseController
 //        return SearchHelper::searchPaper($request, $this->routeType);
 
         $query = trim($request->q);
+        
+        if (!strlen($query)) {
+            \Flash::warning('Please enter search keyword.');
+            return redirect()->back();
+        }
 
         $currentPage = intval($request->page);
 

@@ -76,23 +76,22 @@ class ImportPapers extends Command
                     }
                 }
             }
+        } catch (Exception $e) {
+            Log::info($e->getMessage());
+        }
 
-            // Remove job info from databases
-            try {
-                \DB::statement("DELETE FROM importjobs WHERE pid = ".getmypid()." AND type='paper'");
-                $c = count(\DB::select("SELECT * FROM importjobs WHERE type='paper'"));
-                if ($c == 0) {
+        // Remove job info from databases
+        try {
+            \DB::statement("DELETE FROM importjobs WHERE pid = ".getmypid()." AND type='paper'");
+            $c = count(\DB::select("SELECT * FROM importjobs WHERE type='paper'"));
+            if ($c == 0) {
                 // All job done
                 Cache::pull('paper_lines');
-            }
-            } catch (Exception $e) {
-                Log::info($e->getMessage());
             }
             
             // Artisan::call('paper:re-index');
             $process = new Process('php ../artisan paper:re-index');
             $process->start();
-            
         } catch (Exception $e) {
             Log::info($e->getMessage());
         }

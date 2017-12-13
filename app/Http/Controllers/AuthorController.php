@@ -117,11 +117,14 @@ class AuthorController extends AppBaseController
             return redirect(route('authors.index'));
         }
 
-        $author = $this->authorRepository->update($request->all(), $id);
-
-        Flash::success('Author updated successfully.');
-
+        try {
+            $author = $this->authorRepository->update($request->all(), $id);
+            Flash::success('Author updated successfully.');
+        } catch (\Exception $e) {
+            Flash::error('Some fileds not valid');
+        }
         return redirect(route('authors.index'));
+
     }
 
     /**

@@ -19,6 +19,7 @@ class SyncController extends AppBaseController
     {
 
         # Check if any importing job exists
+        DB::statement('SET GLOBAL max_allowed_packet=500000000');
         $importJobs = DB::select("SELECT * FROM importjobs");
 
         if (count($importJobs) > 0) {
@@ -37,6 +38,7 @@ class SyncController extends AppBaseController
 
     public function candidates() {
         # Check if any importing job exists
+        DB::statement('SET GLOBAL max_allowed_packet=500000000');
         $importJobs = DB::select("SELECT * FROM importjobs");
 
         if (count($importJobs) > 0) {

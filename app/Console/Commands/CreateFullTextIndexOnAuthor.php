@@ -66,7 +66,7 @@ class CreateFullTextIndexOnAuthor extends Command
 
         // Remove job info from databases
         try {
-            \DB::statement("DELETE FROM importjobs WHERE pid = ".getmypid()." AND type='paper_index'");
+            \DB::statement("DELETE FROM importjobs WHERE pid = ".getmypid()." AND type='author_index'");
         } catch (Exception $e) {
             Log::info($e->getMessage());
         }

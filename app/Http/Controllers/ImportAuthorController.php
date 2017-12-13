@@ -47,6 +47,7 @@ class ImportAuthorController extends Controller
 				if(!empty($data) && $n)
 				{
 					// dump('Put authors data to cache');
+					DB::statement('SET GLOBAL max_allowed_packet=500000000');
 					Cache::put('author_lines', $data, 20);
 
 					$numProcesses = 15.0;
