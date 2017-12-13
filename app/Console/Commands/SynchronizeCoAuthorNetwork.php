@@ -42,19 +42,6 @@ class SynchronizeCoAuthorNetwork extends Command
         }
 
         try {
-            //if ($this->option('begin')) {
-            //    Cache::flush();
-            //    $this->info('cache cleared');
-            //    Cache::put('status', [], 1440);
-            //}
-            //
-            //$offset = $this->option('offset');
-            //$status = Cache::get('status');
-            //$status[$offset] = false;
-            //Cache::put('status', $status, 1440);
-
-            //if (! Cache::has('authors')) {
-
             $authorPapers = DB::select('SELECT * FROM `author_paper`');
 
             $authors = [];
@@ -75,36 +62,14 @@ class SynchronizeCoAuthorNetwork extends Command
                 }
             }
 
-            //unset($authorPapers);
-
-            //Cache::put('authors', $authors, 1440);
-            //Cache::put('papers', $papers, 1440);
-            //Cache::put('records', [], 1440);
-
-            //$this->info(count($authors));
-            //$this->info(count($papers));
-
-            //unset($authors, $papers);
-
             DB::statement('SET FOREIGN_KEY_CHECKS=0;');
             DB::statement('TRUNCATE TABLE `co_authors`');
             DB::statement('TRUNCATE TABLE `candidates`');
             DB::statement('SET GLOBAL max_allowed_packet=524288000;');
 
             $this->info('Disable foreign key check and truncate co_authors table success');
-            //}
-
-            //$authors = Cache::get('authors');
-            //$papers = Cache::get('papers');
-            //$records = Cache::get('records');
-
-            // Cache::forget('authors');
-            // Cache::forget('papers');
-            // Cache::forget('records');
 
             $start = microtime(TRUE);
-
-            //foreach (array_slice(array_keys($authors), $offset, 10000) as $authorId) {
 
             foreach (array_keys($authors) as $authorId) {
                 $paperIds = $authors[$authorId]; // papers that author wrote
@@ -120,9 +85,6 @@ class SynchronizeCoAuthorNetwork extends Command
                 }
                 $collaborators = array_unique($collaborators);
                 unset($collaborators[0]);
-
-                // dump($authorId);
-                // dump($collaborators);
 
                 foreach ($collaborators as $collaboratorId) {
                     if ($collaboratorId != $authorId) {
@@ -153,26 +115,9 @@ class SynchronizeCoAuthorNetwork extends Command
                 }
             }
 
-            // Cache::put('authors', $authors, 1440);
-            // Cache::put('papers', $papers, 1440);
-
-            // Cache::put('records', $records, 1440);
-            // Cache::put('candidates', [], 1440);
-
-            //unset($authors, $papers, $records);
-
-            //$status[$offset] = true;
-            //Cache::put('status', $status, 1440);
-
             $this->info('Process time: ' . (string) (microtime(TRUE) - $start));
 
-            // check if all processes completed
-            // if (!in_array(false, array_values(TemporaryVariables::$status))) {
-            // if (! in_array(false, array_values(Cache::get('status')))) {
-
             $insertTime = microtime(TRUE);
-
-            //$records = Cache::get('records');
 
             if (count($records) > 0) {
                 // save records to DB

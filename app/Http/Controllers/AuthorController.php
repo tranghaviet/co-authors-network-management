@@ -187,6 +187,7 @@ class AuthorController extends AppBaseController
                 // \Artisan::call('author:re-index', ['--university' => true]);
                 $process = new Process('php ../artisan author:re-index --university');
                 $process->start();
+
                 return redirect()->back();                    
             }    
 
@@ -219,14 +220,14 @@ class AuthorController extends AppBaseController
         if ($currentPage > 1) { // at page 2,3...
             $previousPage = $url . ($currentPage - 1);
 
-            if ($totalResults = 15) {
+            if ($totalResults == 15) {
                 $nextPage = $url . ($currentPage + 1);
                 return view('authors.index')->with(array_merge($data, compact('previousPage', 'nextPage')));
             }
 
             return view('authors.index')->with(array_merge($data, compact('previousPage')));
         } else { // at page 1
-            if ($totalResults = 15) {
+            if ($totalResults == 15) {
                 $nextPage = $url . ($currentPage + 1);
             }
 

@@ -168,18 +168,22 @@ class PaperController extends AppBaseController
         $offset = $perPage * ($currentPage - 1);
 
         if (!$request->session()->has('paper_search_' . $query . '_' . strval($currentPage))) {
-            $execution = "select *, match(papers.title) against ('{$query}') as s1 from papers
+            $execution = "select *, match(papers.title) against ('{$query}') as s1
+                          from papers
                           where 
                             match(papers.title) against ('{$query}')
                             or papers.id = '{$query}'
                             or papers.issn = '{$query}'
                           order by s1 desc limit {$perPage} offset {$offset};";
+
             try {
                 $papers = DB::select($execution);
             } catch (\Exception $e) {
                 \Flash::warning('Index in progress.. Come back later.');
                 // \Artisan::call('paper:re-index');
                 $process = new Process('php ../artisan paper:re-index');
+
+                $process->start();
 
                 return redirect()->back();                    
             }                      
@@ -190,39 +194,37 @@ class PaperController extends AppBaseController
             $papers = $request->session()->get('paper_search_' . $query);
         }
 
-        # Pagination
         $totalResults = count($papers);
-        $url = route($this->routeType.'papers.search') . '?q=' . $query . '&page=';
-
-        if ($currentPage > 1) {
-            $previousPage = $url . ($currentPage - 1);
-        } else {
-            $previousPage = $url . 1;
-        }
-
-        if ($totalResults > $perPage) {
-            $nextPage = $url . ($currentPage + 1);
-        } else {
-            $nextPage = $url . $currentPage;
-        }
-
-        if ($totalResults == 0) {
-            return view('papers.index')->with([
-                'papers' => $papers,
-                'routeType' => $this->routeType,
-                'nextPage' => $nextPage,
-                'previousPage' => $previousPage,
-            ]);
-        }
-
         $papers = json_decode(json_encode($papers), true);
 
-        return view('papers.index')->with([
+        # Pagination
+        $data = [
             'papers' => $papers,
             'routeType' => $this->routeType,
-            'nextPage' => $nextPage,
-            'previousPage' => $previousPage,
-        ]);
+        ];
 
+        # If empty result
+        if ($totalResults == 0) {
+            return view('papers.index')->with($data);
+        }
+
+        $url = route($this->routeType.'papers.search') . '?q=' . $query . '&page=';
+
+        if ($currentPage > 1) { // at page 2,3...
+            $previousPage = $url . ($currentPage - 1);
+
+            if ($totalResults == 15) {
+                $nextPage = $url . ($currentPage + 1);
+                return view('papers.index')->with(array_merge($data, compact('previousPage', 'nextPage')));
+            }
+
+            return view('papers.index')->with(array_merge($data, compact('previousPage')));
+        } else { // at page 1
+            if ($totalResults == 15) {
+                $nextPage = $url . ($currentPage + 1);
+            }
+
+            return view('papers.index')->with(array_merge($data, compact('nextPage')));
+        }
     }
 }

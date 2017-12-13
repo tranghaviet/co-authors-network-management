@@ -43,7 +43,7 @@ class CoAuthorController extends AppBaseController
             ->with('firstAuthor.university')
             ->with('secondAuthor.university')
             ->paginate(config('constants.DEFAULT_PAGINATION'));
-// dd($coAuthors);
+
         $paginator = $coAuthors->render();
 
         $coAuthors = $coAuthors->toArray()['data'];

@@ -22,7 +22,8 @@ class CreatePapersTable extends Migration
             $url = $table->string('url')->nullable();
             $issn = $table->string('issn', 50)->nullable();
 
-            $id->collation = $url->collation = $issn->collation = 'ascii_general_ci';
+            //$id->collation = $url->collation = $issn->collation = 'ascii_general_ci';
+            $url->collation = 'ascii_general_ci';
 
             $table->primary('id');
         });
