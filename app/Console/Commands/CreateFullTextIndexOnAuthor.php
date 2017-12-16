@@ -42,20 +42,25 @@ class CreateFullTextIndexOnAuthor extends Command
         try {
 
             //        $query1 = 'SET GLOBAL innodb_optimize_fulltext_only=1;';
-            $query2 = 'DROP INDEX  `authors_ft_name` ON authors;';
-            //        $query3 = 'DROP INDEX IF EXISTS `universities_ft_name` ON universities;';
+            $query1 = 'DROP INDEX  `authors_fulltext_surname` ON authors;';
+            $query2 = 'DROP INDEX  `authors_fulltext_given_name` ON authors;';
             $query3 = 'DROP INDEX  `universities_ft_name` ON universities;';
 
-            $query4 = 'CREATE FULLTEXT INDEX authors_ft_name ON `authors` (`surname`, `given_name`);';
-            //        $query5 = 'CREATE FULLTEXT INDEX universities_ft_name ON `universities` (`name`);';
+            // $query4 = 'ALTER TABLE `authors` ADD FULLTEXT `authors_fulltext_surname` (`surname`);';
+            $query6 = 'ALTER TABLE `authors` ADD FULLTEXT `authors_fulltext_given_name` (`given_name`);';
+            $query4 = 'CREATE FULLTEXT INDEX authors_fulltext_surname ON `authors` (`surname`);';
+            // $query6 = 'CREATE FULLTEXT INDEX authors_fulltext_given_name ON `authors` (`given_name`);';
             $query5 = 'ALTER TABLE `universities` ADD FULLTEXT `universities_ft_name` (`name`);';
 
             try {
+                DB::statement($query1);
                 DB::statement($query2);
             } catch (\Exception $e) {
                 \Log::info($e->getMessage());
             }
+
             DB::statement($query4);
+            DB::statement($query6);
 
             //        DB::statement($query1);
 
@@ -65,6 +70,7 @@ class CreateFullTextIndexOnAuthor extends Command
                 } catch (\Exception $e) {
                     \Log::info($e->getMessage());
                 }
+
                 DB::statement($query5);
             }
 

@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use DB;
+use Cache;
 use Illuminate\Http\Request;
 
 class SearchHelper
@@ -11,22 +12,52 @@ class SearchHelper
     {
         $query = trim($request->q);
 
-        if (! $request->session()->has('author_search_with_university_' . $query . '_' . strval($currentPage))) {
-            $execution = "select authors.*, universities.name , match(authors.given_name, authors.surname) against ('{$query}') as s1,
-                match(universities.name) against ('{$query}') as s2 
-                from authors inner join universities on authors.university_id = universities.id
-                where match(authors.given_name, authors.surname) against ('{$query}')
-                or match(universities.name) against ('{$query}')
-                order by (s1 + s2 ) desc limit {$perPage} offset {$offset}";
+        if (! Cache::has('author_search_with_university_' . $query . '_' . strval($currentPage))) {
+            $execution = "SELECT authors.*, universities.name,
+                    MATCH(authors.given_name) against (?) AS s1,
+                    MATCH(authors.surname) against (?) AS s2,
+                    MATCH(universities.name) against (?) AS s3
+                    FROM authors INNER JOIN universities ON authors.university_id = universities.id
+                    WHERE
+                    MATCH(authors.given_name) AGAINST (?)
+                    OR MATCH(authors.surname) AGAINST (?)
+                    OR MATCH(universities.name) AGAINST (?)
+                    ORDER BY (s1 + s2 + s3) DESC
+                    LIMIT {$perPage} OFFSET {$offset};";
 
-            $authors = DB::select($execution);
+            $authors = DB::select($execution, array_fill(0, 6, $query));
 
-            session(['author_search_with_university_' . $query . '_' . strval($currentPage) => $authors]);
+            Cache::put('author_search_with_university_' . $query . '_' . strval($currentPage), $authors, 10);
         } else {
-            $authors = $request->session()->get('author_search_with_university_' . $query . '_' . strval($currentPage));
+            $authors = Cache::get('author_search_with_university_' . $query . '_' . strval($currentPage));
         }
 
         return $authors;
+    }
+
+    public static function searchPapers(Request $request, $currentPage, $offset, $perPage)
+    {
+        $query = trim($request->q);
+
+        if (! Cache::has('paper_search_' . $query . '_' . strval($currentPage))) {
+
+            $execution = "SELECT *, MATCH(papers.title) AGAINST (':query') AS s1
+                        FROM papers
+                        WHERE
+                        MATCH(papers.title) AGAINST (':query')
+                        OR papers.id = ':query'
+                        OR papers.issn = ':query'
+                        ORDER BY s1 DESC LIMIT {$perPage} OFFSET {$offset};";
+
+            $papers = DB::select($execution, ['query' => $query]);
+
+            Cache::put('paper_search_' . $query . '_' . strval($currentPage), $papers, 10);
+        } else {
+            $papers = Cache::get('paper_search_' . $query . '_' . strval($currentPage));
+            dd($papers);
+        }
+
+        return $papers;
     }
 
     public static function searchingAuthor(Request $request, $currentPage, $offset, $perPage)
@@ -47,205 +78,4 @@ class SearchHelper
 
         return $authors;
     }
-
-//    public static function searchAuthorWithUniversity(SearchRequest $request, $routeType)
-//    {
-//        $query = trim($request->q);
-//
-//        $currentPage = intval($request->page);
-//
-//        if (empty($currentPage)) {
-//            $currentPage = 1;
-//        }
-//
-//        if (!is_numeric($currentPage) || $currentPage < 1) {
-//            Flash::error('Invalid page.');
-//            return view('authors.index')->with([
-//                'routeType' => $routeType,
-//            ]);
-//        }
-//
-//        $perPage = config('constants.DEFAULT_PAGINATION');
-//        $offset = $perPage * ($currentPage - 1);
-//
-//        if (!$request->session()->has('author_search_with_university_' . $query . '_' . strval($currentPage))) {
-//            $execution = "select authors.*, universities.name , match(authors.given_name, authors.surname) against ('{$query}') as s1,
-//                match(universities.name) against ('{$query}') as s2
-//                from authors inner join universities on authors.university_id = universities.id
-//                where match(authors.given_name, authors.surname) against ('{$query}')
-//                or match(universities.name) against ('{$query}')
-//                order by (s1 + s2 ) desc limit {$perPage} offset {$offset}";
-//
-//            $authors = DB::select($execution);
-//
-//            session(['author_search_with_university_' . $query => $authors]);
-//        } else {
-//            $authors = $request->session()->get('author_search_with_university_' . $query);
-//        }
-//
-//        # Pagination
-//        $url = route($routeType.'authors.search') . '?q=' . $query . '&page=';
-//        $previousPage = $url . 1;
-//        $nextPage = $url . ($currentPage + 1);
-//
-//        if ($currentPage > 1) {
-//            $previousPage = $url . ($currentPage - 1);
-//        }
-//
-//        # If empty result
-//        if (count($authors) == 0) {
-//            return view('authors.index')->with([
-//                'authors' => $authors,
-//                'routeType' => $routeType,
-//                'nextPage' => $nextPage,
-//                'previousPage' => $previousPage,
-//            ]);
-//        }
-//
-//        # View
-//        $authors = json_decode(json_encode($authors), true);
-//
-//        for ($i = 0; $i < count($authors); $i++) {
-//            $authors[$i]['university'] = [];
-//            $authors[$i]['university']['name'] = $authors[$i]['name'];
-//        }
-//
-//        return view('authors.index')->with([
-//            'authors' => $authors,
-//            'routeType' => $routeType,
-//            'nextPage' => $nextPage,
-//            'previousPage' => $previousPage,
-//        ]);
-//    }
-
-//    public static function searchAuthor(SearchRequest $request, $routeType)
-//    {
-//        $query = trim($request->q);
-//
-//        $currentPage = intval($request->page);
-//
-//        if (empty($currentPage)) {
-//            $currentPage = 1;
-//        }
-//
-//        if (!is_numeric($currentPage) || $currentPage < 1) {
-//            Flash::error('Invalid page.');
-//            return view('authors.index')->with([
-//                'routeType' => $routeType,
-//            ]);
-//        }
-//
-//        $perPage = config('constants.DEFAULT_PAGINATION');
-//        $offset = $perPage * ($currentPage - 1);
-//
-//        if (!$request->session()->has('author_search_' . $query . '_' . strval($currentPage))) {
-//            $execution = "select authors.* , match(authors.given_name, authors.surname) against ('{$query}') as s1,
-//                from authors
-//                where match(authors.given_name, authors.surname) against ('{$query}')
-//                order by s1 desc limit {$perPage} offset {$offset}";
-//            $authors = DB::select($execution);
-//
-//            session(['author_search_' . $query => $authors]);
-//        } else {
-//            $authors = $request->session()->get('author_search_' . $query);
-//        }
-//
-//        # Pagination
-//        $url = route($routeType.'authors.search') . '?q=' . $query . '&page=';
-//        $previousPage = $url . 1;
-//        $nextPage = $url . ($currentPage + 1);
-//
-//        if ($currentPage > 1) {
-//            $previousPage = $url . ($currentPage - 1);
-//        }
-//
-//        # If empty result
-//        if (count($authors) == 0) {
-//            return view('authors.index')->with([
-//                'authors' => $authors,
-//                'routeType' => $routeType,
-//                'nextPage' => $nextPage,
-//                'previousPage' => $previousPage,
-//            ]);
-//        }
-//
-//        # View
-//        $authors = json_decode(json_encode($authors), true);
-//
-//        for ($i = 0; $i < count($authors); $i++) {
-//            $authors[$i]['university'] = [];
-//            $authors[$i]['university']['name'] = $authors[$i]['name'];
-//        }
-//
-//        return view('authors.index')->with([
-//            'authors' => $authors,
-//            'routeType' => $routeType,
-//            'nextPage' => $nextPage,
-//            'previousPage' => $previousPage,
-//        ]);
-//    }
-
-//    public static function searchPaper(SearchRequest $request, $routeType)
-//    {
-//        $query = trim($request->q);
-//
-//        $currentPage = intval($request->page);
-//
-//        if (empty($currentPage)) {
-//            $currentPage = 1;
-//        }
-//
-//        if (!is_numeric($currentPage) || $currentPage < 1) {
-//            Flash::error('Invalid page.');
-//            return view('papers.index')->with([
-//                'routeType' => $routeType,
-//            ]);
-//        }
-//
-//        $perPage = config('constants.DEFAULT_PAGINATION');
-//        $offset = $perPage * ($currentPage - 1);
-//
-//        if (!$request->session()->has('paper_search_' . $query . '_' . strval($currentPage))) {
-//            $execution = "select *, match(papers.title) against ('{$query}') as s1 from papers
-//                          where
-//                            match(papers.title) against ('{$query}')
-//                            or papers.id = '{$query}'
-//                            or papers.issn = '{$query}'
-//                          order by s1 desc limit {$perPage} offset {$offset};";
-//
-//            $papers = DB::select($execution);
-//
-//            session(['author_search_' . $query => $papers]);
-//        } else {
-//            $papers = $request->session()->get('paper_search_' . $query);
-//        }
-//
-//        # Pagination
-//        $url = route($routeType.'papers.search') . '?q=' . $query . '&page=';
-//        $previousPage = $url . 1;
-//        $nextPage = $url . ($currentPage + 1);
-//
-//        if ($currentPage > 1) {
-//            $previousPage = $url . ($currentPage - 1);
-//        }
-//
-//        if (count($papers) == 0) {
-//            return view('papers.index')->with([
-//                'papers' => $papers,
-//                'routeType' => $routeType,
-//                'nextPage' => $nextPage,
-//                'previousPage' => $previousPage,
-//            ]);
-//        }
-//
-//        $papers = json_decode(json_encode($papers), true);
-//
-//        return view('papers.index')->with([
-//            'papers' => $papers,
-//            'routeType' => $routeType,
-//            'nextPage' => $nextPage,
-//            'previousPage' => $previousPage,
-//        ]);
-//
-//    }
 }

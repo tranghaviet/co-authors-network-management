@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Flash;
 use Response;
 use Illuminate\Http\Request;
+use App\Helpers\SearchHelper;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\SearchRequest;
 use App\Repositories\PaperRepository;
@@ -168,34 +169,21 @@ class PaperController extends AppBaseController
         $perPage = config('constants.DEFAULT_PAGINATION');
         $offset = $perPage * ($currentPage - 1);
 
-        if (! $request->session()->has('paper_search_' . $query . '_' . strval($currentPage))) {
-            $execution = "select *, match(papers.title) against ('{$query}') as s1
-                          from papers
-                          where 
-                            match(papers.title) against ('{$query}')
-                            or papers.id = '{$query}'
-                            or papers.issn = '{$query}'
-                          order by s1 desc limit {$perPage} offset {$offset};";
-
+        try {
+            $papers = SearchHelper::searchPapers($request, $currentPage, $offset, $perPage);
+        } catch (\Exception $e) {
             try {
-                $papers = DB::select($execution);
+                \Artisan::call('paper:re-index');
+                $papers = SearchHelper::searchPapers($request, $currentPage, $offset, $perPage);
             } catch (\Exception $e) {
-                try {
-                    \Artisan::call('paper:re-index');
-                    $papers = DB::select($execution);
-                } catch (\Exception $e) {
-                    \Log::debug('paper:re-index fail', $e->getTrace());
-                    \Flash::warning('Index in progress...try after few seconds');
-                    $process = new Process('php ../artisan paper:re-index');
-                    $process->start();
+                \Flash::error('Index in progress...try after few seconds');
+                \Log::debug('paper:re-index fail', $e->getTrace());
 
-                    return redirect()->back();
-                }
+                $process = new Process('php ../artisan paper:re-index');
+                $process->start();
+
+                return redirect()->back();
             }
-
-            session(['author_search_' . $query . '_' . strval($currentPage) => $papers]);
-        } else {
-            $papers = $request->session()->get('paper_search_' . $query . '_' . strval($currentPage));
         }
 
         $totalResults = count($papers);

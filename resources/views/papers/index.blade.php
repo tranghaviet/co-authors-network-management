@@ -7,7 +7,7 @@
             {!! Form::open(['route' => [$routeType . 'papers.search'], 'method' => 'get']) !!}
             <div class="form-group col-sm-8">
                 {!! Form::text('q', null, ['class' => 'form-control', 'required' => true,
-                'placeholder' => 'Type ID, Title, ISSN', 'required' => true]) !!}
+                'placeholder' => 'Type Title, ISSN', 'required' => true]) !!}
             </div>
             <div class="form-group col-sm-2">
                 {!! Form::submit('Search', ['class' => 'btn btn-primary btn-block']) !!}
