@@ -12,15 +12,19 @@ class SearchHelper
         $query = trim($request->q);
 
         if (! $request->session()->has('author_search_with_university_' . $query . '_' . strval($currentPage))) {
-            $execution = "select authors.*, universities.name , match(authors.given_name, authors.surname) against ('{$query}') as s1,
-                match(universities.name) against ('{$query}') as s2 
+            $execution = "select authors.*, universities.name , match(authors.given_name, authors.surname) against ('{$query}' IN NATURAL LANGUAGE MODE) as s1,
+                match(universities.name) against ('{$query}' IN NATURAL LANGUAGE MODE) as s2 
                 from authors inner join universities on authors.university_id = universities.id
-                where match(authors.given_name, authors.surname) against ('{$query}')
-                or match(universities.name) against ('{$query}')
+                where match(authors.given_name, authors.surname) against ('{$query}' IN NATURAL LANGUAGE MODE)
+                or match(universities.name) against ('{$query}' IN NATURAL LANGUAGE MODE)
+                or authors.given_name like '{$query}%' 
+                or authors.surname like '{$query}%'
+                or universities.name like '{$query}%' 
+                
                 order by (s1 + s2 ) desc limit {$perPage} offset {$offset}";
-
+            
             $authors = DB::select($execution);
-
+           
             session(['author_search_with_university_' . $query . '_' . strval($currentPage) => $authors]);
         } else {
             $authors = $request->session()->get('author_search_with_university_' . $query . '_' . strval($currentPage));
@@ -34,9 +38,11 @@ class SearchHelper
         $query = trim($request->q);
 
         if (! $request->session()->has('author_search_' . $query . '_' . strval($currentPage))) {
-            $execution = "select authors.* , match(authors.given_name, authors.surname) against ('{$query}') as s1,
+            $execution = "select authors.* , match(authors.given_name, authors.surname) against ('{$query}' IN NATURAL LANGUAGE MODE) as s1,
                             from authors
-                            where match(authors.given_name, authors.surname) against ('{$query}')
+                            where match(authors.given_name, authors.surname) against ('{$query}' IN NATURAL LANGUAGE MODE)
+                            or authors.given_name like '{$query}%'
+                            or authors.surname like '{$query}%'
                             order by s1 desc limit {$perPage} offset {$offset}";
             $authors = DB::select($execution);
 

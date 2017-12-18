@@ -173,6 +173,7 @@ class PaperController extends AppBaseController
                           from papers
                           where 
                             match(papers.title) against ('{$query}')
+                            or papers.title like '%${query}%'
                             or papers.id = '{$query}'
                             or papers.issn = '{$query}'
                           order by s1 desc limit {$perPage} offset {$offset};";

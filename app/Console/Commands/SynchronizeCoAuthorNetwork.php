@@ -83,34 +83,38 @@ class SynchronizeCoAuthorNetwork extends Command
                     $collaborators = array_merge($collaborators, $papers[$pid]);
                 }
                 $collaborators = array_unique($collaborators);
-                unset($collaborators[0]);
+                if (($key = array_search($authorId, $collaborators)) !== false) {
+                    unset($collaborators[$key]);
+                }
 
                 foreach ($collaborators as $collaboratorId) {
-                    if ($collaboratorId != $authorId) {
-                        if (isset($records[$authorId . ',' . $collaboratorId])) {
+                    if (isset($records[$authorId . ',' . $collaboratorId])) {
+                        continue;
+                    } else {
+                        if (isset($records[$collaboratorId . ',' . $authorId])) {
                             continue;
-                        } else {
-                            if (isset($records[$collaboratorId . ',' . $authorId])) {
-                                continue;
-                            }
                         }
-
-                        $collaboratorPaperIds = $authors[$collaboratorId];
-                        $noOfJointPapers = count(array_intersect($paperIds, $collaboratorPaperIds));
-
-                        $collaboratorCollaborators = [];
-
-                        foreach ($collaboratorPaperIds as $coPId) {
-                            $collaboratorCollaborators = array_merge($collaboratorCollaborators, $papers[$coPId]);
-                        }
-
-                        $noOfMutualAuthors = count(array_intersect($collaborators, $collaboratorCollaborators));
-
-                        $records[$authorId . ',' . $collaboratorId] = [
-                            $noOfJointPapers,
-                            $noOfMutualAuthors,
-                        ];
                     }
+
+                    $collaboratorPaperIds = $authors[$collaboratorId];
+                    $noOfJointPapers = count(array_intersect($paperIds, $collaboratorPaperIds));
+
+                    $collaboratorCollaborators = [];
+
+                    foreach ($collaboratorPaperIds as $coPId) {
+                        $collaboratorCollaborators = array_merge($collaboratorCollaborators, $papers[$coPId]);
+                    }
+                    $collaboratorCollaborators = array_unique($collaboratorCollaborators);
+                    if (($key = array_search($collaboratorId, $collaboratorCollaborators)) !== false) {
+                        unset($collaboratorCollaborators[$key]);
+                    }
+
+                    $noOfMutualAuthors = count(array_intersect($collaborators, $collaboratorCollaborators));
+                    
+                    $records[$authorId . ',' . $collaboratorId] = [
+                        $noOfMutualAuthors,
+                        $noOfJointPapers,
+                    ];
                 }
             }
 

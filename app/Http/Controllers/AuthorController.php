@@ -171,11 +171,12 @@ class AuthorController extends AppBaseController
         try {
             $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);
         } catch (\Exception $e) {
+            \Log::debug($e->getMessage());
             try {
                 \Artisan::call('author:re-index', ['--university' => true]);
                 $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);
             } catch (\Exception $e) {
-                \Flash::error('Index in progress...try after few seconds');
+                \Flash::error('Đang đánh chỉ mục, vui lòng thử lại sau ít giây');
                 \Log::debug('author:re-index fail', $e->getTrace());
 
                 $process = new Process('php ../artisan author:re-index --university');
