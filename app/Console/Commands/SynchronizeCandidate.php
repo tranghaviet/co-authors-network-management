@@ -35,11 +35,24 @@ class SynchronizeCandidate extends Command
      */
     public function handle()
     {
+        // Add job info to databases
+        \Log::info('Process start time: '. microtime(true));
+        \Log::info('Sync candidate process ' . getmypid());
+        \Log::info('Try adding job to database: sync_candidate');
         try {
-            Cache::pull('co_authors_map');
-            // Cache::flush();
+            \DB::statement('INSERT INTO importjobs VALUES ('.getmypid().", 'sync_candidate')");
+            \Log::info('Job added to database: sync_candidate');
+        } catch (\Exception $e) {
+            \Log::info('Add job failed');
+            \Log::info($e->getMessage());
+        }
+        
+        \Log::info('Handle and insert to database: candidate');
+        try {
+            // Cache::pull('co_authors_map');
+            Cache::flush();
             Log::info('Flush cache');
-
+            
             // Map authorId to coauthors
             if (Cache::has('co_authors_map')) {
                 $coAuthorsMap = Cache::get('co_authors_map');
@@ -73,51 +86,59 @@ class SynchronizeCandidate extends Command
             } catch (\Exception $e) {
                 \Log::debug($e->getMessage());
             }
+            
+            // Calculate and insert
+            CoAuthor::chunk(5000, function ($coAuthorsPart) use ($coAuthorsMap) {
+                $candidates = [];
 
-            // Add job info to databases
-            \DB::statement('INSERT INTO importjobs VALUES ('.getmypid().", 'sync_candidate')");
-
-            try {
-                CoAuthor::chunk(5000, function ($coAuthorsPart) use ($coAuthorsMap) {
-                    $candidates = [];
-
-                    foreach ($coAuthorsPart as $coAuthor) {
+                foreach ($coAuthorsPart as $coAuthor) {
+                    try {
                         $firstCoAuthors = CoAuthorHelper::collaborators($coAuthor['first_author_id'],
                                 $coAuthorsMap);
                         $secondCoAuthors = CoAuthorHelper::collaborators($coAuthor['second_author_id'],
                                 $coAuthorsMap);
-
+    
                         $scores = MeasureLinking::wcn_waa_wca($firstCoAuthors, $secondCoAuthors,
                                 $coAuthorsMap);
-
+    
                         array_push($candidates, [
                             'co_author_id' => $coAuthor->id,
                             'score_1' => $scores['wcn'],
                             'score_2' => $scores['waa'],
                             'score_3' => $scores['wca'],
                         ]);
+                    } catch (\Exception $e) {
+                        \Log::debug($e->getMessage());
                     }
-                    Candidate::insert($candidates);
-                });
-            } catch (Exception $e) {
-                Log::debug($e->getMessage());
-            } finally {
-                try {
-                    // Remove job info from databases
-                    \DB::statement('DELETE FROM importjobs WHERE pid = '.getmypid()." AND type='sync_candidate'");
-                } catch (Exception $e) {
-                    \Log::debug($e->getMessage());
                 }
-
-                // Set foreign key
-                DB::statement('ALTER TABLE `candidates` ADD constraint  candidates_co_author_id_foreign 
-                    FOREIGN KEY  (co_author_id) REFERENCES co_authors(id);');
-
-                // Remove from cache
-                Cache::pull('co_authors_map');
-            }
+                Candidate::insert($candidates);
+            });
+        } catch (Exception $e) {
+            \Log::info('Handle and insert failed');
+            \Log::debug($e->getMessage());
+        }
+        
+        try {
+            // Remove job info from databases
+            \Log::info('Try removing jobs from database: sync_candidate');
+            
+            \DB::statement("DELETE FROM importjobs WHERE type='sync_candidate'");
+            
+            \Log::info('Job removed');
+            
+            // Set foreign key
+            \Log::info('Try set foreign key to candidates table');
+            
+            DB::statement('ALTER TABLE `candidates` ADD constraint  candidates_co_author_id_foreign 
+                FOREIGN KEY  (co_author_id) REFERENCES co_authors(id);');
+                
+            \Log::info('Set foreign key done');
+            
+            // Remove from cache
+            Cache::pull('co_authors_map');
         } catch (Exception $e) {
             \Log::debug($e->getMessage());
         }
+        
     }
 }

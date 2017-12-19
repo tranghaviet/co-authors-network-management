@@ -53,29 +53,35 @@ class ImportPapers extends Command
         } catch (Exception $e) {
             Log::info($e->getMessage());
         }
-
-        $paper_lines = array_slice(Cache::get('paper_lines'), $offset, $limit);
-
+        
+        // Handle
         try {
-            foreach ($paper_lines as $key => $value) {
-                if (! empty($value['id'])) {
+            $paper_lines = array_slice(Cache::get('paper_lines'), $offset, $limit);
 
-                    // Import papers
-                    ImportPaper::insert_papers($value['id'], $value['title'], $value['coverdate'],
-                        $value['abstract'], $value['url'], $value['issn']);
-
-                    // Tách nhóm từ khóa thành nhiều từ khóa
-                    $keywords = preg_split('/,\s*/', trim($value['keywords']), -1, PREG_SPLIT_NO_EMPTY);
-
-                    // với mỗi từ khóa thêm vào cùng với bài báo: keyword-paper
-                    foreach ($keywords as $keyword) {
-                        ImportPaper::handle_keywords($value['id'], $keyword);
+            try {
+                foreach ($paper_lines as $key => $value) {
+                    if (! empty($value['id'])) {
+    
+                        // Import papers
+                        ImportPaper::insert_papers($value['id'], $value['title'], $value['coverdate'],
+                            $value['abstract'], $value['url'], $value['issn']);
+    
+                        // Tách nhóm từ khóa thành nhiều từ khóa
+                        $keywords = preg_split('/,\s*/', trim($value['keywords']), -1, PREG_SPLIT_NO_EMPTY);
+    
+                        // với mỗi từ khóa thêm vào cùng với bài báo: keyword-paper
+                        foreach ($keywords as $keyword) {
+                            ImportPaper::handle_keywords($value['id'], $keyword);
+                        }
                     }
                 }
+            } catch (Exception $e) {
+                Log::info($e->getMessage());
             }
-        } catch (Exception $e) {
-            Log::info($e->getMessage());
+        } catch (\Exception $e) {
+            \Log::info($e->getMessage());
         }
+        
 
         // Remove job info from databases
         try {
