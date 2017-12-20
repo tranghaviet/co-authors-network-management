@@ -195,24 +195,11 @@ class CoAuthorController extends AppBaseController
         $perPage = config('constants.DEFAULT_PAGINATION');
         $offset = $perPage * ($currentPage - 1);
 
-        try {
-            $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);
-        } catch (\Exception $e) {
-            try {
-                \Artisan::call('author:re-index', ['--university' => true]);
-                $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);
-            } catch (\Exception $e) {
-                \Log::debug('author:re-index fail', $e->getTrace());
-                \Flash::error('Index in progress...try after few seconds');
-                $process = new Process('php ../artisan author:re-index --university');
-                $process->start();
-
-                return redirect()->back();
-            }
-        }
-
         // Pagination
-        $url = route($this->routeType.'coAuthors.search') . '?q=' . $query . '&page=';
+        $url = route($this->routeType.'coAuthors.search') . '?q=' . $query
+            . '&no_of_joint_papers=' . $jointPapers
+            . '&no_of_mutual_authors=' . $jointAuthors
+            . '&page=';
         $previousPage = $url . 1;
         $nextPage = $url . ($currentPage + 1);
 
@@ -220,67 +207,85 @@ class CoAuthorController extends AppBaseController
             $previousPage = $url . ($currentPage - 1);
         }
 
-        // If empty result
-        if (count($authors) == 0) {
-            return view('co_authors.index')->with([
-                'routeType' => $this->routeType,
-                'nextPage' => $nextPage,
-                'previousPage' => $previousPage,
-            ]);
-        }
+        if (! empty($query)) {
+            try {
+                $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);
+            } catch (\Exception $e) {
+                try {
+                    \Artisan::call('author:re-index', ['--university' => true]);
+                    $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);
+                } catch (\Exception $e) {
+                    \Log::debug('author:re-index fail', $e->getTrace());
+                    \Flash::error('Index in progress...try after few seconds');
+                    $process = new Process('php ../artisan author:re-index --university');
+                    $process->start();
 
-        // View
-        $authors = json_decode(json_encode($authors), true);
+                    return redirect()->back();
+                }
+            }
 
-        for ($i = 0; $i < count($authors); $i++) {
-            $authors[$i]['university'] = [];
-            $authors[$i]['university']['name'] = $authors[$i]['name'];
-            $authors[$authors[$i]['id']] = $authors[$i];
+            // If empty result
+            if (count($authors) == 0) {
+                return view('co_authors.index')->with([
+                    'routeType' => $this->routeType,
+                    'nextPage' => $nextPage,
+                    'previousPage' => $previousPage,
+                ]);
+            }
 
-            unset($authors[$i]);
-        }
+            // View
+            $authors = json_decode(json_encode($authors), true);
 
-        // Find authors by query
-        $authorIds = array_keys($authors);
+            for ($i = 0; $i < count($authors); $i++) {
+                $authors[$i]['university'] = [];
+                $authors[$i]['university']['name'] = $authors[$i]['name'];
+                $authors[$authors[$i]['id']] = $authors[$i];
 
-        // Find coauthors by first author id
-        $coAuthors1 = CoAuthor::whereIn('first_author_id', $authorIds)
-            ->where('no_of_joint_papers', '>=', $jointPapers)
-            ->where('no_of_mutual_authors', '>=', $jointAuthors)
-            ->get()->toArray();
-        $secondAuthorIds = array_map(function ($x) {
-            return intval($x['second_author_id']);
-        }, $coAuthors1);
-        $secondAuthors = Author::whereIn('id', $secondAuthorIds)->with('university')->get()->toArray();
-        for ($i = 0; $i < count($secondAuthors); $i++) {
-            $secondAuthors[$secondAuthors[$i]['id']] = $secondAuthors[$i];
-            unset($secondAuthors[$i]);
-        }
+                unset($authors[$i]);
+            }
+            // Find authors by query
+            $authorIds = array_keys($authors);
 
-        // Find coauthors by first author id
-        $coAuthors2 = CoAuthor::whereIn('second_author_id', $authorIds)
-            ->where('no_of_joint_papers', '>=', $jointPapers)
-            ->where('no_of_mutual_authors', '>=', $jointAuthors)
-            ->get()->toArray();
-        // dump($coAuthors2);
-        $firstAuthorIds = array_map(function ($x) {
-            return intval($x['first_author_id']);
-        }, $coAuthors2);
-        $firstAuthors = Author::whereIn('id', $firstAuthorIds)->with('university')->get()->toArray();
-        for ($i = 0; $i < count($firstAuthors); $i++) {
-            $firstAuthors[$firstAuthors[$i]['id']] = $firstAuthors[$i];
-            unset($firstAuthors[$i]);
-        }
+            // Find coauthors by first author id
+            $coAuthors1 = CoAuthor::whereIn('first_author_id', $authorIds)
+                ->where('no_of_joint_papers', '>=', $jointPapers)
+                ->where('no_of_mutual_authors', '>=', $jointAuthors)
+                ->get()->toArray();
 
-        // Combine co authors
-        for ($i = 0; $i < count($coAuthors1); $i++) {
-            $coAuthors1[$i]['first_author'] = $authors[$coAuthors1[$i]['first_author_id']];
-            $coAuthors1[$i]['second_author'] = $secondAuthors[$secondAuthorIds[$i]];
-        }
+            $secondAuthorIds = array_map(function ($x) {
+                return intval($x['second_author_id']);
+            }, $coAuthors1);
 
-        for ($i = 0; $i < count($coAuthors2); $i++) {
-            $coAuthors2[$i]['first_author'] = $firstAuthors[$firstAuthorIds[$i]];
-            $coAuthors2[$i]['second_author'] = $authors[$coAuthors2[$i]['second_author_id']];
+            $secondAuthors = Author::whereIn('id', $secondAuthorIds)->with('university')->get()->toArray();
+
+            for ($i = 0; $i < count($secondAuthors); $i++) {
+                $secondAuthors[$secondAuthors[$i]['id']] = $secondAuthors[$i];
+                unset($secondAuthors[$i]);
+            }
+
+            // Find coauthors by second author id
+            $coAuthors2 = CoAuthor::whereIn('second_author_id', $authorIds)
+                ->where('no_of_joint_papers', '>=', $jointPapers)
+                ->where('no_of_mutual_authors', '>=', $jointAuthors)
+                ->get()->toArray();
+            // dump($coAuthors2);
+            $firstAuthorIds = array_map(function ($x) {
+                return intval($x['first_author_id']);
+            }, $coAuthors2);
+            $firstAuthors = Author::whereIn('id', $firstAuthorIds)->with('university')->get()->toArray();
+            for ($i = 0; $i < count($firstAuthors); $i++) {
+                $firstAuthors[$firstAuthors[$i]['id']] = $firstAuthors[$i];
+                unset($firstAuthors[$i]);
+            }
+        } else {
+            // Find coauthors by first author id
+            $coAuthors1 = CoAuthor::where('no_of_joint_papers', '>=', $jointPapers)
+                ->where('no_of_mutual_authors', '>=', $jointAuthors)
+                ->offset($offset)->limit($perPage)
+                ->with('firstAuthor.university')
+                ->with('secondAuthor.university')
+                ->get()->toArray();
+            $coAuthors2 = [];
         }
 
         $coAuthors = array_merge($coAuthors1, $coAuthors2);

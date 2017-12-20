@@ -54,7 +54,6 @@ class SearchHelper
             Cache::put('paper_search_' . $query . '_' . strval($currentPage), $papers, 10);
         } else {
             $papers = Cache::get('paper_search_' . $query . '_' . strval($currentPage));
-            dd($papers);
         }
 
         return $papers;
