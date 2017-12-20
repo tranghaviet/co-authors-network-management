@@ -31,15 +31,20 @@ class SynchronizeCoAuthorNetwork extends Command
      */
     public function handle()
     {
+        \Log::info('Process start time: '. microtime(true));
         \Log::info('Sync coauthor process ' . getmypid());
 
         // Add job info to databases
+        \Log::info('Try adding job to database: sync_coauthor');
         try {
             DB::statement('INSERT INTO importjobs VALUES (' . getmypid() . ", 'sync_coauthor')");
+            \Log::info('Job added to database: sync_coauthor');
         } catch (Exception $e) {
+            \Log::info('Add job failed');
             Log::info($e->getMessage());
         }
-
+        
+        \Log::info('Handle and add data to database: coauthor');
         try {
             $authorPapers = DB::select('SELECT * FROM `author_paper`');
 
@@ -143,13 +148,17 @@ class SynchronizeCoAuthorNetwork extends Command
 
             Log::info('Sync coauthor done');
         } catch (\Exception $e) {
+            \Log::info('Handle and add data to database: failed');
             Log::debug($e->getMessage());
         }
 
         // Remove job info from databases
+        \Log::info('Try removing job to database: sync_coauthor');
         try {
-            DB::statement('DELETE FROM importjobs WHERE pid = ' . getmypid() . " AND type='sync_coauthor'");
+            DB::statement("DELETE FROM importjobs WHERE type='sync_coauthor'");
+            \Log::info('Removing success');
         } catch (Exception $e) {
+            \Log::info('Removing failed');
             Log::info($e->getMessage());
         }
     }

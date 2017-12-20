@@ -57,7 +57,7 @@ class ImportAuthorController extends Controller
 
                         $i++;
                     }
-
+                    sleep(1);
                     Flash::info('In processing. Please wait');
 
                     return redirect()->back();
