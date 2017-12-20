@@ -50,7 +50,6 @@ class CandidateController extends AppBaseController
         $paginator = $candidates->render();
         $candidates = $candidates->toArray()['data'];
 
-        dump($candidates);
         return view('candidates.index')
             ->with([
                 'candidates' => $candidates,
@@ -202,7 +201,6 @@ class CandidateController extends AppBaseController
                 $result[$i]['first_author'] = $result[$i]['co_author']['first_author'];
                 $result[$i]['second_author'] = $result[$i]['co_author']['second_author'];
             }
-            //dd($result);
         } else {
             try {
                 $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);

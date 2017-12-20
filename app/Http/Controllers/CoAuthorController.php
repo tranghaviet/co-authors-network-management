@@ -288,7 +288,6 @@ class CoAuthorController extends AppBaseController
         ];
 
         $totalResults = count($coAuthors);
-        dump($totalResults);
         // If empty result
         if ($totalResults == 0) {
             return view('co_authors.index')->with($data);

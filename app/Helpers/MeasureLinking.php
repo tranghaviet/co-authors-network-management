@@ -24,8 +24,6 @@ class MeasureLinking
         foreach ($firstCoAuthors as $firstCoAuthor) {
             foreach ($secondCoAuthors as $secondCoauthor) {
                 if ($firstCoAuthor['author_id'] == $secondCoauthor['author_id']) {
-                    // dump($firstCoAuthor);
-                    // dump($secondCoauthor);
                     $result += $firstCoAuthor['no_of_joint_papers'] + $secondCoauthor['no_of_joint_papers'];
                     break;
                 }
