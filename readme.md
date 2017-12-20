@@ -81,6 +81,10 @@ DB_DATABASE=co_authors_network
 DB_USERNAME=root
 DB_PASSWORD=
 ```
+
+sudo a2dismod php5
+sudo a2enmod php7.1
+sudo service apache2 restart
 Tạo key cho app:
 ```
 php artisan key:generate

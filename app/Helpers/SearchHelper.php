@@ -65,9 +65,11 @@ class SearchHelper
         $query = trim($request->q);
 
         if (! $request->session()->has('author_search_' . $query . '_' . strval($currentPage))) {
-            $execution = "select authors.* , match(authors.given_name, authors.surname) against ('{$query}') as s1,
+            $execution = "select authors.* , match(authors.given_name, authors.surname) against ('{$query}' IN NATURAL LANGUAGE MODE) as s1,
                             from authors
-                            where match(authors.given_name, authors.surname) against ('{$query}')
+                            where match(authors.given_name, authors.surname) against ('{$query}' IN NATURAL LANGUAGE MODE)
+                            or authors.given_name like '{$query}%'
+                            or authors.surname like '{$query}%'
                             order by s1 desc limit {$perPage} offset {$offset}";
             $authors = DB::select($execution);
 

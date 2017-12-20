@@ -68,7 +68,7 @@ class ImportAuthorController extends Controller
                 }
             }
         } else {
-            Flash::error('Nothing to import');
+            Flash::error('Yêu cầu nhập file dữ liệu hợp lệ');
 
             return redirect()->back();
         }

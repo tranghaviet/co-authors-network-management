@@ -23,10 +23,6 @@ class ImportAuthor_PaperController extends Controller
         if (Input::hasFile('file')) {
             $path = Input::file('file')->getRealPath();
             $data = Excel::load($path, function ($reader) {
-            })->get();
-
-            $path = Input::file('file')->getRealPath();
-            $data = Excel::load($path, function ($reader) {
             })->get()->toArray();
             $n = count($data);
 
@@ -69,7 +65,7 @@ class ImportAuthor_PaperController extends Controller
                 }
             }
         } else {
-            Flash::error('Nothing to import');
+            Flash::error('Yêu cầu nhập file dữ liệu');
 
             return redirect()->back();
         }
