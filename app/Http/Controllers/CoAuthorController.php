@@ -200,12 +200,6 @@ class CoAuthorController extends AppBaseController
             . '&no_of_joint_papers=' . $jointPapers
             . '&no_of_mutual_authors=' . $jointAuthors
             . '&page=';
-        $previousPage = $url . 1;
-        $nextPage = $url . ($currentPage + 1);
-
-        if ($currentPage > 1) {
-            $previousPage = $url . ($currentPage - 1);
-        }
 
         if (! empty($query)) {
             try {
@@ -228,8 +222,6 @@ class CoAuthorController extends AppBaseController
             if (count($authors) == 0) {
                 return view('co_authors.index')->with([
                     'routeType' => $this->routeType,
-                    'nextPage' => $nextPage,
-                    'previousPage' => $previousPage,
                 ]);
             }
 
@@ -290,12 +282,34 @@ class CoAuthorController extends AppBaseController
 
         $coAuthors = array_merge($coAuthors1, $coAuthors2);
 
-        // Return view
-        return view('co_authors.index')->with([
+        $data = [
             'coAuthors' => $coAuthors,
             'routeType' => $this->routeType,
-            'nextPage' => $nextPage,
-            'previousPage' => $previousPage,
-        ]);
+        ];
+
+        $totalResults = count($coAuthors);
+        dump($totalResults);
+        // If empty result
+        if ($totalResults == 0) {
+            return view('co_authors.index')->with($data);
+        }
+
+        if ($currentPage > 1) { // at page 2,3...
+            $previousPage = $url . ($currentPage - 1);
+
+            if ($totalResults == 15) {
+                $nextPage = $url . ($currentPage + 1);
+
+                return view('co_authors.index')->with(array_merge($data, compact('previousPage', 'nextPage')));
+            }
+
+            return view('co_authors.index')->with(array_merge($data, compact('previousPage')));
+        } else { // at page 1
+            if ($totalResults == 15) {
+                $nextPage = $url . ($currentPage + 1);
+            }
+
+            return view('co_authors.index')->with(array_merge($data, compact('nextPage')));
+        }
     }
 }

@@ -72,6 +72,19 @@
                     </table>
                 @endif
             </div>
+            <ul class="pagination">
+                @if(isset($previousPage))
+                    <li><a href="{{ $previousPage }}" rel="prev">« Previous</a></li>
+                @else
+                    <li class="disabled"><span>« Previous</span></li>
+                @endif
+
+                @if(isset($nextPage))
+                    <li><a href="{{ $nextPage }}" rel="next">Next »</a></li>
+                @else
+                    <li class="disabled"><span>Next »</span></li>
+                @endif
+            </ul>
         </div>
     </div>
 @endsection

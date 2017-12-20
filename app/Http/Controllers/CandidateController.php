@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Flash;
 use Response;
+use App\Models\Candidate;
 use Illuminate\Http\Request;
 use App\Helpers\SearchHelper;
 use App\Repositories\CandidateRepository;
@@ -49,6 +50,7 @@ class CandidateController extends AppBaseController
         $paginator = $candidates->render();
         $candidates = $candidates->toArray()['data'];
 
+        dump($candidates);
         return view('candidates.index')
             ->with([
                 'candidates' => $candidates,
@@ -180,123 +182,158 @@ class CandidateController extends AppBaseController
         $perPage = config('constants.DEFAULT_PAGINATION');
         $offset = $perPage * ($currentPage - 1);
 
-        try {
-            $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);
-        } catch (\Exception $e) {
+        // Pagination
+        $url = route($this->routeType.'candidates.search') . '?q=' . $query
+            . '&score_1=' . $score1
+            . '&score_2=' . $score2
+            . '&score_3=' . $score3
+            . '&page=';
+
+        if (empty($query)) {
+            $result = Candidate::where('score_1', '>', $score1)
+                ->where('score_2', '>', $score2)
+                ->where('score_3', '>', $score3)
+                ->with('coAuthor.firstAuthor')
+                ->with('coAuthor.secondAuthor')
+                ->offset($offset)->limit($perPage)
+                ->get()->toArray();
+
+            for ($i = 0; $i < count($result); $i++) {
+                $result[$i]['first_author'] = $result[$i]['co_author']['first_author'];
+                $result[$i]['second_author'] = $result[$i]['co_author']['second_author'];
+            }
+            //dd($result);
+        } else {
             try {
-                \Artisan::call('author:re-index', ['--university' => true]);
                 $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);
             } catch (\Exception $e) {
-                \Log::debug('author:re-index fail', $e->getTrace());
-                \Flash::error('Index in progress...try after few seconds');
-                $process = new Process('php ../artisan author:re-index --university');
-                $process->start();
+                try {
+                    \Artisan::call('author:re-index', ['--university' => TRUE]);
+                    $authors = SearchHelper::searchingAuthorWithUniversity($request, $currentPage, $offset, $perPage);
+                } catch (\Exception $e) {
+                    \Log::debug('author:re-index fail', $e->getTrace());
+                    \Flash::error('Index in progress...try after few seconds');
+                    $process = new Process('php ../artisan author:re-index --university');
+                    $process->start();
 
-                return redirect()->back();
+                    return redirect()->back();
+                }
             }
-        }
 
-        // Pagination
-        $url = route($this->routeType.'candidates.search') . '?q=' . $query . '&page=';
-        $previousPage = $url . 1;
-        $nextPage = $url . ($currentPage + 1);
+            // If empty result
+            if (count($authors) == 0) {
+                return view('candidates.index')->with([
+                    'routeType' => $this->routeType,
+                    'nextPage' => $nextPage,
+                    'previousPage' => $previousPage,
+                ]);
+            }
 
-        if ($currentPage > 1) {
-            $previousPage = $url . ($currentPage - 1);
-        }
+            // View
+            $authors = json_decode(json_encode($authors), TRUE);
 
-        // If empty result
-        if (count($authors) == 0) {
-            return view('candidates.index')->with([
-                'routeType' => $this->routeType,
-                'nextPage' => $nextPage,
-                'previousPage' => $previousPage,
-            ]);
-        }
+            for ($i = 0; $i < count($authors); $i++) {
+                $authors[$i]['university'] = [];
+                $authors[$i]['university']['name'] = $authors[$i]['name'];
+                $authors[$authors[$i]['id']] = $authors[$i];
 
-        // View
-        $authors = json_decode(json_encode($authors), true);
+                unset($authors[$i]);
+            }
 
-        for ($i = 0; $i < count($authors); $i++) {
-            $authors[$i]['university'] = [];
-            $authors[$i]['university']['name'] = $authors[$i]['name'];
-            $authors[$authors[$i]['id']] = $authors[$i];
+            // Find authors by query
+            $authorIds = array_keys($authors);
 
-            unset($authors[$i]);
-        }
+            // Find coauthors by first author id
+            $coAuthors1 = CoAuthor::whereIn('first_author_id', $authorIds)->with('candidate')->get()->toArray();
+            $secondAuthorIds = array_map(function ($x) {
+                return intval($x['second_author_id']);
+            }, $coAuthors1);
 
-        // Find authors by query
-        $authorIds = array_keys($authors);
+            $secondAuthors = Author::whereIn('id', $secondAuthorIds)->with('university')->get()->toArray();
+            for ($i = 0; $i < count($secondAuthors); $i++) {
+                $secondAuthors[$secondAuthors[$i]['id']] = $secondAuthors[$i];
+                unset($secondAuthors[$i]);
+            }
 
-        // Find coauthors by first author id
-        $coAuthors1 = CoAuthor::whereIn('first_author_id', $authorIds)->with('candidate')
-            ->get()->toArray();
-        $secondAuthorIds = array_map(function ($x) {
-            return intval($x['second_author_id']);
-        }, $coAuthors1);
-        $secondAuthors = Author::whereIn('id', $secondAuthorIds)->with('university')->get()->toArray();
-        for ($i = 0; $i < count($secondAuthors); $i++) {
-            $secondAuthors[$secondAuthors[$i]['id']] = $secondAuthors[$i];
-            unset($secondAuthors[$i]);
-        }
+            // Find coauthors by first author id
+            $coAuthors2 = CoAuthor::whereIn('second_author_id', $authorIds)->with('candidate')->get()->toArray();
+            // dump($coAuthors2);
+            $firstAuthorIds = array_map(function ($x) {
+                return intval($x['first_author_id']);
+            }, $coAuthors2);
+            $firstAuthors = Author::whereIn('id', $firstAuthorIds)->with('university')->get()->toArray();
+            for ($i = 0; $i < count($firstAuthors); $i++) {
+                $firstAuthors[$firstAuthors[$i]['id']] = $firstAuthors[$i];
+                unset($firstAuthors[$i]);
+            }
 
-        // Find coauthors by first author id
-        $coAuthors2 = CoAuthor::whereIn('second_author_id', $authorIds)->with('candidate')
-            ->get()->toArray();
-        // dump($coAuthors2);
-        $firstAuthorIds = array_map(function ($x) {
-            return intval($x['first_author_id']);
-        }, $coAuthors2);
-        $firstAuthors = Author::whereIn('id', $firstAuthorIds)->with('university')->get()->toArray();
-        for ($i = 0; $i < count($firstAuthors); $i++) {
-            $firstAuthors[$firstAuthors[$i]['id']] = $firstAuthors[$i];
-            unset($firstAuthors[$i]);
-        }
+            // Combine co authors
+            for ($i = 0; $i < count($coAuthors1); $i++) {
+                $coAuthors1[$i]['first_author'] = $authors[$coAuthors1[$i]['first_author_id']];
+                $coAuthors1[$i]['second_author'] = $secondAuthors[$secondAuthorIds[$i]];
+            }
 
-        // Combine co authors
-        for ($i = 0; $i < count($coAuthors1); $i++) {
-            $coAuthors1[$i]['first_author'] = $authors[$coAuthors1[$i]['first_author_id']];
-            $coAuthors1[$i]['second_author'] = $secondAuthors[$secondAuthorIds[$i]];
-        }
+            for ($i = 0; $i < count($coAuthors2); $i++) {
+                $coAuthors2[$i]['first_author'] = $firstAuthors[$firstAuthorIds[$i]];
+                $coAuthors2[$i]['second_author'] = $authors[$coAuthors2[$i]['second_author_id']];
+            }
 
-        for ($i = 0; $i < count($coAuthors2); $i++) {
-            $coAuthors2[$i]['first_author'] = $firstAuthors[$firstAuthorIds[$i]];
-            $coAuthors2[$i]['second_author'] = $authors[$coAuthors2[$i]['second_author_id']];
-        }
+            $coAuthors = array_merge($coAuthors1, $coAuthors2);
+            $coAuthors = array_map(function ($x) {
+                $x['score_1'] = $x['candidate']['score_1'];
+                $x['score_2'] = $x['candidate']['score_2'];
+                $x['score_3'] = $x['candidate']['score_3'];
+                unset($x['candidate']);
 
-        $coAuthors = array_merge($coAuthors1, $coAuthors2);
-        $coAuthors = array_map(function ($x) {
-            $x['score_1'] = $x['candidate']['score_1'];
-            $x['score_2'] = $x['candidate']['score_2'];
-            $x['score_3'] = $x['candidate']['score_3'];
-            unset($x['candidate']);
+                return $x;
+            }, $coAuthors);
 
-            return $x;
-        }, $coAuthors);
+            $coAuthors = array_slice($coAuthors, 0, 30);
 
-        $coAuthors = array_slice($coAuthors, 0, 30);
+            usort($coAuthors, function ($a, $b) {
+                return $b['score_1'] - $a['score_1'];
+            });
 
-        usort($coAuthors, function ($a, $b) {
-            return $b['score_1'] - $a['score_1'];
-        });
-
-        $result = [];
-        $count = 0;
-        foreach ($coAuthors as $key => $value) {
-            if ($value['score_1'] >= $score1 && $value['score_2'] >= $score2 &&
-                        $value['score_3'] >= $score3) {
-                array_push($result, $value);
-                $count++;
-                if ($count > 15) {
-                    break;
+            $result = [];
+            $count = 0;
+            foreach ($coAuthors as $key => $value) {
+                if ($value['score_1'] >= $score1 && $value['score_2'] >= $score2 && $value['score_3'] >= $score3) {
+                    array_push($result, $value);
+                    $count++;
+                    if ($count > 15) {
+                        break;
+                    }
                 }
             }
         }
 
-        // Return view
-        return view('candidates.search')->with([
+        $data = [
             'candidates' => $result,
             'routeType' => $this->routeType,
-        ]);
+        ];
+
+        $totalResults = count($result);
+        // If empty result
+        if ($totalResults == 0) {
+            return view('candidates.search')->with($data);
+        }
+
+        if ($currentPage > 1) { // at page 2,3...
+            $previousPage = $url . ($currentPage - 1);
+
+            if ($totalResults == 15) {
+                $nextPage = $url . ($currentPage + 1);
+
+                return view('candidates.search')->with(array_merge($data, compact('previousPage', 'nextPage')));
+            }
+
+            return view('candidates.search')->with(array_merge($data, compact('previousPage')));
+        } else { // at page 1
+            if ($totalResults == 15) {
+                $nextPage = $url . ($currentPage + 1);
+            }
+
+            return view('candidates.search')->with(array_merge($data, compact('nextPage')));
+        }
     }
 }
