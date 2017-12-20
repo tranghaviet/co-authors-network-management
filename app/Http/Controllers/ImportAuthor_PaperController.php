@@ -8,7 +8,6 @@ use Excel;
 use Cache;
 use DB;
 use Flash;
-use App\Models\Paper;
 use Symfony\Component\Process\Process as Process;
 
 class ImportAuthor_PaperController extends Controller
