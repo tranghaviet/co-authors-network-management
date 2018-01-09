@@ -142,8 +142,6 @@ class PaperController extends AppBaseController
 
     public function search(SearchRequest $request)
     {
-//        return SearchHelper::searchPaper($request, $this->routeType);
-
         $query = trim($request->q);
 
         if (! strlen($query)) {

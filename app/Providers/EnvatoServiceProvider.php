@@ -11,10 +11,10 @@ class EnvatoServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
-    {
-        //
-    }
+    // public function boot()
+    // {
+    //     //
+    // }
 
     /**
      * Register the application services.
