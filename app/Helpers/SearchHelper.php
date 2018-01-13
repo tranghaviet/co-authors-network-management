@@ -59,24 +59,24 @@ class SearchHelper
         return $papers;
     }
 
-    public static function searchingAuthor(Request $request, $currentPage, $offset, $perPage)
-    {
-        $query = trim($request->q);
+    // public static function searchingAuthor(Request $request, $currentPage, $offset, $perPage)
+    // {
+    //     $query = trim($request->q);
 
-        if (! $request->session()->has('author_search_' . $query . '_' . strval($currentPage))) {
-            $execution = "select authors.* , match(authors.given_name, authors.surname) against ('{$query}' IN NATURAL LANGUAGE MODE) as s1,
-                            from authors
-                            where match(authors.given_name, authors.surname) against ('{$query}' IN NATURAL LANGUAGE MODE)
-                            or authors.given_name like '{$query}%'
-                            or authors.surname like '{$query}%'
-                            order by s1 desc limit {$perPage} offset {$offset}";
-            $authors = DB::select($execution);
+    //     if (! $request->session()->has('author_search_' . $query . '_' . strval($currentPage))) {
+    //         $execution = "select authors.* , match(authors.given_name, authors.surname) against ('{$query}' IN NATURAL LANGUAGE MODE) as s1,
+    //                         from authors
+    //                         where match(authors.given_name, authors.surname) against ('{$query}' IN NATURAL LANGUAGE MODE)
+    //                         or authors.given_name like '{$query}%'
+    //                         or authors.surname like '{$query}%'
+    //                         order by s1 desc limit {$perPage} offset {$offset}";
+    //         $authors = DB::select($execution);
 
-            session(['author_search_' . $query . '_' . strval($currentPage) => $authors]);
-        } else {
-            $authors = $request->session()->get('author_search_' . $query . '_' . strval($currentPage));
-        }
+    //         session(['author_search_' . $query . '_' . strval($currentPage) => $authors]);
+    //     } else {
+    //         $authors = $request->session()->get('author_search_' . $query . '_' . strval($currentPage));
+    //     }
 
-        return $authors;
-    }
+    //     return $authors;
+    // }
 }

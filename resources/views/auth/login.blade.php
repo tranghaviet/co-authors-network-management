@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>InfyOm Laravel Generator</title>
+    <title>Co-authors network</title>
 
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -16,10 +16,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
 
     <!-- Ionicons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css"> --}}
 
     <link rel="stylesheet" href="{{ asset('css/AdminLTE.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/AdminLTE_all-skins.min.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('css/AdminLTE_all-skins.min.css') }}"> --}}
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -32,7 +32,7 @@
 <body class="hold-transition login-page">
 <div class="login-box">
     <div class="login-logo">
-        <a href="{{ url('/home') }}"><b>Co-authors network management</b></a>
+        <a href="/"><b>Co-authors network management</b></a>
     </div>
 
     <!-- /.login-logo -->
@@ -44,7 +44,7 @@
 
             <div class="form-group has-feedback {{ $errors->has('email') ? ' has-error' : '' }}">
                 <input type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="Email">
-                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                {{-- <span class="glyphicon glyphicon-envelope form-control-feedback"></span> --}}
                 @if ($errors->has('email'))
                     <span class="help-block">
                     <strong>{{ $errors->first('email') }}</strong>
@@ -54,7 +54,7 @@
 
             <div class="form-group has-feedback{{ $errors->has('password') ? ' has-error' : '' }}">
                 <input type="password" class="form-control" placeholder="Password" name="password">
-                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                {{-- <span class="glyphicon glyphicon-lock form-control-feedback"></span> --}}
                 @if ($errors->has('password'))
                     <span class="help-block">
                     <strong>{{ $errors->first('password') }}</strong>
@@ -84,12 +84,12 @@
 <!-- /.login-box -->
 
 <!-- jQuery 3.1.1 -->
-<script src="{{ asset('js/jquery.min.js') }}"></script>
+{{-- <script src="{{ asset('js/jquery.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-<script src="{{ asset('js/icheck.min.js') }}"></script>
+<script src="{{ asset('js/icheck.min.js') }}"></script> --}}
 
 <!-- AdminLTE App -->
-<script src="{{ asset('js/app.min.js') }}"></script>
+{{-- <script src="{{ asset('js/app.min.js') }}"></script> --}}
 <!-- <script>
     $(function () {
         $('input').iCheck({
